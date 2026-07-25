@@ -505,6 +505,13 @@ function updateProgress() {
   const done = studyIndex;
   $('progress-text').textContent = `${done}/${total}`;
   $('progress-bar').style.width = `${total > 0 ? (done / total) * 100 : 0}%`;
+
+  // Update stat badges
+  const remaining = Math.max(total - done, 0);
+  const badgeL = $('badge-learning');
+  const badgeR = $('badge-correct');
+  if (badgeL) badgeL.textContent = remaining;
+  if (badgeR) badgeR.textContent = sessionCorrect;
 }
 
 function markCard(correct) {
