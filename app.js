@@ -1,0 +1,937 @@
+/* ============================
+   SwipeCard App - app.js
+   ============================ */
+
+// ============================================================
+// DATA LAYER
+// ============================================================
+
+const STORAGE_KEY = 'swipecard_decks';
+const EMOJIS = ['📚','🌍','🎵','🔬','🍎','✈️','🎓','💡','🏆','🌸','🎯','🧠','📝','🦊','🌊','🏠','🎭','🔥','💎','🚀'];
+
+const SAMPLE_DECKS = [
+  {
+    id: 'deck_sample1',
+    name: 'TOEIC 基本単語',
+    emoji: '📚',
+    createdAt: Date.now() - 86400000,
+    learned: [],
+    cards: [
+      { id: 'c1', front: 'Accomplish', back: '達成する・成し遂げる', phonetic: '/əˈkɒmplɪʃ/', example: 'We accomplished our goal.' },
+      { id: 'c2', front: 'Adjacent', back: '隣接した・近くの', phonetic: '/əˈdʒeɪsənt/', example: 'The office is adjacent to the park.' },
+      { id: 'c3', front: 'Allocate', back: '割り当てる・配分する', phonetic: '/ˈæləkeɪt/', example: 'We need to allocate resources.' },
+      { id: 'c4', front: 'Ambitious', back: '野心的な・意欲的な', phonetic: '/æmˈbɪʃəs/', example: 'She is an ambitious manager.' },
+      { id: 'c5', front: 'Analyze', back: '分析する・解析する', phonetic: '/ˈænəlaɪz/', example: 'Please analyze the data.' },
+      { id: 'c6', front: 'Beneficial', back: '有益な・ためになる', phonetic: '/ˌbenɪˈfɪʃəl/', example: 'Exercise is beneficial to health.' },
+      { id: 'c7', front: 'Collaborate', back: '協力する・共同作業する', phonetic: '/kəˈlæbəreɪt/', example: 'They collaborated on the project.' },
+      { id: 'c8', front: 'Demonstrate', back: 'デモする・示す', phonetic: '/ˈdemənstreɪt/', example: 'Please demonstrate the product.' },
+      { id: 'c9', front: 'Efficient', back: '効率的な', phonetic: '/ɪˈfɪʃənt/', example: 'The process is very efficient.' },
+      { id: 'c10', front: 'Evaluate', back: '評価する・査定する', phonetic: '/ɪˈvæljueɪt/', example: 'We evaluate performance quarterly.' },
+    ]
+  },
+  {
+    id: 'deck_sample2',
+    name: '日常英会話',
+    emoji: '🌍',
+    createdAt: Date.now() - 43200000,
+    learned: [],
+    cards: [
+      { id: 'e1', front: 'What\'s up?', back: '最近どう？', phonetic: '', example: 'Hey! What\'s up?' },
+      { id: 'e2', front: 'Take it easy', back: 'のんびりしてね', phonetic: '', example: 'Take it easy this weekend.' },
+      { id: 'e3', front: 'Hang out', back: '一緒に過ごす', phonetic: '', example: 'Let\'s hang out sometime.' },
+      { id: 'e4', front: 'Break a leg', back: '頑張って！', phonetic: '', example: 'Break a leg at the interview!' },
+      { id: 'e5', front: 'Hit the sack', back: '寝る', phonetic: '', example: 'I\'m going to hit the sack early.' },
+      { id: 'e6', front: 'Under the weather', back: '体調が悪い', phonetic: '', example: 'I\'m a bit under the weather today.' },
+      { id: 'e7', front: 'Spill the beans', back: '秘密を明かす', phonetic: '', example: 'Don\'t spill the beans about the party!' },
+    ]
+  }
+];
+
+function loadDecks() {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (data) return JSON.parse(data);
+    // First load: use sample data
+    saveDecks(SAMPLE_DECKS);
+    return SAMPLE_DECKS;
+  } catch {
+    return [];
+  }
+}
+
+function saveDecks(decks) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(decks));
+}
+
+const SETTINGS_KEY = 'swipecard_settings';
+const DEFAULT_SETTINGS = {
+  fontSize: 'large',
+  shuffle: true
+};
+
+let settings = loadSettings();
+
+function loadSettings() {
+  try {
+    const data = localStorage.getItem(SETTINGS_KEY);
+    if (data) return { ...DEFAULT_SETTINGS, ...JSON.parse(data) };
+    return { ...DEFAULT_SETTINGS };
+  } catch {
+    return { ...DEFAULT_SETTINGS };
+  }
+}
+
+function saveSettings(newSettings) {
+  settings = newSettings;
+  try {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  } catch (e) {
+    console.error(e);
+  }
+  applySettings();
+}
+
+function applySettings() {
+  const fontSizes = {
+    standard: 'clamp(1.6rem, 5.5vw, 2.4rem)',
+    large: 'clamp(2.4rem, 7.5vw, 3.4rem)',
+    extra: 'clamp(3.2rem, 9.5vw, 4.4rem)'
+  };
+  const sizeValue = fontSizes[settings.fontSize] || fontSizes.large;
+  document.documentElement.style.setProperty('--card-word-size', sizeValue);
+}
+
+applySettings();
+
+function genId() {
+  return 'id_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+// ============================================================
+// APP STATE
+// ============================================================
+
+let decks = loadDecks();
+let currentDeck = null;
+let studyQueue = []; // indices into currentDeck.cards
+let studyIndex = 0;
+let sessionCorrect = 0;
+let sessionWrong = 0;
+let wrongCards = [];
+let isFlipped = false;
+
+// ============================================================
+// DOM HELPERS
+// ============================================================
+
+const $ = id => document.getElementById(id);
+
+function showScreen(screenId) {
+  document.querySelectorAll('.screen').forEach(s => {
+    if (s.id === screenId) {
+      s.classList.remove('slide-out');
+      s.classList.add('active');
+    } else {
+      s.classList.remove('active');
+      if (s.classList.contains('active')) {
+        s.classList.add('slide-out');
+        setTimeout(() => s.classList.remove('slide-out'), 400);
+      }
+    }
+  });
+}
+
+function showToast(msg, duration = 2000) {
+  const toast = $('toast');
+  toast.classList.remove('hidden');
+  toast.textContent = msg;
+  requestAnimationFrame(() => {
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.classList.add('hidden'), 300);
+    }, duration);
+  });
+}
+
+function speakText(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+
+// ============================================================
+// HOME SCREEN
+// ============================================================
+
+function renderHome() {
+  const list = $('deck-list');
+  const countEl = $('deck-count');
+  list.innerHTML = '';
+  countEl.textContent = decks.length + ' デッキ';
+
+  if (decks.length === 0) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📭</div>
+        <h3>デッキがありません</h3>
+        <p>右上の「＋」ボタンを押して<br/>最初のデッキを作ろう！</p>
+        <button class="btn-primary" style="max-width:200px;margin:0 auto;" onclick="openDeckModal()">デッキを作成</button>
+      </div>`;
+    return;
+  }
+
+  decks.forEach((deck, i) => {
+    const total = deck.cards.length;
+    const learned = deck.learned ? deck.learned.length : 0;
+    const pct = total > 0 ? Math.round((learned / total) * 100) : 0;
+
+    const card = document.createElement('div');
+    card.className = 'deck-card';
+    card.style.animationDelay = `${i * 60}ms`;
+    card.innerHTML = `
+      <div class="deck-emoji">${deck.emoji}</div>
+      <div class="deck-info">
+        <div class="deck-title">${escHtml(deck.name)}</div>
+        <div class="deck-meta">${total} 単語 · 習得 ${pct}%</div>
+        <div class="deck-progress-wrap">
+          <div class="deck-progress" style="width:${pct}%"></div>
+        </div>
+      </div>
+      <div class="deck-actions">
+        <button class="deck-btn-study" data-idx="${i}">学習開始</button>
+        <button class="deck-btn-edit" data-idx="${i}">編集</button>
+      </div>`;
+
+    list.appendChild(card);
+  });
+
+  // Event delegation
+  list.addEventListener('click', e => {
+    const studyBtn = e.target.closest('.deck-btn-study');
+    const editBtn = e.target.closest('.deck-btn-edit');
+    const card = e.target.closest('.deck-card');
+
+    if (studyBtn) {
+      e.stopPropagation();
+      startStudy(parseInt(studyBtn.dataset.idx));
+    } else if (editBtn) {
+      e.stopPropagation();
+      openDeckModal(parseInt(editBtn.dataset.idx));
+    } else if (card) {
+      const idx = [...$('deck-list').children].indexOf(card);
+      startStudy(idx);
+    }
+  }, { once: true });
+}
+
+function escHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ============================================================
+// DECK MODAL
+// ============================================================
+
+let editingDeckIdx = -1;
+let selectedEmoji = EMOJIS[0];
+let editorCards = [];
+
+function openDeckModal(deckIdx = -1) {
+  editingDeckIdx = deckIdx;
+  const modal = $('modal-deck');
+  const titleEl = $('modal-deck-title');
+  const nameInput = $('deck-name-input');
+  const deletBtn = $('btn-delete-deck');
+
+  if (deckIdx >= 0) {
+    const deck = decks[deckIdx];
+    titleEl.textContent = 'デッキを編集';
+    nameInput.value = deck.name;
+    selectedEmoji = deck.emoji;
+    editorCards = deck.cards.map(c => ({ ...c }));
+    deletBtn.classList.remove('hidden');
+  } else {
+    titleEl.textContent = '新しいデッキ';
+    nameInput.value = '';
+    selectedEmoji = EMOJIS[0];
+    editorCards = [{ id: genId(), front: '', back: '', phonetic: '', example: '' }];
+    deletBtn.classList.add('hidden');
+  }
+
+  renderEmojiGrid();
+  renderCardsEditor();
+  modal.classList.remove('hidden');
+  setTimeout(() => nameInput.focus(), 300);
+}
+
+function closeDeckModal() {
+  const modal = $('modal-deck');
+  modal.classList.add('hidden');
+}
+
+function renderEmojiGrid() {
+  const grid = $('emoji-grid');
+  grid.innerHTML = '';
+  EMOJIS.forEach(em => {
+    const btn = document.createElement('button');
+    btn.className = 'emoji-btn' + (em === selectedEmoji ? ' selected' : '');
+    btn.textContent = em;
+    btn.addEventListener('click', () => {
+      selectedEmoji = em;
+      grid.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+    grid.appendChild(btn);
+  });
+}
+
+function renderCardsEditor() {
+  const editor = $('cards-editor');
+  editor.innerHTML = '';
+  editorCards.forEach((card, i) => {
+    const item = document.createElement('div');
+    item.className = 'card-editor-item';
+    item.innerHTML = `
+      <input type="text" placeholder="表面 (例: Apple)" value="${escHtml(card.front)}" data-field="front" data-idx="${i}" />
+      <input type="text" placeholder="裏面 (例: りんご)" value="${escHtml(card.back)}" data-field="back" data-idx="${i}" />
+      <button class="btn-remove" data-rm="${i}" title="削除">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div class="card-editor-phonetic">
+        <input type="text" placeholder="発音記号 (任意)" value="${escHtml(card.phonetic || '')}" data-field="phonetic" data-idx="${i}" />
+      </div>
+      <div class="card-editor-example">
+        <input type="text" placeholder="例文 (任意)" value="${escHtml(card.example || '')}" data-field="example" data-idx="${i}" />
+      </div>`;
+    editor.appendChild(item);
+  });
+
+  editor.addEventListener('input', e => {
+    const input = e.target;
+    const idx = parseInt(input.dataset.idx);
+    const field = input.dataset.field;
+    if (idx >= 0 && field) editorCards[idx][field] = input.value;
+  });
+
+  editor.addEventListener('click', e => {
+    const rmBtn = e.target.closest('[data-rm]');
+    if (rmBtn) {
+      const idx = parseInt(rmBtn.dataset.rm);
+      if (editorCards.length === 1) { showToast('最低1枚のカードが必要です'); return; }
+      editorCards.splice(idx, 1);
+      renderCardsEditor();
+    }
+  });
+}
+
+function saveDeck() {
+  const name = $('deck-name-input').value.trim();
+  if (!name) { showToast('デッキ名を入力してください'); $('deck-name-input').focus(); return; }
+
+  const validCards = editorCards.filter(c => c.front.trim() && c.back.trim());
+  if (validCards.length === 0) { showToast('有効なカードが必要です'); return; }
+
+  // Ensure all cards have IDs
+  validCards.forEach(c => { if (!c.id) c.id = genId(); });
+
+  if (editingDeckIdx >= 0) {
+    const old = decks[editingDeckIdx];
+    decks[editingDeckIdx] = { ...old, name, emoji: selectedEmoji, cards: validCards };
+    showToast('✅ デッキを更新しました');
+  } else {
+    decks.push({ id: genId(), name, emoji: selectedEmoji, createdAt: Date.now(), learned: [], cards: validCards });
+    showToast('✅ デッキを作成しました');
+  }
+
+  saveDecks(decks);
+  closeDeckModal();
+  renderHome();
+}
+
+function deleteDeck() {
+  if (editingDeckIdx < 0) return;
+  if (!confirm(`「${decks[editingDeckIdx].name}」を削除しますか？`)) return;
+  decks.splice(editingDeckIdx, 1);
+  saveDecks(decks);
+  closeDeckModal();
+  renderHome();
+  showToast('🗑 デッキを削除しました');
+}
+
+// ============================================================
+// STUDY SCREEN
+// ============================================================
+
+function startStudy(deckIdx, wrongOnly = false) {
+  currentDeck = decks[deckIdx];
+  if (!currentDeck || currentDeck.cards.length === 0) {
+    showToast('このデッキにカードがありません');
+    return;
+  }
+
+  studyQueue = wrongOnly
+    ? wrongCards.map(c => currentDeck.cards.indexOf(c)).filter(i => i >= 0)
+    : [...Array(currentDeck.cards.length).keys()];
+
+  // Shuffle
+  if (settings.shuffle !== false) {
+    for (let i = studyQueue.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [studyQueue[i], studyQueue[j]] = [studyQueue[j], studyQueue[i]];
+    }
+  }
+
+  studyIndex = 0;
+  sessionCorrect = 0;
+  sessionWrong = 0;
+  wrongCards = [];
+  isFlipped = false;
+
+  $('study-deck-name').textContent = currentDeck.emoji + ' ' + currentDeck.name;
+  $('study-complete').classList.add('hidden');
+  $('study-footer').style.display = '';
+  $('card-stack').style.display = '';
+
+  showScreen('screen-study');
+  setTimeout(() => renderStudyCard(), 200);
+}
+
+function renderStudyCard() {
+  const stack = $('card-stack');
+  stack.innerHTML = '';
+  isFlipped = false;
+
+  if (studyIndex >= studyQueue.length) {
+    showComplete();
+    return;
+  }
+
+  updateProgress();
+
+  // Render Background Card 2 (Bottom)
+  if (studyIndex + 2 < studyQueue.length) {
+    const cardNext2 = currentDeck.cards[studyQueue[studyIndex + 2]];
+    const bg2 = document.createElement('div');
+    bg2.className = 'flash-card-bg-2';
+    bg2.innerHTML = `<div class="card-word">${escHtml(cardNext2.front)}</div>`;
+    stack.appendChild(bg2);
+  }
+
+  // Render Background Card 1 (Middle)
+  if (studyIndex + 1 < studyQueue.length) {
+    const cardNext1 = currentDeck.cards[studyQueue[studyIndex + 1]];
+    const bg1 = document.createElement('div');
+    bg1.className = 'flash-card-bg-1';
+    bg1.innerHTML = `<div class="card-word">${escHtml(cardNext1.front)}</div>`;
+    stack.appendChild(bg1);
+  }
+
+  // Render Active Card (Top)
+  const card = currentDeck.cards[studyQueue[studyIndex]];
+  const el = document.createElement('div');
+  el.className = 'flash-card';
+  el.id = 'current-card';
+  el.innerHTML = `
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <button class="card-btn-speak" id="btn-speak-current" title="英語読み上げ">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        </button>
+        <div class="card-word">${escHtml(card.front)}</div>
+        ${card.phonetic ? `<div class="card-phonetic">${escHtml(card.phonetic)}</div>` : ''}
+        <div class="card-tap-hint">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+          </svg>
+          タップしてめくる
+        </div>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-word">${escHtml(card.back)}</div>
+        ${card.example ? `<div class="card-example">"${escHtml(card.example)}"</div>` : ''}
+      </div>
+    </div>`;
+
+  stack.appendChild(el);
+
+  // Setup manual speaker button event handler
+  const speakBtn = el.querySelector('#btn-speak-current');
+  if (speakBtn) {
+    const handleSpeak = e => {
+      e.stopPropagation();
+      e.preventDefault();
+      speakText(card.front);
+    };
+    speakBtn.addEventListener('click', handleSpeak);
+    speakBtn.addEventListener('touchstart', handleSpeak, { passive: false });
+    speakBtn.addEventListener('mousedown', handleSpeak);
+  }
+
+  setupCardInteraction(el);
+
+  // Auto pronunciation
+  speakText(card.front);
+
+  // Entrance animation
+  el.style.opacity = '0';
+  el.style.transform = 'scale(0.92) translateY(12px)';
+  requestAnimationFrame(() => {
+    el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    el.style.opacity = '1';
+    el.style.transform = 'scale(1) translateY(0)';
+  });
+}
+
+function flipCard() {
+  const el = $('current-card');
+  if (!el) return;
+  isFlipped = !isFlipped;
+  el.classList.toggle('flipped', isFlipped);
+}
+
+function updateProgress() {
+  const total = studyQueue.length;
+  const done = studyIndex;
+  $('progress-text').textContent = `${done}/${total}`;
+  $('progress-bar').style.width = `${total > 0 ? (done / total) * 100 : 0}%`;
+}
+
+function markCard(correct) {
+  const card = currentDeck.cards[studyQueue[studyIndex]];
+  if (correct) {
+    sessionCorrect++;
+    if (!currentDeck.learned) currentDeck.learned = [];
+    if (!currentDeck.learned.includes(card.id)) currentDeck.learned.push(card.id);
+  } else {
+    sessionWrong++;
+    wrongCards.push(card);
+    // Remove from learned if re-marked wrong
+    if (currentDeck.learned) {
+      currentDeck.learned = currentDeck.learned.filter(id => id !== card.id);
+    }
+  }
+
+  saveDecks(decks);
+  studyIndex++;
+  animateCardOut(correct, () => renderStudyCard());
+}
+
+function animateCardOut(correct, callback) {
+  const el = $('current-card');
+  if (!el) { callback(); return; }
+
+  // 1. Swipe out the current card
+  const dx = correct ? 120 : -120;
+  const rotate = correct ? 20 : -20;
+
+  el.style.transition = 'transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.25s ease';
+  el.style.transform = `translateX(${dx}%) rotate(${rotate}deg)`;
+  el.style.opacity = '0';
+  el.style.pointerEvents = 'none';
+
+  // 2. Instantly promote background cards in the DOM to start their visual transition
+  const bg1 = document.querySelector('.flash-card-bg-1');
+  const bg2 = document.querySelector('.flash-card-bg-2');
+
+  // Since studyIndex has already been incremented, the new active card is at studyIndex
+  if (bg1 && studyIndex < studyQueue.length) {
+    const nextCard = currentDeck.cards[studyQueue[studyIndex]];
+    // Promote bg1 to active card style and position
+    bg1.className = 'flash-card';
+    bg1.style.transform = 'translate3d(0, 0, 10px) rotate(0deg) scale(1)';
+    bg1.style.left = '0';
+    bg1.style.width = '100%';
+    // Set the inner structure to match the active card
+    bg1.innerHTML = `
+      <div class="card-inner">
+        <div class="card-face card-front">
+          <button class="card-btn-speak" style="opacity: 0" title="英語読み上げ">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+          <div class="card-word">${escHtml(nextCard.front)}</div>
+          ${nextCard.phonetic ? `<div class="card-phonetic">${escHtml(nextCard.phonetic)}</div>` : ''}
+          <div class="card-tap-hint">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+            </svg>
+            タップしてめくる
+          </div>
+        </div>
+      </div>`;
+  }
+
+  if (bg2 && studyIndex + 1 < studyQueue.length) {
+    const nextNextCard = currentDeck.cards[studyQueue[studyIndex + 1]];
+    // Promote bg2 to bg1 slot
+    bg2.className = 'flash-card-bg-1';
+    bg2.innerHTML = `<div class="card-word">${escHtml(nextNextCard.front)}</div>`;
+  }
+
+  // Create and fade-in the new bg2 card at the bottom of the stack
+  if (studyIndex + 2 < studyQueue.length) {
+    const futureCard = currentDeck.cards[studyQueue[studyIndex + 2]];
+    const newBg2 = document.createElement('div');
+    newBg2.className = 'flash-card-bg-2';
+    newBg2.style.opacity = '0';
+    newBg2.style.transition = 'opacity 0.25s ease';
+    newBg2.innerHTML = `<div class="card-word">${escHtml(futureCard.front)}</div>`;
+    
+    const stack = $('card-stack');
+    stack.insertBefore(newBg2, stack.firstChild);
+    requestAnimationFrame(() => {
+      newBg2.style.opacity = '';
+    });
+  }
+
+
+
+  setTimeout(callback, 260);
+}
+
+function showComplete() {
+  $('card-stack').style.display = 'none';
+  $('study-footer').style.display = 'none';
+
+  const stats = $('complete-stats');
+  stats.innerHTML = `
+    <div class="stat-chip total"><div class="stat-num">${studyQueue.length}</div><div class="stat-label">合計</div></div>
+    <div class="stat-chip correct"><div class="stat-num">${sessionCorrect}</div><div class="stat-label">覚えた</div></div>
+    <div class="stat-chip wrong"><div class="stat-num">${sessionWrong}</div><div class="stat-label">要復習</div></div>`;
+
+  $('study-complete').classList.remove('hidden');
+
+  const redoBtn = $('btn-redo-wrong');
+  if (sessionWrong === 0) {
+    redoBtn.disabled = true;
+    redoBtn.style.opacity = '0.4';
+  } else {
+    redoBtn.disabled = false;
+    redoBtn.style.opacity = '';
+  }
+
+  updateProgress();
+}
+
+// ============================================================
+// SWIPE / DRAG INTERACTION
+// ============================================================
+
+function setupCardInteraction(el) {
+  let startX = 0, startY = 0, currentX = 0, currentY = 0;
+  let dragging = false;
+  let direction = 'none';
+  let hasDragged = false;
+
+  function onStart(clientX, clientY) {
+    startX = clientX;
+    startY = clientY;
+    currentX = 0;
+    currentY = 0;
+    dragging = true;
+    direction = 'none';
+    hasDragged = false;
+    el.style.transition = 'none';
+  }
+
+  function onMove(clientX, clientY, canPreventDefault, event) {
+    if (!dragging) return;
+    const dx = clientX - startX;
+    const dy = clientY - startY;
+    currentX = dx;
+    currentY = dy;
+
+    // Detect if user dragged the card significantly
+    if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
+      hasDragged = true;
+    }
+
+    // Detect swipe direction
+    if (direction === 'none' && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+      direction = Math.abs(dx) >= Math.abs(dy) ? 'horizontal' : 'vertical';
+    }
+
+    if (direction === 'horizontal') {
+      if (canPreventDefault && event && event.cancelable) {
+        event.preventDefault();
+      }
+      const rotate = dx * 0.08;
+      const scale = 1 - Math.min(Math.abs(dx) / 1200, 0.04);
+      el.style.transform = `translateX(${dx}px) rotate(${rotate}deg) scale(${scale})`;
+
+      // Real-time card border color/glow interpolation
+      const faces = el.querySelectorAll('.card-face');
+      if (dx > 0) {
+        const amt = Math.min(dx / 120, 1);
+        faces.forEach(f => {
+          f.style.borderColor = `rgba(52, 211, 153, ${0.2 + amt * 0.6})`;
+          f.style.boxShadow = `var(--shadow-card), 0 0 40px rgba(52, 211, 153, ${0.08 + amt * 0.22})`;
+        });
+      } else {
+        const amt = Math.min(-dx / 120, 1);
+        faces.forEach(f => {
+          f.style.borderColor = `rgba(248, 113, 113, ${0.2 + amt * 0.6})`;
+          f.style.boxShadow = `var(--shadow-card), 0 0 40px rgba(248, 113, 113, ${0.08 + amt * 0.22})`;
+        });
+      }
+
+
+    }
+  }
+
+  function onEnd() {
+    if (!dragging) return;
+    dragging = false;
+
+    const faces = el.querySelectorAll('.card-face');
+
+    // If it was a simple tap (no drag), let the click listener handle flipping
+    if (!hasDragged) {
+      el.style.transition = 'transform 0.3s ease';
+      el.style.transform = '';
+      faces.forEach(f => {
+        f.style.borderColor = '';
+        f.style.boxShadow = '';
+      });
+      return;
+    }
+
+    if (direction === 'horizontal') {
+      const threshold = 80;
+      if (currentX > threshold) {
+        markCard(true);
+      } else if (currentX < -threshold) {
+        markCard(false);
+      } else {
+        // Snap back
+        el.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        el.style.transform = 'translateX(0) rotate(0deg) scale(1)';
+        faces.forEach(f => {
+          f.style.transition = 'border-color 0.4s ease, box-shadow 0.4s ease';
+          f.style.borderColor = '';
+          f.style.boxShadow = '';
+          setTimeout(() => { f.style.transition = ''; }, 400);
+        });
+      }
+    } else {
+      // Snap back for vertical or undefined movement
+      el.style.transition = 'transform 0.3s ease';
+      el.style.transform = '';
+      faces.forEach(f => {
+        f.style.borderColor = '';
+        f.style.boxShadow = '';
+      });
+    }
+  }
+
+  // Native click listener to handle flipping
+  el.addEventListener('click', e => {
+    // Prevent flip if we just finished dragging, or clicked the speaker button
+    if (hasDragged) return;
+    if (e.target.closest('#btn-speak-current')) return;
+    flipCard();
+  });
+
+  // Touch events
+  el.addEventListener('touchstart', e => {
+    const t = e.touches[0];
+    onStart(t.clientX, t.clientY);
+  }, { passive: true });
+
+  el.addEventListener('touchmove', e => {
+    const t = e.touches[0];
+    onMove(t.clientX, t.clientY, true, e);
+  }, { passive: false });
+
+  el.addEventListener('touchend', onEnd);
+  el.addEventListener('touchcancel', () => {
+    dragging = false;
+    el.style.transition = 'transform 0.3s ease';
+    el.style.transform = '';
+  });
+
+  // Mouse events
+  el.addEventListener('mousedown', e => {
+    onStart(e.clientX, e.clientY);
+    // Do not call e.preventDefault() here, to allow click event to propagate
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (dragging) onMove(e.clientX, e.clientY, false, e);
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (dragging) onEnd();
+  });
+}
+
+// ============================================================
+// SETTINGS MODAL
+// ============================================================
+
+function openSettingsModal() {
+  const radios = document.getElementsByName('font-size-option');
+  radios.forEach(radio => {
+    radio.checked = radio.value === settings.fontSize;
+  });
+  
+  $('setting-shuffle-toggle').checked = settings.shuffle !== false;
+  
+  $('modal-settings').classList.remove('hidden');
+}
+
+function closeSettingsModal() {
+  $('modal-settings').classList.add('hidden');
+}
+
+function saveSettingsFromUI() {
+  const radios = document.getElementsByName('font-size-option');
+  let selectedFontSize = 'large';
+  radios.forEach(radio => {
+    if (radio.checked) selectedFontSize = radio.value;
+  });
+  
+  const isShuffle = $('setting-shuffle-toggle').checked;
+  
+  saveSettings({
+    fontSize: selectedFontSize,
+    shuffle: isShuffle
+  });
+  
+  closeSettingsModal();
+}
+
+// ============================================================
+// EVENT LISTENERS
+// ============================================================
+
+// Home
+$('btn-add-deck').addEventListener('click', () => openDeckModal());
+$('btn-open-settings').addEventListener('click', openSettingsModal);
+
+// Study screen
+$('btn-back').addEventListener('click', () => {
+  showScreen('screen-home');
+  renderHome();
+});
+
+$('btn-flip').addEventListener('click', flipCard);
+
+$('btn-redo-wrong').addEventListener('click', () => {
+  if (wrongCards.length === 0) return;
+  const deckIdx = decks.indexOf(currentDeck);
+  startStudy(deckIdx, true);
+});
+
+$('btn-redo-all').addEventListener('click', () => {
+  const deckIdx = decks.indexOf(currentDeck);
+  startStudy(deckIdx, false);
+});
+
+$('btn-back-home').addEventListener('click', () => {
+  showScreen('screen-home');
+  renderHome();
+});
+
+// Modal
+$('btn-add-deck').addEventListener('click', () => openDeckModal());
+$('modal-deck-close').addEventListener('click', closeDeckModal);
+$('btn-cancel-deck').addEventListener('click', closeDeckModal);
+$('btn-save-deck').addEventListener('click', saveDeck);
+$('btn-delete-deck').addEventListener('click', deleteDeck);
+$('btn-add-card').addEventListener('click', () => {
+  editorCards.push({ id: genId(), front: '', back: '', phonetic: '', example: '' });
+  renderCardsEditor();
+  // Scroll to bottom
+  const editor = $('cards-editor');
+  setTimeout(() => editor.lastChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+});
+
+// Close modal on overlay click
+$('modal-deck').addEventListener('click', e => {
+  if (e.target === $('modal-deck')) closeDeckModal();
+});
+
+// Settings Modal
+$('modal-settings-close').addEventListener('click', closeSettingsModal);
+$('btn-save-settings').addEventListener('click', saveSettingsFromUI);
+$('modal-settings').addEventListener('click', e => {
+  if (e.target === $('modal-settings')) closeSettingsModal();
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if ($('screen-study').classList.contains('active')) {
+    if (e.key === 'ArrowRight' || e.key === 'l') markCard(true);
+    if (e.key === 'ArrowLeft' || e.key === 'h') markCard(false);
+    if (e.key === ' ') { e.preventDefault(); flipCard(); }
+  }
+});
+
+// ============================================================
+// MOBILE: iOS KEYBOARD / VIEWPORT HANDLING
+// ============================================================
+
+// When the iOS keyboard opens, the visual viewport shrinks.
+// We adjust the modal-body max-height so it doesn't get hidden.
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', () => {
+    const modal = $('modal-deck');
+    if (!modal.classList.contains('hidden')) {
+      const vh = window.visualViewport.height;
+      const box = modal.querySelector('.modal-box');
+      if (box) {
+        box.style.maxHeight = Math.min(vh * 0.95, window.innerHeight * 0.95) + 'px';
+      }
+    }
+  });
+}
+
+// Prevent default touch scroll while dragging a card
+document.addEventListener('touchmove', e => {
+  // Only block if there's an active card drag in progress
+  if (document.querySelector('.flash-card') && e.cancelable) {
+    // Allow vertical scroll in modal and home, block in study-main during swipe
+    const studyMain = document.querySelector('.study-main');
+    if (studyMain && studyMain.contains(e.target)) {
+      // Will be managed by individual card's touch handler
+    }
+  }
+}, { passive: true });
+
+// ============================================================
+// INIT
+// ============================================================
+
+async function initApp() {
+  const hasGoldPhrase = decks.some(d => d.id === 'gold-phrase');
+  if (!hasGoldPhrase) {
+    try {
+      const response = await fetch('gold_phrase.json');
+      if (response.ok) {
+        const goldDeck = await response.json();
+        goldDeck.createdAt = Date.now();
+        decks.push(goldDeck);
+        saveDecks(decks);
+      }
+    } catch (e) {
+      console.error('Failed to auto-load gold_phrase.json:', e);
+    }
+  }
+  renderHome();
+}
+
+initApp();

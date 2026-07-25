@@ -1,0 +1,6008 @@
+{
+  "id": "gold-phrase",
+  "name": "金フレ (金のフレーズ)",
+  "emoji": "📙",
+  "cards": [
+    {
+      "id": 1,
+      "front": "refer",
+      "back": "参照する、言及する、(人を)紹介する",
+      "phonetic": ""
+    },
+    {
+      "id": 2,
+      "front": "available",
+      "back": "入手できる、利用できる、空いている",
+      "phonetic": ""
+    },
+    {
+      "id": 3,
+      "front": "conference",
+      "back": "会議",
+      "phonetic": ""
+    },
+    {
+      "id": 4,
+      "front": "according to",
+      "back": "～によると、～に従って",
+      "phonetic": ""
+    },
+    {
+      "id": 5,
+      "front": "likely",
+      "back": "おそらく～しそうだ",
+      "phonetic": ""
+    },
+    {
+      "id": 6,
+      "front": "offer",
+      "back": "申し出る、提供する、申し出、オファー",
+      "phonetic": ""
+    },
+    {
+      "id": 7,
+      "front": "equipment",
+      "back": "機器、装備",
+      "phonetic": ""
+    },
+    {
+      "id": 8,
+      "front": "provide",
+      "back": "提供する",
+      "phonetic": ""
+    },
+    {
+      "id": 9,
+      "front": "purchase",
+      "back": "購入する、購入品",
+      "phonetic": ""
+    },
+    {
+      "id": 10,
+      "front": "construction",
+      "back": "建設",
+      "phonetic": ""
+    },
+    {
+      "id": 11,
+      "front": "recently",
+      "back": "最近",
+      "phonetic": ""
+    },
+    {
+      "id": 12,
+      "front": "indicate",
+      "back": "示す",
+      "phonetic": ""
+    },
+    {
+      "id": 13,
+      "front": "additional",
+      "back": "追加の",
+      "phonetic": ""
+    },
+    {
+      "id": 14,
+      "front": "survey",
+      "back": "アンケート調査、アンケート調査を行う",
+      "phonetic": ""
+    },
+    {
+      "id": 15,
+      "front": "review",
+      "back": "検討する、論評する、検討、論評",
+      "phonetic": ""
+    },
+    {
+      "id": 16,
+      "front": "production",
+      "back": "生産、作品",
+      "phonetic": ""
+    },
+    {
+      "id": 17,
+      "front": "detail",
+      "back": "詳細、詳しく述べる",
+      "phonetic": ""
+    },
+    {
+      "id": 18,
+      "front": "repair",
+      "back": "修理、修理する",
+      "phonetic": ""
+    },
+    {
+      "id": 19,
+      "front": "increase",
+      "back": "増加、増える、増やす",
+      "phonetic": ""
+    },
+    {
+      "id": 20,
+      "front": "include",
+      "back": "含む",
+      "phonetic": ""
+    },
+    {
+      "id": 21,
+      "front": "advertising",
+      "back": "広告(業)、宣伝(活動)",
+      "phonetic": ""
+    },
+    {
+      "id": 22,
+      "front": "expect",
+      "back": "予期する、予定する",
+      "phonetic": ""
+    },
+    {
+      "id": 23,
+      "front": "firm",
+      "back": "会社",
+      "phonetic": ""
+    },
+    {
+      "id": 24,
+      "front": "financial",
+      "back": "お金の、財務の、金融の",
+      "phonetic": ""
+    },
+    {
+      "id": 25,
+      "front": "annual",
+      "back": "年に1度の、毎年恒例の、年間の",
+      "phonetic": ""
+    },
+    {
+      "id": 26,
+      "front": "application",
+      "back": "応募書類、応募、申請",
+      "phonetic": ""
+    },
+    {
+      "id": 27,
+      "front": "contract",
+      "back": "契約(書)",
+      "phonetic": ""
+    },
+    {
+      "id": 28,
+      "front": "performance",
+      "back": "業績、仕事ぶり、性能、公演",
+      "phonetic": ""
+    },
+    {
+      "id": 29,
+      "front": "pleased",
+      "back": "喜んで、満足して",
+      "phonetic": ""
+    },
+    {
+      "id": 30,
+      "front": "confirm",
+      "back": "確認する",
+      "phonetic": ""
+    },
+    {
+      "id": 31,
+      "front": "candidate",
+      "back": "候補者",
+      "phonetic": ""
+    },
+    {
+      "id": 32,
+      "front": "state",
+      "back": "述べる",
+      "phonetic": ""
+    },
+    {
+      "id": 33,
+      "front": "exhibit",
+      "back": "展示物、展示会、展示する",
+      "phonetic": ""
+    },
+    {
+      "id": 34,
+      "front": "note",
+      "back": "注意する、述べる、メモ",
+      "phonetic": ""
+    },
+    {
+      "id": 35,
+      "front": "process",
+      "back": "処理する、プロセス、過程、処理",
+      "phonetic": ""
+    },
+    {
+      "id": 36,
+      "front": "instruction",
+      "back": "説明、説明書、指示",
+      "phonetic": ""
+    },
+    {
+      "id": 37,
+      "front": "agency",
+      "back": "代理店、機関",
+      "phonetic": ""
+    },
+    {
+      "id": 38,
+      "front": "facility",
+      "back": "施設",
+      "phonetic": ""
+    },
+    {
+      "id": 39,
+      "front": "advance",
+      "back": "先行した、事前の、進歩、前進",
+      "phonetic": ""
+    },
+    {
+      "id": 40,
+      "front": "committee",
+      "back": "委員会",
+      "phonetic": ""
+    },
+    {
+      "id": 41,
+      "front": "industry",
+      "back": "産業、業界",
+      "phonetic": ""
+    },
+    {
+      "id": 42,
+      "front": "fee",
+      "back": "料金",
+      "phonetic": ""
+    },
+    {
+      "id": 43,
+      "front": "accept",
+      "back": "受け入れる",
+      "phonetic": ""
+    },
+    {
+      "id": 44,
+      "front": "upcoming",
+      "back": "今度の",
+      "phonetic": ""
+    },
+    {
+      "id": 45,
+      "front": "latest",
+      "back": "最新の",
+      "phonetic": ""
+    },
+    {
+      "id": 46,
+      "front": "transportation",
+      "back": "輸送手段",
+      "phonetic": ""
+    },
+    {
+      "id": 47,
+      "front": "executive",
+      "back": "重役、重役(用)の、高級な",
+      "phonetic": ""
+    },
+    {
+      "id": 48,
+      "front": "introduce",
+      "back": "導入する、紹介する",
+      "phonetic": ""
+    },
+    {
+      "id": 49,
+      "front": "previous",
+      "back": "前の、以前の",
+      "phonetic": ""
+    },
+    {
+      "id": 50,
+      "front": "proposal",
+      "back": "提案、提案書",
+      "phonetic": ""
+    },
+    {
+      "id": 51,
+      "front": "supply",
+      "back": "必需品、供給する",
+      "phonetic": ""
+    },
+    {
+      "id": 52,
+      "front": "enclose",
+      "back": "同封する、囲む",
+      "phonetic": ""
+    },
+    {
+      "id": 53,
+      "front": "policy",
+      "back": "規定、方針",
+      "phonetic": ""
+    },
+    {
+      "id": 54,
+      "front": "register",
+      "back": "登録する、レジ",
+      "phonetic": ""
+    },
+    {
+      "id": 55,
+      "front": "arrange",
+      "back": "手配する、並べる",
+      "phonetic": ""
+    },
+    {
+      "id": 56,
+      "front": "approve",
+      "back": "承認する、賛成する",
+      "phonetic": ""
+    },
+    {
+      "id": 57,
+      "front": "conduct",
+      "back": "実行する、実施する",
+      "phonetic": ""
+    },
+    {
+      "id": 58,
+      "front": "corporate",
+      "back": "企業の、法人の",
+      "phonetic": ""
+    },
+    {
+      "id": 59,
+      "front": "warranty",
+      "back": "保証、保証書",
+      "phonetic": ""
+    },
+    {
+      "id": 60,
+      "front": "reserve",
+      "back": "予約する、確保する、蓄え",
+      "phonetic": ""
+    },
+    {
+      "id": 61,
+      "front": "resident",
+      "back": "住民、住人",
+      "phonetic": ""
+    },
+    {
+      "id": 62,
+      "front": "inform",
+      "back": "知らせる、影響を与える",
+      "phonetic": ""
+    },
+    {
+      "id": 63,
+      "front": "appreciate",
+      "back": "感謝する",
+      "phonetic": ""
+    },
+    {
+      "id": 64,
+      "front": "replacement",
+      "back": "交換、交換品、後任",
+      "phonetic": ""
+    },
+    {
+      "id": 65,
+      "front": "paid",
+      "back": "有給の、支払い済みの",
+      "phonetic": ""
+    },
+    {
+      "id": 66,
+      "front": "rent",
+      "back": "家賃、賃貸借する",
+      "phonetic": ""
+    },
+    {
+      "id": 67,
+      "front": "memo",
+      "back": "社内文書",
+      "phonetic": ""
+    },
+    {
+      "id": 68,
+      "front": "luggage",
+      "back": "旅行かばん、手荷物",
+      "phonetic": ""
+    },
+    {
+      "id": 69,
+      "front": "editor",
+      "back": "編集者",
+      "phonetic": ""
+    },
+    {
+      "id": 70,
+      "front": "exhibition",
+      "back": "展示会、展示物、展示",
+      "phonetic": ""
+    },
+    {
+      "id": 71,
+      "front": "leading",
+      "back": "首位の、一流の",
+      "phonetic": ""
+    },
+    {
+      "id": 72,
+      "front": "organization",
+      "back": "団体、会社、組織(化)",
+      "phonetic": ""
+    },
+    {
+      "id": 73,
+      "front": "release",
+      "back": "発売する、公表する、発売",
+      "phonetic": ""
+    },
+    {
+      "id": 74,
+      "front": "limited",
+      "back": "限られた",
+      "phonetic": ""
+    },
+    {
+      "id": 75,
+      "front": "procedure",
+      "back": "手続き、手順",
+      "phonetic": ""
+    },
+    {
+      "id": 76,
+      "front": "personnel",
+      "back": "社員、人事部",
+      "phonetic": ""
+    },
+    {
+      "id": 77,
+      "front": "author",
+      "back": "著者、作者、(本を)書く",
+      "phonetic": ""
+    },
+    {
+      "id": 78,
+      "front": "benefit",
+      "back": "特典、福利厚生、～のためになる",
+      "phonetic": ""
+    },
+    {
+      "id": 79,
+      "front": "focus",
+      "back": "(意識等を)～に集中させる、重点を置く、焦点、集中",
+      "phonetic": ""
+    },
+    {
+      "id": 80,
+      "front": "participate",
+      "back": "参加する",
+      "phonetic": ""
+    },
+    {
+      "id": 81,
+      "front": "degree",
+      "back": "位、程度、(温度や角度の単位の)度",
+      "phonetic": ""
+    },
+    {
+      "id": 82,
+      "front": "directly",
+      "back": "直接",
+      "phonetic": ""
+    },
+    {
+      "id": 83,
+      "front": "expert",
+      "back": "専門家、専門的な",
+      "phonetic": ""
+    },
+    {
+      "id": 84,
+      "front": "impress",
+      "back": "感心させる、好印象を与える",
+      "phonetic": ""
+    },
+    {
+      "id": 85,
+      "front": "mainly",
+      "back": "主に",
+      "phonetic": ""
+    },
+    {
+      "id": 86,
+      "front": "suggestion",
+      "back": "提案",
+      "phonetic": ""
+    },
+    {
+      "id": 87,
+      "front": "supplier",
+      "back": "納入業者、供給業者",
+      "phonetic": ""
+    },
+    {
+      "id": 88,
+      "front": "remind",
+      "back": "再確認する、念押しする",
+      "phonetic": ""
+    },
+    {
+      "id": 89,
+      "front": "require",
+      "back": "求める、要求する",
+      "phonetic": ""
+    },
+    {
+      "id": 90,
+      "front": "representative",
+      "back": "担当者、代表者",
+      "phonetic": ""
+    },
+    {
+      "id": 91,
+      "front": "description",
+      "back": "説明、記述、描写",
+      "phonetic": ""
+    },
+    {
+      "id": 92,
+      "front": "property",
+      "back": "不動産、資産",
+      "phonetic": ""
+    },
+    {
+      "id": 93,
+      "front": "extension",
+      "back": "内線、延長",
+      "phonetic": ""
+    },
+    {
+      "id": 94,
+      "front": "inquire",
+      "back": "尋ねる、問い合わせる",
+      "phonetic": ""
+    },
+    {
+      "id": 95,
+      "front": "merchandise",
+      "back": "商品",
+      "phonetic": ""
+    },
+    {
+      "id": 96,
+      "front": "highly",
+      "back": "非常に",
+      "phonetic": ""
+    },
+    {
+      "id": 97,
+      "front": "result",
+      "back": "生じる、終わる、結果",
+      "phonetic": ""
+    },
+    {
+      "id": 98,
+      "front": "assistance",
+      "back": "支援、援助",
+      "phonetic": ""
+    },
+    {
+      "id": 99,
+      "front": "encourage",
+      "back": "奨励する、促す",
+      "phonetic": ""
+    },
+    {
+      "id": 100,
+      "front": "individual",
+      "back": "個人、個人の、個別の",
+      "phonetic": ""
+    },
+    {
+      "id": 101,
+      "front": "laboratory",
+      "back": "研究所、実験室",
+      "phonetic": ""
+    },
+    {
+      "id": 102,
+      "front": "consider",
+      "back": "考える、検討する",
+      "phonetic": ""
+    },
+    {
+      "id": 103,
+      "front": "intended",
+      "back": "意図された、向けられた",
+      "phonetic": ""
+    },
+    {
+      "id": 104,
+      "front": "brochure",
+      "back": "パンフレット",
+      "phonetic": ""
+    },
+    {
+      "id": 105,
+      "front": "prefer",
+      "back": "～を(…よりも)好む",
+      "phonetic": ""
+    },
+    {
+      "id": 106,
+      "front": "response",
+      "back": "返答、返事",
+      "phonetic": ""
+    },
+    {
+      "id": 107,
+      "front": "region",
+      "back": "地域",
+      "phonetic": ""
+    },
+    {
+      "id": 108,
+      "front": "donation",
+      "back": "寄付",
+      "phonetic": ""
+    },
+    {
+      "id": 109,
+      "front": "quarter",
+      "back": "四半期",
+      "phonetic": ""
+    },
+    {
+      "id": 110,
+      "front": "agreement",
+      "back": "契約(書)、同意(書)、合意",
+      "phonetic": ""
+    },
+    {
+      "id": 111,
+      "front": "journal",
+      "back": "専門誌",
+      "phonetic": ""
+    },
+    {
+      "id": 112,
+      "front": "distribute",
+      "back": "配布する、流通させる",
+      "phonetic": ""
+    },
+    {
+      "id": 113,
+      "front": "reschedule",
+      "back": "スケジュール変更する",
+      "phonetic": ""
+    },
+    {
+      "id": 114,
+      "front": "warehouse",
+      "back": "倉庫",
+      "phonetic": ""
+    },
+    {
+      "id": 115,
+      "front": "refund",
+      "back": "返金、返金する",
+      "phonetic": ""
+    },
+    {
+      "id": 116,
+      "front": "immediately",
+      "back": "すぐに、即座に",
+      "phonetic": ""
+    },
+    {
+      "id": 117,
+      "front": "council",
+      "back": "議会",
+      "phonetic": ""
+    },
+    {
+      "id": 118,
+      "front": "broadcast",
+      "back": "放送する、放送",
+      "phonetic": ""
+    },
+    {
+      "id": 119,
+      "front": "responsible",
+      "back": "相当している、責任がある",
+      "phonetic": ""
+    },
+    {
+      "id": 120,
+      "front": "avoid",
+      "back": "避ける",
+      "phonetic": ""
+    },
+    {
+      "id": 121,
+      "front": "effective",
+      "back": "効果的な",
+      "phonetic": ""
+    },
+    {
+      "id": 122,
+      "front": "invitation",
+      "back": "招待(状)",
+      "phonetic": ""
+    },
+    {
+      "id": 123,
+      "front": "reduce",
+      "back": "(値段を)下げる、減らす",
+      "phonetic": ""
+    },
+    {
+      "id": 124,
+      "front": "vehicle",
+      "back": "乗り物、車両",
+      "phonetic": ""
+    },
+    {
+      "id": 125,
+      "front": "efficient",
+      "back": "効率的な",
+      "phonetic": ""
+    },
+    {
+      "id": 126,
+      "front": "manufacturer",
+      "back": "メーカー、製造業者",
+      "phonetic": ""
+    },
+    {
+      "id": 127,
+      "front": "comfortable",
+      "back": "快適な、楽な、自信がある",
+      "phonetic": ""
+    },
+    {
+      "id": 128,
+      "front": "correct",
+      "back": "正確な、正しい、修正する",
+      "phonetic": ""
+    },
+    {
+      "id": 129,
+      "front": "method",
+      "back": "方法",
+      "phonetic": ""
+    },
+    {
+      "id": 130,
+      "front": "entire",
+      "back": "全体の",
+      "phonetic": ""
+    },
+    {
+      "id": 131,
+      "front": "setting",
+      "back": "環境",
+      "phonetic": ""
+    },
+    {
+      "id": 132,
+      "front": "apologize",
+      "back": "おわびする",
+      "phonetic": ""
+    },
+    {
+      "id": 133,
+      "front": "frequent",
+      "back": "頻繁な",
+      "phonetic": ""
+    },
+    {
+      "id": 134,
+      "front": "promotion",
+      "back": "昇進、販売促進",
+      "phonetic": ""
+    },
+    {
+      "id": 135,
+      "front": "regarding",
+      "back": "～に関する",
+      "phonetic": ""
+    },
+    {
+      "id": 136,
+      "front": "temporary",
+      "back": "一時的な、臨時の",
+      "phonetic": ""
+    },
+    {
+      "id": 137,
+      "front": "admission",
+      "back": "入場、入場料、入場許可",
+      "phonetic": ""
+    },
+    {
+      "id": 138,
+      "front": "reference",
+      "back": "照会先、照会、参照",
+      "phonetic": ""
+    },
+    {
+      "id": 139,
+      "front": "status",
+      "back": "状況、地位",
+      "phonetic": ""
+    },
+    {
+      "id": 140,
+      "front": "fuel",
+      "back": "燃料",
+      "phonetic": ""
+    },
+    {
+      "id": 141,
+      "front": "nearly",
+      "back": "ほとんど、もう少しで",
+      "phonetic": ""
+    },
+    {
+      "id": 142,
+      "front": "determine",
+      "back": "決定する、判断する、決心する",
+      "phonetic": ""
+    },
+    {
+      "id": 143,
+      "front": "expense",
+      "back": "費用、経費",
+      "phonetic": ""
+    },
+    {
+      "id": 144,
+      "front": "satisfied",
+      "back": "満足した",
+      "phonetic": ""
+    },
+    {
+      "id": 145,
+      "front": "improve",
+      "back": "改善する、改良する",
+      "phonetic": ""
+    },
+    {
+      "id": 146,
+      "front": "unable",
+      "back": "(～することが)できない",
+      "phonetic": ""
+    },
+    {
+      "id": 147,
+      "front": "delay",
+      "back": "遅らせる、遅れ",
+      "phonetic": ""
+    },
+    {
+      "id": 148,
+      "front": "regulation",
+      "back": "規制、規則",
+      "phonetic": ""
+    },
+    {
+      "id": 149,
+      "front": "expand",
+      "back": "拡大する、進出する",
+      "phonetic": ""
+    },
+    {
+      "id": 150,
+      "front": "launch",
+      "back": "開始、発売、開始する、発売する",
+      "phonetic": ""
+    },
+    {
+      "id": 151,
+      "front": "direct",
+      "back": "向ける、管理する、直接の",
+      "phonetic": ""
+    },
+    {
+      "id": 152,
+      "front": "profit",
+      "back": "利益、利益を与える",
+      "phonetic": ""
+    },
+    {
+      "id": 153,
+      "front": "demand",
+      "back": "需要、要求する",
+      "phonetic": ""
+    },
+    {
+      "id": 154,
+      "front": "figure",
+      "back": "数字、人物",
+      "phonetic": ""
+    },
+    {
+      "id": 155,
+      "front": "attach",
+      "back": "添付する",
+      "phonetic": ""
+    },
+    {
+      "id": 156,
+      "front": "attract",
+      "back": "引き付ける、呼び込む",
+      "phonetic": ""
+    },
+    {
+      "id": 157,
+      "front": "insurance",
+      "back": "保険",
+      "phonetic": ""
+    },
+    {
+      "id": 158,
+      "front": "departure",
+      "back": "出発、逸脱",
+      "phonetic": ""
+    },
+    {
+      "id": 159,
+      "front": "mayor",
+      "back": "町長、市長",
+      "phonetic": ""
+    },
+    {
+      "id": 160,
+      "front": "balance",
+      "back": "残金、残額、バランス",
+      "phonetic": ""
+    },
+    {
+      "id": 161,
+      "front": "estimate",
+      "back": "見積もり、見積もる",
+      "phonetic": ""
+    },
+    {
+      "id": 162,
+      "front": "district",
+      "back": "地区",
+      "phonetic": ""
+    },
+    {
+      "id": 163,
+      "front": "former",
+      "back": "前の、かつての、前者",
+      "phonetic": ""
+    },
+    {
+      "id": 164,
+      "front": "establish",
+      "back": "設立する、創立する",
+      "phonetic": ""
+    },
+    {
+      "id": 165,
+      "front": "option",
+      "back": "選択肢、オプション",
+      "phonetic": ""
+    },
+    {
+      "id": 166,
+      "front": "retire",
+      "back": "退職する",
+      "phonetic": ""
+    },
+    {
+      "id": 167,
+      "front": "search",
+      "back": "捜索、検索、探す、検索する",
+      "phonetic": ""
+    },
+    {
+      "id": 168,
+      "front": "specific",
+      "back": "具体的な、特定の",
+      "phonetic": ""
+    },
+    {
+      "id": 169,
+      "front": "agricultural",
+      "back": "農業の",
+      "phonetic": ""
+    },
+    {
+      "id": 170,
+      "front": "complaint",
+      "back": "苦情、クレーム",
+      "phonetic": ""
+    },
+    {
+      "id": 171,
+      "front": "related",
+      "back": "関連した",
+      "phonetic": ""
+    },
+    {
+      "id": 172,
+      "front": "simply",
+      "back": "単純に、単に",
+      "phonetic": ""
+    },
+    {
+      "id": 173,
+      "front": "concerning",
+      "back": "～に関する",
+      "phonetic": ""
+    },
+    {
+      "id": 174,
+      "front": "reputation",
+      "back": "評判",
+      "phonetic": ""
+    },
+    {
+      "id": 175,
+      "front": "ability",
+      "back": "能力",
+      "phonetic": ""
+    },
+    {
+      "id": 176,
+      "front": "arrival",
+      "back": "到着",
+      "phonetic": ""
+    },
+    {
+      "id": 177,
+      "front": "familiar",
+      "back": "よく知っている、おなじみの",
+      "phonetic": ""
+    },
+    {
+      "id": 178,
+      "front": "ideal",
+      "back": "理想的な",
+      "phonetic": ""
+    },
+    {
+      "id": 179,
+      "front": "maintain",
+      "back": "維持する、主張する",
+      "phonetic": ""
+    },
+    {
+      "id": 180,
+      "front": "landscaping",
+      "back": "造園",
+      "phonetic": ""
+    },
+    {
+      "id": 181,
+      "front": "significant",
+      "back": "かなりの、大幅な、重要な",
+      "phonetic": ""
+    },
+    {
+      "id": 182,
+      "front": "occasion",
+      "back": "特別な行事(何かが起こる)時、好機",
+      "phonetic": ""
+    },
+    {
+      "id": 183,
+      "front": "advanced",
+      "back": "進んだ、上級の、高度な",
+      "phonetic": ""
+    },
+    {
+      "id": 184,
+      "front": "alternative",
+      "back": "代わりの、代案",
+      "phonetic": ""
+    },
+    {
+      "id": 185,
+      "front": "confident",
+      "back": "確信している、自信がある",
+      "phonetic": ""
+    },
+    {
+      "id": 186,
+      "front": "initial",
+      "back": "初めの、当初の",
+      "phonetic": ""
+    },
+    {
+      "id": 187,
+      "front": "separate",
+      "back": "分かれた、別々の、分ける",
+      "phonetic": ""
+    },
+    {
+      "id": 188,
+      "front": "concern",
+      "back": "心配、懸念、関心事",
+      "phonetic": ""
+    },
+    {
+      "id": 189,
+      "front": "environment",
+      "back": "環境",
+      "phonetic": ""
+    },
+    {
+      "id": 190,
+      "front": "operate",
+      "back": "操作する、運営する",
+      "phonetic": ""
+    },
+    {
+      "id": 191,
+      "front": "brief",
+      "back": "短い",
+      "phonetic": ""
+    },
+    {
+      "id": 192,
+      "front": "overall",
+      "back": "全体の、全体として",
+      "phonetic": ""
+    },
+    {
+      "id": 193,
+      "front": "achieve",
+      "back": "達成する",
+      "phonetic": ""
+    },
+    {
+      "id": 194,
+      "front": "basis",
+      "back": "ベース、基準、根拠",
+      "phonetic": ""
+    },
+    {
+      "id": 195,
+      "front": "delighted",
+      "back": "とても喜んでいる",
+      "phonetic": ""
+    },
+    {
+      "id": 196,
+      "front": "obtain",
+      "back": "得る、取得する",
+      "phonetic": ""
+    },
+    {
+      "id": 197,
+      "front": "properly",
+      "back": "ちゃんと、適切に",
+      "phonetic": ""
+    },
+    {
+      "id": 198,
+      "front": "suitable",
+      "back": "ふさわしい、適切な",
+      "phonetic": ""
+    },
+    {
+      "id": 199,
+      "front": "finalize",
+      "back": "取りまとめる、仕上げる、最終決定する",
+      "phonetic": ""
+    },
+    {
+      "id": 200,
+      "front": "generous",
+      "back": "寛大な、気前のよい",
+      "phonetic": ""
+    },
+    {
+      "id": 201,
+      "front": "preparation",
+      "back": "準備、用意",
+      "phonetic": ""
+    },
+    {
+      "id": 202,
+      "front": "duty",
+      "back": "任務、職務、関税",
+      "phonetic": ""
+    },
+    {
+      "id": 203,
+      "front": "earn",
+      "back": "得る、もたらす",
+      "phonetic": ""
+    },
+    {
+      "id": 204,
+      "front": "willing",
+      "back": "～することを嫌がらない、～する気がある",
+      "phonetic": ""
+    },
+    {
+      "id": 205,
+      "front": "worth",
+      "back": "価値がある",
+      "phonetic": ""
+    },
+    {
+      "id": 206,
+      "front": "fund",
+      "back": "資金を提供する、資金、基金",
+      "phonetic": ""
+    },
+    {
+      "id": 207,
+      "front": "particularly",
+      "back": "特に",
+      "phonetic": ""
+    },
+    {
+      "id": 208,
+      "front": "aspect",
+      "back": "面、局面",
+      "phonetic": ""
+    },
+    {
+      "id": 209,
+      "front": "hesitate",
+      "back": "ためらう",
+      "phonetic": ""
+    },
+    {
+      "id": 210,
+      "front": "involved",
+      "back": "関わった",
+      "phonetic": ""
+    },
+    {
+      "id": 211,
+      "front": "regularly",
+      "back": "定期的に",
+      "phonetic": ""
+    },
+    {
+      "id": 212,
+      "front": "shortly",
+      "back": "じきに、まもなく",
+      "phonetic": ""
+    },
+    {
+      "id": 213,
+      "front": "deposit",
+      "back": "頭金、敷金、保証金、預け入れる",
+      "phonetic": ""
+    },
+    {
+      "id": 214,
+      "front": "contain",
+      "back": "含む、所有する",
+      "phonetic": ""
+    },
+    {
+      "id": 215,
+      "front": "content",
+      "back": "内容、中身、満足している",
+      "phonetic": ""
+    },
+    {
+      "id": 216,
+      "front": "proof",
+      "back": "証拠、証明",
+      "phonetic": ""
+    },
+    {
+      "id": 217,
+      "front": "affect",
+      "back": "影響する",
+      "phonetic": ""
+    },
+    {
+      "id": 218,
+      "front": "recognize",
+      "back": "(業績等を)認める、(人を)称える、識別する",
+      "phonetic": ""
+    },
+    {
+      "id": 219,
+      "front": "represent",
+      "back": "代表を務める、相当する、表す",
+      "phonetic": ""
+    },
+    {
+      "id": 220,
+      "front": "transfer",
+      "back": "転勤させる(する)、移動させる(する)、転勤、移動",
+      "phonetic": ""
+    },
+    {
+      "id": 221,
+      "front": "automatically",
+      "back": "自動的に",
+      "phonetic": ""
+    },
+    {
+      "id": 222,
+      "front": "destination",
+      "back": "目的地、行き先",
+      "phonetic": ""
+    },
+    {
+      "id": 223,
+      "front": "grant",
+      "back": "補助金、助成金、与える、許可する",
+      "phonetic": ""
+    },
+    {
+      "id": 224,
+      "front": "publish",
+      "back": "出版する",
+      "phonetic": ""
+    },
+    {
+      "id": 225,
+      "front": "accompany",
+      "back": "添付する、同行する",
+      "phonetic": ""
+    },
+    {
+      "id": 226,
+      "front": "extremely",
+      "back": "きわめて、非常に",
+      "phonetic": ""
+    },
+    {
+      "id": 227,
+      "front": "institution",
+      "back": "機関、団体、しきたり",
+      "phonetic": ""
+    },
+    {
+      "id": 228,
+      "front": "accurate",
+      "back": "正確な",
+      "phonetic": ""
+    },
+    {
+      "id": 229,
+      "front": "compete",
+      "back": "競う",
+      "phonetic": ""
+    },
+    {
+      "id": 230,
+      "front": "emphasize",
+      "back": "強調する",
+      "phonetic": ""
+    },
+    {
+      "id": 231,
+      "front": "aware",
+      "back": "気付いて",
+      "phonetic": ""
+    },
+    {
+      "id": 232,
+      "front": "crowded",
+      "back": "混雑した",
+      "phonetic": ""
+    },
+    {
+      "id": 233,
+      "front": "praise",
+      "back": "ほめる、称賛",
+      "phonetic": ""
+    },
+    {
+      "id": 234,
+      "front": "valuable",
+      "back": "貴重な",
+      "phonetic": ""
+    },
+    {
+      "id": 235,
+      "front": "explore",
+      "back": "調査する、探索する",
+      "phonetic": ""
+    },
+    {
+      "id": 236,
+      "front": "found",
+      "back": "設立する、創立する",
+      "phonetic": ""
+    },
+    {
+      "id": 237,
+      "front": "impact",
+      "back": "影響",
+      "phonetic": ""
+    },
+    {
+      "id": 238,
+      "front": "assure",
+      "back": "保証する、請け合う",
+      "phonetic": ""
+    },
+    {
+      "id": 239,
+      "front": "cooperation",
+      "back": "協力",
+      "phonetic": ""
+    },
+    {
+      "id": 240,
+      "front": "popularity",
+      "back": "人気",
+      "phonetic": ""
+    },
+    {
+      "id": 241,
+      "front": "permit",
+      "back": "許可証、許可する",
+      "phonetic": ""
+    },
+    {
+      "id": 242,
+      "front": "solve",
+      "back": "解決する",
+      "phonetic": ""
+    },
+    {
+      "id": 243,
+      "front": "neighborhood",
+      "back": "近所、地域",
+      "phonetic": ""
+    },
+    {
+      "id": 244,
+      "front": "permanent",
+      "back": "常設の、常雇用の、永久の",
+      "phonetic": ""
+    },
+    {
+      "id": 245,
+      "front": "regret",
+      "back": "残念に思う",
+      "phonetic": ""
+    },
+    {
+      "id": 246,
+      "front": "slightly",
+      "back": "わずかに、少し",
+      "phonetic": ""
+    },
+    {
+      "id": 247,
+      "front": "complicated",
+      "back": "複雑な",
+      "phonetic": ""
+    },
+    {
+      "id": 248,
+      "front": "factor",
+      "back": "要因、要素",
+      "phonetic": ""
+    },
+    {
+      "id": 249,
+      "front": "favorable",
+      "back": "好意的な、有利な",
+      "phonetic": ""
+    },
+    {
+      "id": 250,
+      "front": "guarantee",
+      "back": "保証する、保証",
+      "phonetic": ""
+    },
+    {
+      "id": 251,
+      "front": "priority",
+      "back": "優先順位、優先事項",
+      "phonetic": ""
+    },
+    {
+      "id": 252,
+      "front": "relatively",
+      "back": "比較的",
+      "phonetic": ""
+    },
+    {
+      "id": 253,
+      "front": "resource",
+      "back": "資源",
+      "phonetic": ""
+    },
+    {
+      "id": 254,
+      "front": "divide",
+      "back": "分ける",
+      "phonetic": ""
+    },
+    {
+      "id": 255,
+      "front": "native",
+      "back": "出身の、出身の人",
+      "phonetic": ""
+    },
+    {
+      "id": 256,
+      "front": "afford",
+      "back": "～する余裕がある",
+      "phonetic": ""
+    },
+    {
+      "id": 257,
+      "front": "income",
+      "back": "収入",
+      "phonetic": ""
+    },
+    {
+      "id": 258,
+      "front": "occur",
+      "back": "起こる、発生する、行われる",
+      "phonetic": ""
+    },
+    {
+      "id": 259,
+      "front": "saving",
+      "back": "値引き、貯蓄、節約",
+      "phonetic": ""
+    },
+    {
+      "id": 260,
+      "front": "findings",
+      "back": "(研究・調査の)結果、わかったこと",
+      "phonetic": ""
+    },
+    {
+      "id": 261,
+      "front": "locate",
+      "back": "見つける",
+      "phonetic": ""
+    },
+    {
+      "id": 262,
+      "front": "postpone",
+      "back": "延期する",
+      "phonetic": ""
+    },
+    {
+      "id": 263,
+      "front": "preserve",
+      "back": "保護する、保存する、保護区",
+      "phonetic": ""
+    },
+    {
+      "id": 264,
+      "front": "prove",
+      "back": "わかる、判明する、証明する",
+      "phonetic": ""
+    },
+    {
+      "id": 265,
+      "front": "exact",
+      "back": "正確な",
+      "phonetic": ""
+    },
+    {
+      "id": 266,
+      "front": "gain",
+      "back": "得る、増加、利益",
+      "phonetic": ""
+    },
+    {
+      "id": 267,
+      "front": "labor",
+      "back": "労働、労働者",
+      "phonetic": ""
+    },
+    {
+      "id": 268,
+      "front": "regard",
+      "back": "みなす、評価する、点",
+      "phonetic": ""
+    },
+    {
+      "id": 269,
+      "front": "closely",
+      "back": "密に、注意深く",
+      "phonetic": ""
+    },
+    {
+      "id": 270,
+      "front": "deserve",
+      "back": "値する",
+      "phonetic": ""
+    },
+    {
+      "id": 271,
+      "front": "identify",
+      "back": "特定する",
+      "phonetic": ""
+    },
+    {
+      "id": 272,
+      "front": "promising",
+      "back": "有望な",
+      "phonetic": ""
+    },
+    {
+      "id": 273,
+      "front": "analyze",
+      "back": "分析する",
+      "phonetic": ""
+    },
+    {
+      "id": 274,
+      "front": "commission",
+      "back": "委託する、委任する、委員会、歩合",
+      "phonetic": ""
+    },
+    {
+      "id": 275,
+      "front": "committed",
+      "back": "熱心に取り組む、献身的な",
+      "phonetic": ""
+    },
+    {
+      "id": 276,
+      "front": "comparison",
+      "back": "比較",
+      "phonetic": ""
+    },
+    {
+      "id": 277,
+      "front": "component",
+      "back": "部品",
+      "phonetic": ""
+    },
+    {
+      "id": 278,
+      "front": "enable",
+      "back": "可能にする",
+      "phonetic": ""
+    },
+    {
+      "id": 279,
+      "front": "enjoyable",
+      "back": "楽しい",
+      "phonetic": ""
+    },
+    {
+      "id": 280,
+      "front": "existing",
+      "back": "従来の、既存の",
+      "phonetic": ""
+    },
+    {
+      "id": 281,
+      "front": "proceed",
+      "back": "進む",
+      "phonetic": ""
+    },
+    {
+      "id": 282,
+      "front": "prevent",
+      "back": "防ぐ、阻む",
+      "phonetic": ""
+    },
+    {
+      "id": 283,
+      "front": "alike",
+      "back": "同様に、よく似た",
+      "phonetic": ""
+    },
+    {
+      "id": 284,
+      "front": "appoint",
+      "back": "指名する、任命する",
+      "phonetic": ""
+    },
+    {
+      "id": 285,
+      "front": "fairly",
+      "back": "かなり",
+      "phonetic": ""
+    },
+    {
+      "id": 286,
+      "front": "calculate",
+      "back": "計算する",
+      "phonetic": ""
+    },
+    {
+      "id": 287,
+      "front": "occasionally",
+      "back": "時々",
+      "phonetic": ""
+    },
+    {
+      "id": 288,
+      "front": "practical",
+      "back": "実務の、実際の、実用的な",
+      "phonetic": ""
+    },
+    {
+      "id": 289,
+      "front": "strength",
+      "back": "強さ、強度、(液体等の)濃さ",
+      "phonetic": ""
+    },
+    {
+      "id": 290,
+      "front": "equally",
+      "back": "同じように、均等に",
+      "phonetic": ""
+    },
+    {
+      "id": 291,
+      "front": "informal",
+      "back": "非公式の、カジュアルな",
+      "phonetic": ""
+    },
+    {
+      "id": 292,
+      "front": "lately",
+      "back": "最近、この頃",
+      "phonetic": ""
+    },
+    {
+      "id": 293,
+      "front": "profession",
+      "back": "専門的職業",
+      "phonetic": ""
+    },
+    {
+      "id": 294,
+      "front": "supervisor",
+      "back": "上司、責任者",
+      "phonetic": ""
+    },
+    {
+      "id": 295,
+      "front": "ensure",
+      "back": "保証する、請け合う",
+      "phonetic": ""
+    },
+    {
+      "id": 296,
+      "front": "definitely",
+      "back": "間違いなく、絶対に",
+      "phonetic": ""
+    },
+    {
+      "id": 297,
+      "front": "eligible",
+      "back": "資格がある",
+      "phonetic": ""
+    },
+    {
+      "id": 298,
+      "front": "complimentaly",
+      "back": "無料の",
+      "phonetic": ""
+    },
+    {
+      "id": 299,
+      "front": "revise",
+      "back": "修正する、見直す",
+      "phonetic": ""
+    },
+    {
+      "id": 300,
+      "front": "track",
+      "back": "追跡する、線路、走路",
+      "phonetic": ""
+    },
+    {
+      "id": 301,
+      "front": "administrative",
+      "back": "管理の",
+      "phonetic": ""
+    },
+    {
+      "id": 302,
+      "front": "retail",
+      "back": "小売り",
+      "phonetic": ""
+    },
+    {
+      "id": 303,
+      "front": "inventory",
+      "back": "在庫(表)、棚卸",
+      "phonetic": ""
+    },
+    {
+      "id": 304,
+      "front": "extensive",
+      "back": "詳細な、幅広い、大規模な",
+      "phonetic": ""
+    },
+    {
+      "id": 305,
+      "front": "promotional",
+      "back": "販売促進用の、販促の",
+      "phonetic": ""
+    },
+    {
+      "id": 306,
+      "front": "catering",
+      "back": "仕出し、出前、ケータリング",
+      "phonetic": ""
+    },
+    {
+      "id": 307,
+      "front": "assign",
+      "back": "割り当てる、任命する",
+      "phonetic": ""
+    },
+    {
+      "id": 308,
+      "front": "imply",
+      "back": "ほのめかす、暗示する",
+      "phonetic": ""
+    },
+    {
+      "id": 309,
+      "front": "banquet",
+      "back": "夕食会",
+      "phonetic": ""
+    },
+    {
+      "id": 310,
+      "front": "valid",
+      "back": "有効な",
+      "phonetic": ""
+    },
+    {
+      "id": 311,
+      "front": "affordable",
+      "back": "手ごろな",
+      "phonetic": ""
+    },
+    {
+      "id": 312,
+      "front": "certificate",
+      "back": "認定証、修了証",
+      "phonetic": ""
+    },
+    {
+      "id": 313,
+      "front": "innovative",
+      "back": "革新的な",
+      "phonetic": ""
+    },
+    {
+      "id": 314,
+      "front": "assembly",
+      "back": "組立、集会",
+      "phonetic": ""
+    },
+    {
+      "id": 315,
+      "front": "install",
+      "back": "設置する、導入する、(プログラム等を)インストールする",
+      "phonetic": ""
+    },
+    {
+      "id": 316,
+      "front": "appropriate",
+      "back": "適切な、適した",
+      "phonetic": ""
+    },
+    {
+      "id": 317,
+      "front": "ingredient",
+      "back": "(料理の)材料",
+      "phonetic": ""
+    },
+    {
+      "id": 318,
+      "front": "prior",
+      "back": "前の",
+      "phonetic": ""
+    },
+    {
+      "id": 319,
+      "front": "merger",
+      "back": "合併、統合",
+      "phonetic": ""
+    },
+    {
+      "id": 320,
+      "front": "inn",
+      "back": "宿、ホテル",
+      "phonetic": ""
+    },
+    {
+      "id": 321,
+      "front": "equip",
+      "back": "備え付ける、装備する",
+      "phonetic": ""
+    },
+    {
+      "id": 322,
+      "front": "lease",
+      "back": "賃貸借(契約)、賃貸借する",
+      "phonetic": ""
+    },
+    {
+      "id": 323,
+      "front": "defective",
+      "back": "欠陥のある、不良の",
+      "phonetic": ""
+    },
+    {
+      "id": 324,
+      "front": "quarterly",
+      "back": "年に4回の、四半期ごとの、副年に4回",
+      "phonetic": ""
+    },
+    {
+      "id": 325,
+      "front": "extended",
+      "back": "長期の、長時間の",
+      "phonetic": ""
+    },
+    {
+      "id": 326,
+      "front": "architect",
+      "back": "建築家",
+      "phonetic": ""
+    },
+    {
+      "id": 327,
+      "front": "grocery",
+      "back": "食品雑貨の、食品雑貨",
+      "phonetic": ""
+    },
+    {
+      "id": 328,
+      "front": "sculpture",
+      "back": "彫刻",
+      "phonetic": ""
+    },
+    {
+      "id": 329,
+      "front": "itinerary",
+      "back": "旅程表",
+      "phonetic": ""
+    },
+    {
+      "id": 330,
+      "front": "directory",
+      "back": "名簿",
+      "phonetic": ""
+    },
+    {
+      "id": 331,
+      "front": "expire",
+      "back": "期限が切れる",
+      "phonetic": ""
+    },
+    {
+      "id": 332,
+      "front": "vendor",
+      "back": "業者、露天商",
+      "phonetic": ""
+    },
+    {
+      "id": 333,
+      "front": "colleague",
+      "back": "同僚",
+      "phonetic": ""
+    },
+    {
+      "id": 334,
+      "front": "relocate",
+      "back": "移転させる、引っ越す",
+      "phonetic": ""
+    },
+    {
+      "id": 335,
+      "front": "remodel",
+      "back": "改築する、リフォームする",
+      "phonetic": ""
+    },
+    {
+      "id": 336,
+      "front": "consumer",
+      "back": "消費者",
+      "phonetic": ""
+    },
+    {
+      "id": 337,
+      "front": "inspect",
+      "back": "検査する",
+      "phonetic": ""
+    },
+    {
+      "id": 338,
+      "front": "numerous",
+      "back": "数多くの",
+      "phonetic": ""
+    },
+    {
+      "id": 339,
+      "front": "payroll",
+      "back": "給与、給与管理、賃金台帳",
+      "phonetic": ""
+    },
+    {
+      "id": 340,
+      "front": "qualified",
+      "back": "資格のある、適任の",
+      "phonetic": ""
+    },
+    {
+      "id": 341,
+      "front": "appliance",
+      "back": "電化製品",
+      "phonetic": ""
+    },
+    {
+      "id": 342,
+      "front": "competitive",
+      "back": "他に負けない、競争の激しい",
+      "phonetic": ""
+    },
+    {
+      "id": 343,
+      "front": "specialize",
+      "back": "専門とする",
+      "phonetic": ""
+    },
+    {
+      "id": 344,
+      "front": "questionnaire",
+      "back": "アンケート用紙",
+      "phonetic": ""
+    },
+    {
+      "id": 345,
+      "front": "approximately",
+      "back": "おおよそ、約",
+      "phonetic": ""
+    },
+    {
+      "id": 346,
+      "front": "contribute",
+      "back": "貢献する、寄付する",
+      "phonetic": ""
+    },
+    {
+      "id": 347,
+      "front": "productivity",
+      "back": "生産性",
+      "phonetic": ""
+    },
+    {
+      "id": 348,
+      "front": "promptly",
+      "back": "すばやく、(時刻)きっかりに、即座に",
+      "phonetic": ""
+    },
+    {
+      "id": 349,
+      "front": "strategy",
+      "back": "戦略",
+      "phonetic": ""
+    },
+    {
+      "id": 350,
+      "front": "dedicated",
+      "back": "献身的な、専用の、特化した",
+      "phonetic": ""
+    },
+    {
+      "id": 351,
+      "front": "exceptional",
+      "back": "並外れた、非常に素晴らしい",
+      "phonetic": ""
+    },
+    {
+      "id": 352,
+      "front": "luncheon",
+      "back": "昼食会",
+      "phonetic": ""
+    },
+    {
+      "id": 353,
+      "front": "exceed",
+      "back": "超える",
+      "phonetic": ""
+    },
+    {
+      "id": 354,
+      "front": "multiple",
+      "back": "複数の",
+      "phonetic": ""
+    },
+    {
+      "id": 355,
+      "front": "specify",
+      "back": "明確に述べる、明記する",
+      "phonetic": ""
+    },
+    {
+      "id": 356,
+      "front": "venue",
+      "back": "会場",
+      "phonetic": ""
+    },
+    {
+      "id": 357,
+      "front": "evaluate",
+      "back": "評価する",
+      "phonetic": ""
+    },
+    {
+      "id": 358,
+      "front": "circulation",
+      "back": "発行部数、流通、(図書館の)貸出",
+      "phonetic": ""
+    },
+    {
+      "id": 359,
+      "front": "completion",
+      "back": "完了、終了",
+      "phonetic": ""
+    },
+    {
+      "id": 360,
+      "front": "relevant",
+      "back": "関連した",
+      "phonetic": ""
+    },
+    {
+      "id": 361,
+      "front": "thorough",
+      "back": "徹底的な",
+      "phonetic": ""
+    },
+    {
+      "id": 362,
+      "front": "via",
+      "back": "～を経由して",
+      "phonetic": ""
+    },
+    {
+      "id": 363,
+      "front": "accommodations",
+      "back": "宿泊施設",
+      "phonetic": ""
+    },
+    {
+      "id": 364,
+      "front": "flexible",
+      "back": "柔軟な、フレキシブルな",
+      "phonetic": ""
+    },
+    {
+      "id": 365,
+      "front": "predict",
+      "back": "予測する",
+      "phonetic": ""
+    },
+    {
+      "id": 366,
+      "front": "preference",
+      "back": "好み、希望",
+      "phonetic": ""
+    },
+    {
+      "id": 367,
+      "front": "substantial",
+      "back": "かなりの、頑丈な",
+      "phonetic": ""
+    },
+    {
+      "id": 368,
+      "front": "accessible",
+      "back": "到達できる、利用できる",
+      "phonetic": ""
+    },
+    {
+      "id": 369,
+      "front": "coverage",
+      "back": "報道、(保険の)補償",
+      "phonetic": ""
+    },
+    {
+      "id": 370,
+      "front": "generate",
+      "back": "生み出す",
+      "phonetic": ""
+    },
+    {
+      "id": 371,
+      "front": "refreshment",
+      "back": "軽い飲食物",
+      "phonetic": ""
+    },
+    {
+      "id": 372,
+      "front": "reliable",
+      "back": "信頼できる、頼りになる",
+      "phonetic": ""
+    },
+    {
+      "id": 373,
+      "front": "revenue",
+      "back": "収入",
+      "phonetic": ""
+    },
+    {
+      "id": 374,
+      "front": "fund-raising",
+      "back": "資金調達のための、慈善の",
+      "phonetic": ""
+    },
+    {
+      "id": 375,
+      "front": "accomplished",
+      "back": "熟達した、スキルの高い",
+      "phonetic": ""
+    },
+    {
+      "id": 376,
+      "front": "acquire",
+      "back": "買収する、得る、獲得する",
+      "phonetic": ""
+    },
+    {
+      "id": 377,
+      "front": "accordingly",
+      "back": "それに応じて、結果として",
+      "phonetic": ""
+    },
+    {
+      "id": 378,
+      "front": "critic",
+      "back": "評論家、批評家",
+      "phonetic": ""
+    },
+    {
+      "id": 379,
+      "front": "highlight",
+      "back": "強調する、スポットを当てる、見どころ",
+      "phonetic": ""
+    },
+    {
+      "id": 380,
+      "front": "profile",
+      "back": "人物紹介する、プロフィール",
+      "phonetic": ""
+    },
+    {
+      "id": 381,
+      "front": "encounter",
+      "back": "(問題や困難に)直面する、遭う、出くわす",
+      "phonetic": ""
+    },
+    {
+      "id": 382,
+      "front": "luxury",
+      "back": "高級な、高級、ぜいたく",
+      "phonetic": ""
+    },
+    {
+      "id": 383,
+      "front": "prohibit",
+      "back": "禁止する",
+      "phonetic": ""
+    },
+    {
+      "id": 384,
+      "front": "resolve",
+      "back": "解決する",
+      "phonetic": ""
+    },
+    {
+      "id": 385,
+      "front": "restore",
+      "back": "復旧させる、取り戻す、修復する",
+      "phonetic": ""
+    },
+    {
+      "id": 386,
+      "front": "surrounding",
+      "back": "周辺の",
+      "phonetic": ""
+    },
+    {
+      "id": 387,
+      "front": "anticipated",
+      "back": "待ち望まれた",
+      "phonetic": ""
+    },
+    {
+      "id": 388,
+      "front": "consistently",
+      "back": "常に、変わらず",
+      "phonetic": ""
+    },
+    {
+      "id": 389,
+      "front": "phase",
+      "back": "段階",
+      "phonetic": ""
+    },
+    {
+      "id": 390,
+      "front": "manuscript",
+      "back": "原稿",
+      "phonetic": ""
+    },
+    {
+      "id": 391,
+      "front": "premises",
+      "back": "敷地",
+      "phonetic": ""
+    },
+    {
+      "id": 392,
+      "front": "utility",
+      "back": "公共料金、公共サービス",
+      "phonetic": ""
+    },
+    {
+      "id": 393,
+      "front": "enthusiastic",
+      "back": "熱心な、関心が高い、乗り気である",
+      "phonetic": ""
+    },
+    {
+      "id": 394,
+      "front": "packet",
+      "back": "小包、袋",
+      "phonetic": ""
+    },
+    {
+      "id": 395,
+      "front": "retain",
+      "back": "保管する",
+      "phonetic": ""
+    },
+    {
+      "id": 396,
+      "front": "belongings",
+      "back": "所持品、所有物",
+      "phonetic": ""
+    },
+    {
+      "id": 397,
+      "front": "conservation",
+      "back": "節約、環境保護",
+      "phonetic": ""
+    },
+    {
+      "id": 398,
+      "front": "urban",
+      "back": "都会の、都市の、都会での",
+      "phonetic": ""
+    },
+    {
+      "id": 399,
+      "front": "workforce",
+      "back": "全従業員",
+      "phonetic": ""
+    },
+    {
+      "id": 400,
+      "front": "biography",
+      "back": "人物紹介、伝記",
+      "phonetic": ""
+    },
+    {
+      "id": 401,
+      "front": "ownership",
+      "back": "所有(権)、所有者であること",
+      "phonetic": ""
+    },
+    {
+      "id": 402,
+      "front": "pastly",
+      "back": "焼き菓子",
+      "phonetic": ""
+    },
+    {
+      "id": 403,
+      "front": "workload",
+      "back": "仕事量",
+      "phonetic": ""
+    },
+    {
+      "id": 404,
+      "front": "sufficient",
+      "back": "十分な",
+      "phonetic": ""
+    },
+    {
+      "id": 405,
+      "front": "characteristic",
+      "back": "特徴、特徴的な",
+      "phonetic": ""
+    },
+    {
+      "id": 406,
+      "front": "combined",
+      "back": "共同の、連合の",
+      "phonetic": ""
+    },
+    {
+      "id": 407,
+      "front": "conclude",
+      "back": "終わる、終える、結論を出す",
+      "phonetic": ""
+    },
+    {
+      "id": 408,
+      "front": "associate",
+      "back": "関連付ける、同僚、アシスタント、アシスタントの",
+      "phonetic": ""
+    },
+    {
+      "id": 409,
+      "front": "conflict",
+      "back": "衝突、対立",
+      "phonetic": ""
+    },
+    {
+      "id": 410,
+      "front": "investment",
+      "back": "投資",
+      "phonetic": ""
+    },
+    {
+      "id": 411,
+      "front": "physician",
+      "back": "医師",
+      "phonetic": ""
+    },
+    {
+      "id": 412,
+      "front": "partial",
+      "back": "部分的な、一部の",
+      "phonetic": ""
+    },
+    {
+      "id": 413,
+      "front": "resume",
+      "back": "再開する",
+      "phonetic": ""
+    },
+    {
+      "id": 414,
+      "front": "dealership",
+      "back": "販売特約店",
+      "phonetic": ""
+    },
+    {
+      "id": 415,
+      "front": "garment",
+      "back": "衣料品",
+      "phonetic": ""
+    },
+    {
+      "id": 416,
+      "front": "implement",
+      "back": "実行する、実施する",
+      "phonetic": ""
+    },
+    {
+      "id": 417,
+      "front": "paycheck",
+      "back": "給与、給与小切手",
+      "phonetic": ""
+    },
+    {
+      "id": 418,
+      "front": "substitute",
+      "back": "～を代わりに用いる、代わりを務める人、代用品",
+      "phonetic": ""
+    },
+    {
+      "id": 419,
+      "front": "typically",
+      "back": "通常、典型的に",
+      "phonetic": ""
+    },
+    {
+      "id": 420,
+      "front": "authorize",
+      "back": "公認する、権限を与える",
+      "phonetic": ""
+    },
+    {
+      "id": 421,
+      "front": "comparable",
+      "back": "同等の、匹敵する、類似の",
+      "phonetic": ""
+    },
+    {
+      "id": 422,
+      "front": "faculty",
+      "back": "(大学の)教員、学部",
+      "phonetic": ""
+    },
+    {
+      "id": 423,
+      "front": "initiative",
+      "back": "新しい計画、主導権",
+      "phonetic": ""
+    },
+    {
+      "id": 424,
+      "front": "postage",
+      "back": "郵便料金",
+      "phonetic": ""
+    },
+    {
+      "id": 425,
+      "front": "generally",
+      "back": "おおむね、通常、一般的に",
+      "phonetic": ""
+    },
+    {
+      "id": 426,
+      "front": "occupied",
+      "back": "(部屋・座席・ベッド等が)使われている",
+      "phonetic": ""
+    },
+    {
+      "id": 427,
+      "front": "solid",
+      "back": "確かな、信頼できる",
+      "phonetic": ""
+    },
+    {
+      "id": 428,
+      "front": "attempt",
+      "back": "試み、試みる",
+      "phonetic": ""
+    },
+    {
+      "id": 429,
+      "front": "authority",
+      "back": "権限、権力、権威、当局",
+      "phonetic": ""
+    },
+    {
+      "id": 430,
+      "front": "domestic",
+      "back": "国内の",
+      "phonetic": ""
+    },
+    {
+      "id": 431,
+      "front": "permission",
+      "back": "許可",
+      "phonetic": ""
+    },
+    {
+      "id": 432,
+      "front": "presence",
+      "back": "存在感、出席",
+      "phonetic": ""
+    },
+    {
+      "id": 433,
+      "front": "rapidly",
+      "back": "急速に",
+      "phonetic": ""
+    },
+    {
+      "id": 434,
+      "front": "relief",
+      "back": "安堵感、(苦痛・悩み等の)緩和",
+      "phonetic": ""
+    },
+    {
+      "id": 435,
+      "front": "translate",
+      "back": "翻訳する",
+      "phonetic": ""
+    },
+    {
+      "id": 436,
+      "front": "circumstance",
+      "back": "状況",
+      "phonetic": ""
+    },
+    {
+      "id": 437,
+      "front": "contrary",
+      "back": "正反対の、正反対",
+      "phonetic": ""
+    },
+    {
+      "id": 438,
+      "front": "eventually",
+      "back": "最終的には、結局",
+      "phonetic": ""
+    },
+    {
+      "id": 439,
+      "front": "expose",
+      "back": "さらす、触れさせる、暴露する",
+      "phonetic": ""
+    },
+    {
+      "id": 440,
+      "front": "panel",
+      "back": "グループ、パネル",
+      "phonetic": ""
+    },
+    {
+      "id": 441,
+      "front": "portion",
+      "back": "部分、一人分の食事",
+      "phonetic": ""
+    },
+    {
+      "id": 442,
+      "front": "primary",
+      "back": "主な",
+      "phonetic": ""
+    },
+    {
+      "id": 443,
+      "front": "remark",
+      "back": "言葉、コメント、意見、コメントする",
+      "phonetic": ""
+    },
+    {
+      "id": 444,
+      "front": "commonly",
+      "back": "一般に、通常、普通に",
+      "phonetic": ""
+    },
+    {
+      "id": 445,
+      "front": "consult",
+      "back": "(医者、弁護士等の専門家に)相談する",
+      "phonetic": ""
+    },
+    {
+      "id": 446,
+      "front": "convert",
+      "back": "改造する、変える",
+      "phonetic": ""
+    },
+    {
+      "id": 447,
+      "front": "obligation",
+      "back": "義務",
+      "phonetic": ""
+    },
+    {
+      "id": 448,
+      "front": "resign",
+      "back": "辞職する、辞任する",
+      "phonetic": ""
+    },
+    {
+      "id": 449,
+      "front": "securely",
+      "back": "しっかりと、安全に",
+      "phonetic": ""
+    },
+    {
+      "id": 450,
+      "front": "strive",
+      "back": "懸命に努力する",
+      "phonetic": ""
+    },
+    {
+      "id": 451,
+      "front": "timeline",
+      "back": "予定表",
+      "phonetic": ""
+    },
+    {
+      "id": 452,
+      "front": "urge",
+      "back": "強く促す",
+      "phonetic": ""
+    },
+    {
+      "id": 453,
+      "front": "acknowledge",
+      "back": "(受け取ったことを)知らせる、認める",
+      "phonetic": ""
+    },
+    {
+      "id": 454,
+      "front": "diverse",
+      "back": "多種多様な、たくさんの種類の",
+      "phonetic": ""
+    },
+    {
+      "id": 455,
+      "front": "transaction",
+      "back": "取引",
+      "phonetic": ""
+    },
+    {
+      "id": 456,
+      "front": "lack",
+      "back": "不足、～が不足している",
+      "phonetic": ""
+    },
+    {
+      "id": 457,
+      "front": "essential",
+      "back": "最も重要な、必要不可欠な、本質的な",
+      "phonetic": ""
+    },
+    {
+      "id": 458,
+      "front": "majority",
+      "back": "大多数、大部分",
+      "phonetic": ""
+    },
+    {
+      "id": 459,
+      "front": "observe",
+      "back": "気付く、順守する、観察する",
+      "phonetic": ""
+    },
+    {
+      "id": 460,
+      "front": "possess",
+      "back": "(財産・所有物等として)持つ、所有する",
+      "phonetic": ""
+    },
+    {
+      "id": 461,
+      "front": "sharply",
+      "back": "急激に、はっきりと",
+      "phonetic": ""
+    },
+    {
+      "id": 462,
+      "front": "adjustment",
+      "back": "調整、調節",
+      "phonetic": ""
+    },
+    {
+      "id": 463,
+      "front": "aisle",
+      "back": "通路",
+      "phonetic": ""
+    },
+    {
+      "id": 464,
+      "front": "consist",
+      "back": "～から成る",
+      "phonetic": ""
+    },
+    {
+      "id": 465,
+      "front": "desirable",
+      "back": "望ましい",
+      "phonetic": ""
+    },
+    {
+      "id": 466,
+      "front": "heavily",
+      "back": "大量に、非常に頻繁に",
+      "phonetic": ""
+    },
+    {
+      "id": 467,
+      "front": "investigate",
+      "back": "調査する",
+      "phonetic": ""
+    },
+    {
+      "id": 468,
+      "front": "measurement",
+      "back": "寸法、測定",
+      "phonetic": ""
+    },
+    {
+      "id": 469,
+      "front": "urgent",
+      "back": "緊急の",
+      "phonetic": ""
+    },
+    {
+      "id": 470,
+      "front": "dispose",
+      "back": "処分する",
+      "phonetic": ""
+    },
+    {
+      "id": 471,
+      "front": "modify",
+      "back": "修正する",
+      "phonetic": ""
+    },
+    {
+      "id": 472,
+      "front": "prescription",
+      "back": "処方せん",
+      "phonetic": ""
+    },
+    {
+      "id": 473,
+      "front": "situated",
+      "back": "位置している",
+      "phonetic": ""
+    },
+    {
+      "id": 474,
+      "front": "surprisingly",
+      "back": "驚いたことに",
+      "phonetic": ""
+    },
+    {
+      "id": 475,
+      "front": "undergo",
+      "back": "(検査、修理等を)経験する、受ける",
+      "phonetic": ""
+    },
+    {
+      "id": 476,
+      "front": "considerably",
+      "back": "かなり",
+      "phonetic": ""
+    },
+    {
+      "id": 477,
+      "front": "eliminate",
+      "back": "取り除く、排除する",
+      "phonetic": ""
+    },
+    {
+      "id": 478,
+      "front": "exclusively",
+      "back": "限定で、独占的に",
+      "phonetic": ""
+    },
+    {
+      "id": 479,
+      "front": "preliminary",
+      "back": "仮の、暫定の、本番前の",
+      "phonetic": ""
+    },
+    {
+      "id": 480,
+      "front": "sophisticated",
+      "back": "洗練された、高性能の",
+      "phonetic": ""
+    },
+    {
+      "id": 481,
+      "front": "statistics",
+      "back": "統計、統計学",
+      "phonetic": ""
+    },
+    {
+      "id": 482,
+      "front": "vacant",
+      "back": "空の、空いた、欠員の",
+      "phonetic": ""
+    },
+    {
+      "id": 483,
+      "front": "evidence",
+      "back": "証拠、証明",
+      "phonetic": ""
+    },
+    {
+      "id": 484,
+      "front": "excursion",
+      "back": "お出かけ、小旅行",
+      "phonetic": ""
+    },
+    {
+      "id": 485,
+      "front": "ordinaly",
+      "back": "普通の、通常の",
+      "phonetic": ""
+    },
+    {
+      "id": 486,
+      "front": "reject",
+      "back": "却下する、拒否する",
+      "phonetic": ""
+    },
+    {
+      "id": 487,
+      "front": "tailor",
+      "back": "(ニーズや目的に合うように)合わせる、調整する",
+      "phonetic": ""
+    },
+    {
+      "id": 488,
+      "front": "assume",
+      "back": "引き受ける、思い込む、仮定する",
+      "phonetic": ""
+    },
+    {
+      "id": 489,
+      "front": "engagement",
+      "back": "約束",
+      "phonetic": ""
+    },
+    {
+      "id": 490,
+      "front": "fame",
+      "back": "名声",
+      "phonetic": ""
+    },
+    {
+      "id": 491,
+      "front": "modest",
+      "back": "少しの、高価ではない、謙虚な",
+      "phonetic": ""
+    },
+    {
+      "id": 492,
+      "front": "patent",
+      "back": "特許",
+      "phonetic": ""
+    },
+    {
+      "id": 493,
+      "front": "pursue",
+      "back": "追及する、追い求める",
+      "phonetic": ""
+    },
+    {
+      "id": 494,
+      "front": "allowance",
+      "back": "手当、小遣い、許容量",
+      "phonetic": ""
+    },
+    {
+      "id": 495,
+      "front": "crucial",
+      "back": "非常に重要な",
+      "phonetic": ""
+    },
+    {
+      "id": 496,
+      "front": "distinguished",
+      "back": "際立って優れた、傑出した",
+      "phonetic": ""
+    },
+    {
+      "id": 497,
+      "front": "disturb",
+      "back": "邪魔する、悩ませる",
+      "phonetic": ""
+    },
+    {
+      "id": 498,
+      "front": "fluent",
+      "back": "流ちょうな、堪能な",
+      "phonetic": ""
+    },
+    {
+      "id": 499,
+      "front": "fulfill",
+      "back": "満たす、果たす",
+      "phonetic": ""
+    },
+    {
+      "id": 500,
+      "front": "objective",
+      "back": "目的、目標",
+      "phonetic": ""
+    },
+    {
+      "id": 501,
+      "front": "restrict",
+      "back": "制限する",
+      "phonetic": ""
+    },
+    {
+      "id": 502,
+      "front": "steadily",
+      "back": "着実に",
+      "phonetic": ""
+    },
+    {
+      "id": 503,
+      "front": "adequate",
+      "back": "(要求を満たすのに)十分な、適切な",
+      "phonetic": ""
+    },
+    {
+      "id": 504,
+      "front": "assessment",
+      "back": "評価、見積もり",
+      "phonetic": ""
+    },
+    {
+      "id": 505,
+      "front": "attribute",
+      "back": "起因すると考える、おかげであるとする",
+      "phonetic": ""
+    },
+    {
+      "id": 506,
+      "front": "beforehand",
+      "back": "あらかじめ、事前に",
+      "phonetic": ""
+    },
+    {
+      "id": 507,
+      "front": "challenging",
+      "back": "(困難だが)やりがいのある",
+      "phonetic": ""
+    },
+    {
+      "id": 508,
+      "front": "endeavor",
+      "back": "努力、試み、努力する",
+      "phonetic": ""
+    },
+    {
+      "id": 509,
+      "front": "inspiring",
+      "back": "やる気が出るような、活気づける",
+      "phonetic": ""
+    },
+    {
+      "id": 510,
+      "front": "remarkable",
+      "back": "驚くべき、注目すべき",
+      "phonetic": ""
+    },
+    {
+      "id": 511,
+      "front": "measure",
+      "back": "対策、手段、測定する、評価する",
+      "phonetic": ""
+    },
+    {
+      "id": 512,
+      "front": "struggle",
+      "back": "奮闘する",
+      "phonetic": ""
+    },
+    {
+      "id": 513,
+      "front": "wage",
+      "back": "賃金",
+      "phonetic": ""
+    },
+    {
+      "id": 514,
+      "front": "adapt",
+      "back": "適応する、適応させる、改作する",
+      "phonetic": ""
+    },
+    {
+      "id": 515,
+      "front": "ambitious",
+      "back": "意意的な、野心的な",
+      "phonetic": ""
+    },
+    {
+      "id": 516,
+      "front": "capable",
+      "back": "能力がある",
+      "phonetic": ""
+    },
+    {
+      "id": 517,
+      "front": "consequence",
+      "back": "(～が招いた)結果",
+      "phonetic": ""
+    },
+    {
+      "id": 518,
+      "front": "impose",
+      "back": "課す、負わせる、強制する",
+      "phonetic": ""
+    },
+    {
+      "id": 519,
+      "front": "latter",
+      "back": "後者",
+      "phonetic": ""
+    },
+    {
+      "id": 520,
+      "front": "proudly",
+      "back": "誇らしげに、堂々と",
+      "phonetic": ""
+    },
+    {
+      "id": 521,
+      "front": "stable",
+      "back": "安定した",
+      "phonetic": ""
+    },
+    {
+      "id": 522,
+      "front": "transition",
+      "back": "移行、転身",
+      "phonetic": ""
+    },
+    {
+      "id": 523,
+      "front": "dependable",
+      "back": "信頼できる",
+      "phonetic": ""
+    },
+    {
+      "id": 524,
+      "front": "diligent",
+      "back": "勤勉な、まじめな",
+      "phonetic": ""
+    },
+    {
+      "id": 525,
+      "front": "illustrate",
+      "back": "(例や図表を使って)説明する",
+      "phonetic": ""
+    },
+    {
+      "id": 526,
+      "front": "independently",
+      "back": "単独で、独立して",
+      "phonetic": ""
+    },
+    {
+      "id": 527,
+      "front": "moderate",
+      "back": "ほどほどの、適度な",
+      "phonetic": ""
+    },
+    {
+      "id": 528,
+      "front": "outlook",
+      "back": "見通し、モノの見方",
+      "phonetic": ""
+    },
+    {
+      "id": 529,
+      "front": "precisely",
+      "back": "正確に",
+      "phonetic": ""
+    },
+    {
+      "id": 530,
+      "front": "concentrated",
+      "back": "集中的な、濃縮された",
+      "phonetic": ""
+    },
+    {
+      "id": 531,
+      "front": "ample",
+      "back": "十分な、あり余るほどの",
+      "phonetic": ""
+    },
+    {
+      "id": 532,
+      "front": "asset",
+      "back": "財産、役立つ人やモノ",
+      "phonetic": ""
+    },
+    {
+      "id": 533,
+      "front": "controversial",
+      "back": "議論を引き起こす、議論の的になる",
+      "phonetic": ""
+    },
+    {
+      "id": 534,
+      "front": "disappointing",
+      "back": "期待外れの、がっかりさせるような",
+      "phonetic": ""
+    },
+    {
+      "id": 535,
+      "front": "instrumental",
+      "back": "重要な役割を果たす",
+      "phonetic": ""
+    },
+    {
+      "id": 536,
+      "front": "interruption",
+      "back": "中断",
+      "phonetic": ""
+    },
+    {
+      "id": 537,
+      "front": "perspective",
+      "back": "観点、見方、考え方",
+      "phonetic": ""
+    },
+    {
+      "id": 538,
+      "front": "scope",
+      "back": "範囲、余地",
+      "phonetic": ""
+    },
+    {
+      "id": 539,
+      "front": "speculation",
+      "back": "推測、推量",
+      "phonetic": ""
+    },
+    {
+      "id": 540,
+      "front": "understaffed",
+      "back": "人手不足の",
+      "phonetic": ""
+    },
+    {
+      "id": 541,
+      "front": "rarely",
+      "back": "めったに～しない、まれに",
+      "phonetic": ""
+    },
+    {
+      "id": 542,
+      "front": "caution",
+      "back": "注意、警告、注意する、警告する",
+      "phonetic": ""
+    },
+    {
+      "id": 543,
+      "front": "legislation",
+      "back": "法律、法制化",
+      "phonetic": ""
+    },
+    {
+      "id": 544,
+      "front": "lumber",
+      "back": "材木、製材",
+      "phonetic": ""
+    },
+    {
+      "id": 545,
+      "front": "reverse",
+      "back": "反対の",
+      "phonetic": ""
+    },
+    {
+      "id": 546,
+      "front": "voluntary",
+      "back": "自主的な、任意の",
+      "phonetic": ""
+    },
+    {
+      "id": 547,
+      "front": "contractor",
+      "back": "請負業者、契約業者",
+      "phonetic": ""
+    },
+    {
+      "id": 548,
+      "front": "on-site",
+      "back": "社内の、現場の、その場で",
+      "phonetic": ""
+    },
+    {
+      "id": 549,
+      "front": "comprehensive",
+      "back": "総合的な、包括的な",
+      "phonetic": ""
+    },
+    {
+      "id": 550,
+      "front": "confidential",
+      "back": "機密の、秘密の",
+      "phonetic": ""
+    },
+    {
+      "id": 551,
+      "front": "expertise",
+      "back": "専門知識",
+      "phonetic": ""
+    },
+    {
+      "id": 552,
+      "front": "premier",
+      "back": "最高の、第一位の",
+      "phonetic": ""
+    },
+    {
+      "id": 553,
+      "front": "souvenir",
+      "back": "土産物",
+      "phonetic": ""
+    },
+    {
+      "id": 554,
+      "front": "rafting",
+      "back": "(いかだやゴムボートでの)川下り",
+      "phonetic": ""
+    },
+    {
+      "id": 555,
+      "front": "compartment",
+      "back": "一区画",
+      "phonetic": ""
+    },
+    {
+      "id": 556,
+      "front": "fabric",
+      "back": "生地、織物",
+      "phonetic": ""
+    },
+    {
+      "id": 557,
+      "front": "spacious",
+      "back": "広々とした、ゆったりした",
+      "phonetic": ""
+    },
+    {
+      "id": 558,
+      "front": "showcase",
+      "back": "披露する、お披露目の場、ショーケース",
+      "phonetic": ""
+    },
+    {
+      "id": 559,
+      "front": "commuter",
+      "back": "通勤者",
+      "phonetic": ""
+    },
+    {
+      "id": 560,
+      "front": "enhance",
+      "back": "向上させる、強化する",
+      "phonetic": ""
+    },
+    {
+      "id": 561,
+      "front": "freight",
+      "back": "貨物、輸送、輸送料、輸送する",
+      "phonetic": ""
+    },
+    {
+      "id": 562,
+      "front": "discontinued",
+      "back": "(製造・販売が)終了した",
+      "phonetic": ""
+    },
+    {
+      "id": 563,
+      "front": "mentoring",
+      "back": "メンター制度",
+      "phonetic": ""
+    },
+    {
+      "id": 564,
+      "front": "personalized",
+      "back": "個人に合わせた、名前入りの",
+      "phonetic": ""
+    },
+    {
+      "id": 565,
+      "front": "pharmacy",
+      "back": "薬局",
+      "phonetic": ""
+    },
+    {
+      "id": 566,
+      "front": "excerpt",
+      "back": "抜粋、引用",
+      "phonetic": ""
+    },
+    {
+      "id": 567,
+      "front": "publicize",
+      "back": "宣伝する",
+      "phonetic": ""
+    },
+    {
+      "id": 568,
+      "front": "tuition",
+      "back": "授業料",
+      "phonetic": ""
+    },
+    {
+      "id": 569,
+      "front": "compliance",
+      "back": "(法律・規則等の)順守",
+      "phonetic": ""
+    },
+    {
+      "id": 570,
+      "front": "clarify",
+      "back": "はっきりさせる、明確にする",
+      "phonetic": ""
+    },
+    {
+      "id": 571,
+      "front": "municipal",
+      "back": "市の、市営の",
+      "phonetic": ""
+    },
+    {
+      "id": 572,
+      "front": "respectively",
+      "back": "それぞれ",
+      "phonetic": ""
+    },
+    {
+      "id": 573,
+      "front": "durable",
+      "back": "耐久性がある、頑丈な",
+      "phonetic": ""
+    },
+    {
+      "id": 574,
+      "front": "recipient",
+      "back": "受取人、受賞者",
+      "phonetic": ""
+    },
+    {
+      "id": 575,
+      "front": "transit",
+      "back": "輸送",
+      "phonetic": ""
+    },
+    {
+      "id": 576,
+      "front": "verify",
+      "back": "確認する、検証する、認証する",
+      "phonetic": ""
+    },
+    {
+      "id": 577,
+      "front": "culinary",
+      "back": "料理の",
+      "phonetic": ""
+    },
+    {
+      "id": 578,
+      "front": "attire",
+      "back": "服装",
+      "phonetic": ""
+    },
+    {
+      "id": 579,
+      "front": "reimburse",
+      "back": "払い戻す",
+      "phonetic": ""
+    },
+    {
+      "id": 580,
+      "front": "courteous",
+      "back": "礼儀正しい",
+      "phonetic": ""
+    },
+    {
+      "id": 581,
+      "front": "furnished",
+      "back": "家具付きの",
+      "phonetic": ""
+    },
+    {
+      "id": 582,
+      "front": "craftspeople",
+      "back": "職人",
+      "phonetic": ""
+    },
+    {
+      "id": 583,
+      "front": "emerging",
+      "back": "新たに現れた、新興の",
+      "phonetic": ""
+    },
+    {
+      "id": 584,
+      "front": "enroll",
+      "back": "登録する、入会する、入学する",
+      "phonetic": ""
+    },
+    {
+      "id": 585,
+      "front": "proficiency",
+      "back": "熟達、スキルの高さ、高い能力",
+      "phonetic": ""
+    },
+    {
+      "id": 586,
+      "front": "scenic",
+      "back": "眺めがいい、景色の",
+      "phonetic": ""
+    },
+    {
+      "id": 587,
+      "front": "state-of-the-art",
+      "back": "最新式の、最先端の",
+      "phonetic": ""
+    },
+    {
+      "id": 588,
+      "front": "cuisine",
+      "back": "料理",
+      "phonetic": ""
+    },
+    {
+      "id": 589,
+      "front": "acclaimed",
+      "back": "絶賛されている",
+      "phonetic": ""
+    },
+    {
+      "id": 590,
+      "front": "certified",
+      "back": "有資格の、公認の",
+      "phonetic": ""
+    },
+    {
+      "id": 591,
+      "front": "resistant",
+      "back": "耐えられる、抵抗力のある",
+      "phonetic": ""
+    },
+    {
+      "id": 592,
+      "front": "superb",
+      "back": "素晴らしい",
+      "phonetic": ""
+    },
+    {
+      "id": 593,
+      "front": "informative",
+      "back": "有益な",
+      "phonetic": ""
+    },
+    {
+      "id": 594,
+      "front": "nationwide",
+      "back": "全国的な、全国的に",
+      "phonetic": ""
+    },
+    {
+      "id": 595,
+      "front": "outdated",
+      "back": "時代遅れの",
+      "phonetic": ""
+    },
+    {
+      "id": 596,
+      "front": "voucher",
+      "back": "引換券",
+      "phonetic": ""
+    },
+    {
+      "id": 597,
+      "front": "adjacent",
+      "back": "隣接した",
+      "phonetic": ""
+    },
+    {
+      "id": 598,
+      "front": "correspondence",
+      "back": "(手紙やメールでの)やり取り",
+      "phonetic": ""
+    },
+    {
+      "id": 599,
+      "front": "detergent",
+      "back": "洗剤",
+      "phonetic": ""
+    },
+    {
+      "id": 600,
+      "front": "duration",
+      "back": "継続期間",
+      "phonetic": ""
+    },
+    {
+      "id": 601,
+      "front": "hands-on",
+      "back": "実地の、実用的な",
+      "phonetic": ""
+    },
+    {
+      "id": 602,
+      "front": "intensive",
+      "back": "集中的な",
+      "phonetic": ""
+    },
+    {
+      "id": 603,
+      "front": "thrilled",
+      "back": "とてもわくわくして、とても興奮して",
+      "phonetic": ""
+    },
+    {
+      "id": 604,
+      "front": "spectacular",
+      "back": "壮観な、目を見張るほどの",
+      "phonetic": ""
+    },
+    {
+      "id": 605,
+      "front": "entrepreneur",
+      "back": "起業家",
+      "phonetic": ""
+    },
+    {
+      "id": 606,
+      "front": "introductory",
+      "back": "入門の、最初の、お試しの",
+      "phonetic": ""
+    },
+    {
+      "id": 607,
+      "front": "minimize",
+      "back": "最小限に抑える、最小化する",
+      "phonetic": ""
+    },
+    {
+      "id": 608,
+      "front": "prestigious",
+      "back": "権威のある、誉れ高い",
+      "phonetic": ""
+    },
+    {
+      "id": 609,
+      "front": "screening",
+      "back": "上映、検査",
+      "phonetic": ""
+    },
+    {
+      "id": 610,
+      "front": "amenity",
+      "back": "生活を便利に(楽しく)するもの",
+      "phonetic": ""
+    },
+    {
+      "id": 611,
+      "front": "lengthy",
+      "back": "長期にわたる、冗長な",
+      "phonetic": ""
+    },
+    {
+      "id": 612,
+      "front": "compensate",
+      "back": "補償する",
+      "phonetic": ""
+    },
+    {
+      "id": 613,
+      "front": "misplace",
+      "back": "紛失する、置き忘れる",
+      "phonetic": ""
+    },
+    {
+      "id": 614,
+      "front": "notable",
+      "back": "注目すべき、有名な",
+      "phonetic": ""
+    },
+    {
+      "id": 615,
+      "front": "authentic",
+      "back": "本物の",
+      "phonetic": ""
+    },
+    {
+      "id": 616,
+      "front": "designated",
+      "back": "指定された、指名された",
+      "phonetic": ""
+    },
+    {
+      "id": 617,
+      "front": "disruption",
+      "back": "混乱、妨げ",
+      "phonetic": ""
+    },
+    {
+      "id": 618,
+      "front": "fragile",
+      "back": "壊れやすい、はかない",
+      "phonetic": ""
+    },
+    {
+      "id": 619,
+      "front": "ongoing",
+      "back": "進行中の、続いている",
+      "phonetic": ""
+    },
+    {
+      "id": 620,
+      "front": "periodical",
+      "back": "定期刊行物",
+      "phonetic": ""
+    },
+    {
+      "id": 621,
+      "front": "plumber",
+      "back": "配管工",
+      "phonetic": ""
+    },
+    {
+      "id": 622,
+      "front": "incur",
+      "back": "(損失や罰金等を)受ける",
+      "phonetic": ""
+    },
+    {
+      "id": 623,
+      "front": "oversee",
+      "back": "監督する",
+      "phonetic": ""
+    },
+    {
+      "id": 624,
+      "front": "retrieve",
+      "back": "(PCから情報を)取り出す、取り戻す",
+      "phonetic": ""
+    },
+    {
+      "id": 625,
+      "front": "reunion",
+      "back": "同窓会、再会",
+      "phonetic": ""
+    },
+    {
+      "id": 626,
+      "front": "rigorous",
+      "back": "厳格な、厳密な",
+      "phonetic": ""
+    },
+    {
+      "id": 627,
+      "front": "specification",
+      "back": "仕様(書)",
+      "phonetic": ""
+    },
+    {
+      "id": 628,
+      "front": "tentative",
+      "back": "仮の",
+      "phonetic": ""
+    },
+    {
+      "id": 629,
+      "front": "apprentice",
+      "back": "見習い、実習生",
+      "phonetic": ""
+    },
+    {
+      "id": 630,
+      "front": "bid",
+      "back": "入札、入札する",
+      "phonetic": ""
+    },
+    {
+      "id": 631,
+      "front": "discard",
+      "back": "捨てる",
+      "phonetic": ""
+    },
+    {
+      "id": 632,
+      "front": "outing",
+      "back": "外出、お出かけ",
+      "phonetic": ""
+    },
+    {
+      "id": 633,
+      "front": "overwhelmingly",
+      "back": "圧倒的に",
+      "phonetic": ""
+    },
+    {
+      "id": 634,
+      "front": "proceeds",
+      "back": "収益",
+      "phonetic": ""
+    },
+    {
+      "id": 635,
+      "front": "refrain",
+      "back": "差し控える",
+      "phonetic": ""
+    },
+    {
+      "id": 636,
+      "front": "inclement",
+      "back": "荒れ模様の",
+      "phonetic": ""
+    },
+    {
+      "id": 637,
+      "front": "novice",
+      "back": "初心者",
+      "phonetic": ""
+    },
+    {
+      "id": 638,
+      "front": "anecdote",
+      "back": "逸話",
+      "phonetic": ""
+    },
+    {
+      "id": 639,
+      "front": "collaboration",
+      "back": "協力、協同",
+      "phonetic": ""
+    },
+    {
+      "id": 640,
+      "front": "commemorate",
+      "back": "(記念日や人を)祝う、記念する",
+      "phonetic": ""
+    },
+    {
+      "id": 641,
+      "front": "duplicate",
+      "back": "複製の、複製、複製を取る",
+      "phonetic": ""
+    },
+    {
+      "id": 642,
+      "front": "intermission",
+      "back": "休憩時間",
+      "phonetic": ""
+    },
+    {
+      "id": 643,
+      "front": "fertilizer",
+      "back": "肥料",
+      "phonetic": ""
+    },
+    {
+      "id": 644,
+      "front": "proofread",
+      "back": "校正する",
+      "phonetic": ""
+    },
+    {
+      "id": 645,
+      "front": "solicit",
+      "back": "求める、懇願する",
+      "phonetic": ""
+    },
+    {
+      "id": 646,
+      "front": "applicable",
+      "back": "適用される、あてはまる",
+      "phonetic": ""
+    },
+    {
+      "id": 647,
+      "front": "commend",
+      "back": "ほめる",
+      "phonetic": ""
+    },
+    {
+      "id": 648,
+      "front": "complement",
+      "back": "合う、補完する",
+      "phonetic": ""
+    },
+    {
+      "id": 649,
+      "front": "incentive",
+      "back": "動機付け、やる気を起こさせるもの",
+      "phonetic": ""
+    },
+    {
+      "id": 650,
+      "front": "incorporate",
+      "back": "取り入れる、組み込む",
+      "phonetic": ""
+    },
+    {
+      "id": 651,
+      "front": "lapse",
+      "back": "失効する、うっかりミスをする、過失、時の経過",
+      "phonetic": ""
+    },
+    {
+      "id": 652,
+      "front": "picturesque",
+      "back": "絵のように美しい",
+      "phonetic": ""
+    },
+    {
+      "id": 653,
+      "front": "prospective",
+      "back": "見込みのある、将来の",
+      "phonetic": ""
+    },
+    {
+      "id": 654,
+      "front": "simplify",
+      "back": "簡素化する、単純にする",
+      "phonetic": ""
+    },
+    {
+      "id": 655,
+      "front": "surpass",
+      "back": "超える",
+      "phonetic": ""
+    },
+    {
+      "id": 656,
+      "front": "surplus",
+      "back": "余分な、余り",
+      "phonetic": ""
+    },
+    {
+      "id": 657,
+      "front": "withstand",
+      "back": "耐える",
+      "phonetic": ""
+    },
+    {
+      "id": 658,
+      "front": "advocate",
+      "back": "提唱者、支持者、提唱する",
+      "phonetic": ""
+    },
+    {
+      "id": 659,
+      "front": "aspiring",
+      "back": "～志望の、～になろうとする",
+      "phonetic": ""
+    },
+    {
+      "id": 660,
+      "front": "assorted",
+      "back": "詰め合わせの",
+      "phonetic": ""
+    },
+    {
+      "id": 661,
+      "front": "credentials",
+      "back": "資格、経歴、資質",
+      "phonetic": ""
+    },
+    {
+      "id": 662,
+      "front": "interoffice",
+      "back": "社内の、オフィス間の",
+      "phonetic": ""
+    },
+    {
+      "id": 663,
+      "front": "malfunction",
+      "back": "故障、故障する",
+      "phonetic": ""
+    },
+    {
+      "id": 664,
+      "front": "mutually",
+      "back": "互いに、相互に",
+      "phonetic": ""
+    },
+    {
+      "id": 665,
+      "front": "nutritious",
+      "back": "栄養のある",
+      "phonetic": ""
+    },
+    {
+      "id": 666,
+      "front": "obstruct",
+      "back": "(通路や視界を)ふさぐ、さえぎる",
+      "phonetic": ""
+    },
+    {
+      "id": 667,
+      "front": "abundant",
+      "back": "豊富な、十分な",
+      "phonetic": ""
+    },
+    {
+      "id": 668,
+      "front": "agreeable",
+      "back": "快適な、(人が)フレンドリーな、合意可能な",
+      "phonetic": ""
+    },
+    {
+      "id": 669,
+      "front": "compromise",
+      "back": "妥協、妥協点、妥協する",
+      "phonetic": ""
+    },
+    {
+      "id": 670,
+      "front": "continuous",
+      "back": "途切れない、絶え間のない",
+      "phonetic": ""
+    },
+    {
+      "id": 671,
+      "front": "dominant",
+      "back": "支配的な、圧倒的な",
+      "phonetic": ""
+    },
+    {
+      "id": 672,
+      "front": "exhausted",
+      "back": "疲れ切った",
+      "phonetic": ""
+    },
+    {
+      "id": 673,
+      "front": "fierce",
+      "back": "激しい、しれつな",
+      "phonetic": ""
+    },
+    {
+      "id": 674,
+      "front": "prosperous",
+      "back": "繁栄している、裕福な",
+      "phonetic": ""
+    },
+    {
+      "id": 675,
+      "front": "quote",
+      "back": "提示価格、引用、価格を提示する、引用する",
+      "phonetic": ""
+    },
+    {
+      "id": 676,
+      "front": "reluctant",
+      "back": "気乗りしない、渋っている",
+      "phonetic": ""
+    },
+    {
+      "id": 677,
+      "front": "remedy",
+      "back": "改善策、治療薬、改善する、治療する",
+      "phonetic": ""
+    },
+    {
+      "id": 678,
+      "front": "solely",
+      "back": "唯一、一人で、単独で",
+      "phonetic": ""
+    },
+    {
+      "id": 679,
+      "front": "vital",
+      "back": "不可欠な、非常に重要な",
+      "phonetic": ""
+    },
+    {
+      "id": 680,
+      "front": "revitalize",
+      "back": "再活性化する、復興する",
+      "phonetic": ""
+    },
+    {
+      "id": 681,
+      "front": "commence",
+      "back": "始まる",
+      "phonetic": ""
+    },
+    {
+      "id": 682,
+      "front": "countless",
+      "back": "数えきれないほどの、無数の",
+      "phonetic": ""
+    },
+    {
+      "id": 683,
+      "front": "devise",
+      "back": "考案する、立案する",
+      "phonetic": ""
+    },
+    {
+      "id": 684,
+      "front": "execute",
+      "back": "実行する",
+      "phonetic": ""
+    },
+    {
+      "id": 685,
+      "front": "foster",
+      "back": "促進する、養う",
+      "phonetic": ""
+    },
+    {
+      "id": 686,
+      "front": "initiate",
+      "back": "始める",
+      "phonetic": ""
+    },
+    {
+      "id": 687,
+      "front": "insight",
+      "back": "洞察、洞察力",
+      "phonetic": ""
+    },
+    {
+      "id": 688,
+      "front": "misleading",
+      "back": "誤解を招く恐れのある",
+      "phonetic": ""
+    },
+    {
+      "id": 689,
+      "front": "precaution",
+      "back": "予防策、予防措置",
+      "phonetic": ""
+    },
+    {
+      "id": 690,
+      "front": "transparent",
+      "back": "透明の",
+      "phonetic": ""
+    },
+    {
+      "id": 691,
+      "front": "coindex",
+      "back": "同時に起こる",
+      "phonetic": ""
+    },
+    {
+      "id": 692,
+      "front": "concise",
+      "back": "簡潔な",
+      "phonetic": ""
+    },
+    {
+      "id": 693,
+      "front": "delegation",
+      "back": "代表団、(権限等の)委譲",
+      "phonetic": ""
+    },
+    {
+      "id": 694,
+      "front": "diagnosis",
+      "back": "診断",
+      "phonetic": ""
+    },
+    {
+      "id": 695,
+      "front": "enforce",
+      "back": "施行する、実行する、強制する",
+      "phonetic": ""
+    },
+    {
+      "id": 696,
+      "front": "hypothesis",
+      "back": "仮説",
+      "phonetic": ""
+    },
+    {
+      "id": 697,
+      "front": "predecessor",
+      "back": "前任者、前機種",
+      "phonetic": ""
+    },
+    {
+      "id": 698,
+      "front": "prominently",
+      "back": "目立って、傑出して",
+      "phonetic": ""
+    },
+    {
+      "id": 699,
+      "front": "adoption",
+      "back": "採用",
+      "phonetic": ""
+    },
+    {
+      "id": 700,
+      "front": "accelerate",
+      "back": "加速させる、拍車をかける",
+      "phonetic": ""
+    },
+    {
+      "id": 701,
+      "front": "adhere",
+      "back": "(規則や法律等に)忠実に従う、接着する",
+      "phonetic": ""
+    },
+    {
+      "id": 702,
+      "front": "allocate",
+      "back": "割り当てる",
+      "phonetic": ""
+    },
+    {
+      "id": 703,
+      "front": "appraisal",
+      "back": "査定、評価",
+      "phonetic": ""
+    },
+    {
+      "id": 704,
+      "front": "compile",
+      "back": "取りまとめる、編集する",
+      "phonetic": ""
+    },
+    {
+      "id": 705,
+      "front": "conform",
+      "back": "(規則や周囲の状況等に)合わせる、一致する",
+      "phonetic": ""
+    },
+    {
+      "id": 706,
+      "front": "constraint",
+      "back": "制約",
+      "phonetic": ""
+    },
+    {
+      "id": 707,
+      "front": "distraction",
+      "back": "気を散らすもの、注意の妨げになるもの",
+      "phonetic": ""
+    },
+    {
+      "id": 708,
+      "front": "facilitate",
+      "back": "容易にする、促進する",
+      "phonetic": ""
+    },
+    {
+      "id": 709,
+      "front": "integral",
+      "back": "不可欠の",
+      "phonetic": ""
+    },
+    {
+      "id": 710,
+      "front": "interact",
+      "back": "交流する",
+      "phonetic": ""
+    },
+    {
+      "id": 711,
+      "front": "persistence",
+      "back": "粘り強さ",
+      "phonetic": ""
+    },
+    {
+      "id": 712,
+      "front": "quota",
+      "back": "ノルマ、割り当て",
+      "phonetic": ""
+    },
+    {
+      "id": 713,
+      "front": "congested",
+      "back": "渋滞した",
+      "phonetic": ""
+    },
+    {
+      "id": 714,
+      "front": "deduct",
+      "back": "控除する",
+      "phonetic": ""
+    },
+    {
+      "id": 715,
+      "front": "embrace",
+      "back": "積極的に受け入れる、快諾する",
+      "phonetic": ""
+    },
+    {
+      "id": 716,
+      "front": "synthetic",
+      "back": "合成の",
+      "phonetic": ""
+    },
+    {
+      "id": 717,
+      "front": "terminate",
+      "back": "終わらせる",
+      "phonetic": ""
+    },
+    {
+      "id": 718,
+      "front": "detect",
+      "back": "見つける、検知する",
+      "phonetic": ""
+    },
+    {
+      "id": 719,
+      "front": "patiently",
+      "back": "根気よく、我慢強く",
+      "phonetic": ""
+    },
+    {
+      "id": 720,
+      "front": "ratio",
+      "back": "比率",
+      "phonetic": ""
+    },
+    {
+      "id": 721,
+      "front": "dietary",
+      "back": "食事の",
+      "phonetic": ""
+    },
+    {
+      "id": 722,
+      "front": "intentionally",
+      "back": "意図的に",
+      "phonetic": ""
+    },
+    {
+      "id": 723,
+      "front": "persuasive",
+      "back": "説得力のある",
+      "phonetic": ""
+    },
+    {
+      "id": 724,
+      "front": "subsequent",
+      "back": "その次の、その後の",
+      "phonetic": ""
+    },
+    {
+      "id": 725,
+      "front": "thoughtfully",
+      "back": "深く考えて、思慮深く、配慮して",
+      "phonetic": ""
+    },
+    {
+      "id": 726,
+      "front": "abridged",
+      "back": "要約された、短縮された",
+      "phonetic": ""
+    },
+    {
+      "id": 727,
+      "front": "carpool",
+      "back": "相乗りする、相乗り",
+      "phonetic": ""
+    },
+    {
+      "id": 728,
+      "front": "compatible",
+      "back": "相性が良い、互換性がある、共存できる",
+      "phonetic": ""
+    },
+    {
+      "id": 729,
+      "front": "endorse",
+      "back": "推薦する、支持する、裏書きする",
+      "phonetic": ""
+    },
+    {
+      "id": 730,
+      "front": "explicit",
+      "back": "明白な、明確な",
+      "phonetic": ""
+    },
+    {
+      "id": 731,
+      "front": "keenly",
+      "back": "痛烈に、鋭く",
+      "phonetic": ""
+    },
+    {
+      "id": 732,
+      "front": "plaque",
+      "back": "盾、プレート",
+      "phonetic": ""
+    },
+    {
+      "id": 733,
+      "front": "dilute",
+      "back": "薄める",
+      "phonetic": ""
+    },
+    {
+      "id": 734,
+      "front": "centerpiece",
+      "back": "中心に置かれる装飾品、中心になるもの",
+      "phonetic": ""
+    },
+    {
+      "id": 735,
+      "front": "oversight",
+      "back": "見落とし、手落ち、監視",
+      "phonetic": ""
+    },
+    {
+      "id": 736,
+      "front": "privileged",
+      "back": "光栄な",
+      "phonetic": ""
+    },
+    {
+      "id": 737,
+      "front": "recur",
+      "back": "再発する",
+      "phonetic": ""
+    },
+    {
+      "id": 738,
+      "front": "skeptical",
+      "back": "懐疑的な、疑い深い",
+      "phonetic": ""
+    },
+    {
+      "id": 739,
+      "front": "artifact",
+      "back": "(歴史的、文化的価値のある)工芸品、手工品",
+      "phonetic": ""
+    },
+    {
+      "id": 740,
+      "front": "keynote",
+      "back": "基調となる、基調",
+      "phonetic": ""
+    },
+    {
+      "id": 741,
+      "front": "cubicle",
+      "back": "個別の作業スペース",
+      "phonetic": ""
+    },
+    {
+      "id": 742,
+      "front": "outage",
+      "back": "機能停止期間、供給停止期間",
+      "phonetic": ""
+    },
+    {
+      "id": 743,
+      "front": "perishable",
+      "back": "傷みやすい、腐りやすい",
+      "phonetic": ""
+    },
+    {
+      "id": 744,
+      "front": "avid",
+      "back": "熱心な、熱烈な",
+      "phonetic": ""
+    },
+    {
+      "id": 745,
+      "front": "detour",
+      "back": "回り道、遠回りをする",
+      "phonetic": ""
+    },
+    {
+      "id": 746,
+      "front": "expedite",
+      "back": "早める、促進させる",
+      "phonetic": ""
+    },
+    {
+      "id": 747,
+      "front": "vicinity",
+      "back": "近所、近辺",
+      "phonetic": ""
+    },
+    {
+      "id": 748,
+      "front": "affiliated",
+      "back": "提携した、関連のある",
+      "phonetic": ""
+    },
+    {
+      "id": 749,
+      "front": "definitive",
+      "back": "決定版の、最終的な",
+      "phonetic": ""
+    },
+    {
+      "id": 750,
+      "front": "demolish",
+      "back": "(建物を)解体する、取り壊す",
+      "phonetic": ""
+    },
+    {
+      "id": 751,
+      "front": "feasible",
+      "back": "実現可能な",
+      "phonetic": ""
+    },
+    {
+      "id": 752,
+      "front": "inaugural",
+      "back": "最初の、初開催の",
+      "phonetic": ""
+    },
+    {
+      "id": 753,
+      "front": "installment",
+      "back": "分割払いの1回分",
+      "phonetic": ""
+    },
+    {
+      "id": 754,
+      "front": "redeemable",
+      "back": "(現金や商品と)交換可能な",
+      "phonetic": ""
+    },
+    {
+      "id": 755,
+      "front": "streamline",
+      "back": "合理化する、簡略化する",
+      "phonetic": ""
+    },
+    {
+      "id": 756,
+      "front": "insulation",
+      "back": "(音、熱、電気等を)防ぐこと",
+      "phonetic": ""
+    },
+    {
+      "id": 757,
+      "front": "intact",
+      "back": "傷がない",
+      "phonetic": ""
+    },
+    {
+      "id": 758,
+      "front": "occupancy",
+      "back": "(ホテルや部屋等の)占有、占有人数",
+      "phonetic": ""
+    },
+    {
+      "id": 759,
+      "front": "turnover",
+      "back": "離職率",
+      "phonetic": ""
+    },
+    {
+      "id": 760,
+      "front": "unanimous",
+      "back": "満場一致の",
+      "phonetic": ""
+    },
+    {
+      "id": 761,
+      "front": "deteriorate",
+      "back": "悪化する",
+      "phonetic": ""
+    },
+    {
+      "id": 762,
+      "front": "sturdy",
+      "back": "頑丈な、丈夫な",
+      "phonetic": ""
+    },
+    {
+      "id": 763,
+      "front": "adverse",
+      "back": "よくない、不利な",
+      "phonetic": ""
+    },
+    {
+      "id": 764,
+      "front": "bearer",
+      "back": "(小切手やクーポン等の)持参人",
+      "phonetic": ""
+    },
+    {
+      "id": 765,
+      "front": "unprecedented",
+      "back": "前例のない",
+      "phonetic": ""
+    },
+    {
+      "id": 766,
+      "front": "commensurate",
+      "back": "釣り合った、比例した、見合った",
+      "phonetic": ""
+    },
+    {
+      "id": 767,
+      "front": "consecutive",
+      "back": "連続した",
+      "phonetic": ""
+    },
+    {
+      "id": 768,
+      "front": "deliberation",
+      "back": "熟考",
+      "phonetic": ""
+    },
+    {
+      "id": 769,
+      "front": "discreetly",
+      "back": "分別を持って、思慮深く",
+      "phonetic": ""
+    },
+    {
+      "id": 770,
+      "front": "entail",
+      "back": "必要とする、～を伴う",
+      "phonetic": ""
+    },
+    {
+      "id": 771,
+      "front": "fluctuation",
+      "back": "変動",
+      "phonetic": ""
+    },
+    {
+      "id": 772,
+      "front": "foremost",
+      "back": "最高の、トップの",
+      "phonetic": ""
+    },
+    {
+      "id": 773,
+      "front": "imperative",
+      "back": "急を要する、非常に重要な",
+      "phonetic": ""
+    },
+    {
+      "id": 774,
+      "front": "mandatory",
+      "back": "義務の、強制の",
+      "phonetic": ""
+    },
+    {
+      "id": 775,
+      "front": "meticulously",
+      "back": "細心の注意を払って、きちょう面に",
+      "phonetic": ""
+    },
+    {
+      "id": 776,
+      "front": "outreach",
+      "back": "福祉活動、支援活動",
+      "phonetic": ""
+    },
+    {
+      "id": 777,
+      "front": "versatile",
+      "back": "多才な",
+      "phonetic": ""
+    },
+    {
+      "id": 778,
+      "front": "alleviate",
+      "back": "和らげる、軽減する",
+      "phonetic": ""
+    },
+    {
+      "id": 779,
+      "front": "exemplary",
+      "back": "模範的な",
+      "phonetic": ""
+    },
+    {
+      "id": 780,
+      "front": "gala",
+      "back": "祝祭、祭り",
+      "phonetic": ""
+    },
+    {
+      "id": 781,
+      "front": "mural",
+      "back": "壁画",
+      "phonetic": ""
+    },
+    {
+      "id": 782,
+      "front": "proprietor",
+      "back": "オーナー、所有者",
+      "phonetic": ""
+    },
+    {
+      "id": 783,
+      "front": "stagnant",
+      "back": "停滞した",
+      "phonetic": ""
+    },
+    {
+      "id": 784,
+      "front": "stringent",
+      "back": "非常に厳しい",
+      "phonetic": ""
+    },
+    {
+      "id": 785,
+      "front": "testimonial",
+      "back": "推薦文、推薦の声",
+      "phonetic": ""
+    },
+    {
+      "id": 786,
+      "front": "turnout",
+      "back": "参加者数、来場者数",
+      "phonetic": ""
+    },
+    {
+      "id": 787,
+      "front": "waive",
+      "back": "(権利や条件を)放棄する、差し控える、適用しない",
+      "phonetic": ""
+    },
+    {
+      "id": 788,
+      "front": "faucet",
+      "back": "蛇口",
+      "phonetic": ""
+    },
+    {
+      "id": 789,
+      "front": "amendment",
+      "back": "改正、修正",
+      "phonetic": ""
+    },
+    {
+      "id": 790,
+      "front": "liable",
+      "back": "法的責任がある",
+      "phonetic": ""
+    },
+    {
+      "id": 791,
+      "front": "considerate",
+      "back": "思いやりのある、配慮して",
+      "phonetic": ""
+    },
+    {
+      "id": 792,
+      "front": "consolidate",
+      "back": "統合する",
+      "phonetic": ""
+    },
+    {
+      "id": 793,
+      "front": "vigorous",
+      "back": "活気のある、精力的な",
+      "phonetic": ""
+    },
+    {
+      "id": 794,
+      "front": "retreat",
+      "back": "研修旅行",
+      "phonetic": ""
+    },
+    {
+      "id": 795,
+      "front": "custodian",
+      "back": "管理人、守衛",
+      "phonetic": ""
+    },
+    {
+      "id": 796,
+      "front": "forge",
+      "back": "築く、構築する",
+      "phonetic": ""
+    },
+    {
+      "id": 797,
+      "front": "impending",
+      "back": "間近に迫った、差し迫った",
+      "phonetic": ""
+    },
+    {
+      "id": 798,
+      "front": "itemize",
+      "back": "項目別にする",
+      "phonetic": ""
+    },
+    {
+      "id": 799,
+      "front": "liaison",
+      "back": "連絡係、連絡",
+      "phonetic": ""
+    },
+    {
+      "id": 800,
+      "front": "objectionable",
+      "back": "不快な、気に障る",
+      "phonetic": ""
+    },
+    {
+      "id": 801,
+      "front": "repave",
+      "back": "再舗装する",
+      "phonetic": ""
+    },
+    {
+      "id": 802,
+      "front": "shortcoming",
+      "back": "欠点、短所",
+      "phonetic": ""
+    },
+    {
+      "id": 803,
+      "front": "viable",
+      "back": "実行可能な",
+      "phonetic": ""
+    },
+    {
+      "id": 804,
+      "front": "memorabilia",
+      "back": "記念品、思い出の品",
+      "phonetic": ""
+    },
+    {
+      "id": 805,
+      "front": "deplete",
+      "back": "使い果たす、激減させる",
+      "phonetic": ""
+    },
+    {
+      "id": 806,
+      "front": "jeopardy",
+      "back": "危機、危険",
+      "phonetic": ""
+    },
+    {
+      "id": 807,
+      "front": "nominal",
+      "back": "ほんのわずかの",
+      "phonetic": ""
+    },
+    {
+      "id": 808,
+      "front": "deviate",
+      "back": "それる",
+      "phonetic": ""
+    },
+    {
+      "id": 809,
+      "front": "forfelt",
+      "back": "没収される、剥奪される、罰金、犠牲",
+      "phonetic": ""
+    },
+    {
+      "id": 810,
+      "front": "bolster",
+      "back": "強化する、補強する、鼓舞する",
+      "phonetic": ""
+    },
+    {
+      "id": 811,
+      "front": "optimal",
+      "back": "ベストの、最適な",
+      "phonetic": ""
+    },
+    {
+      "id": 812,
+      "front": "purveyor",
+      "back": "供給業者、販売業者",
+      "phonetic": ""
+    },
+    {
+      "id": 813,
+      "front": "raffle",
+      "back": "福引",
+      "phonetic": ""
+    },
+    {
+      "id": 814,
+      "front": "ventilation",
+      "back": "換気、風通し",
+      "phonetic": ""
+    },
+    {
+      "id": 815,
+      "front": "unwavering",
+      "back": "ゆるがい、断固とした",
+      "phonetic": ""
+    },
+    {
+      "id": 816,
+      "front": "exponentially",
+      "back": "加速度的に、指数関数的に",
+      "phonetic": ""
+    },
+    {
+      "id": 817,
+      "front": "following",
+      "back": "～に続いて、次の、以下の",
+      "phonetic": ""
+    },
+    {
+      "id": 818,
+      "front": "opening",
+      "back": "空き、開店",
+      "phonetic": ""
+    },
+    {
+      "id": 819,
+      "front": "tour",
+      "back": "見学する、旅行する、見学、旅行",
+      "phonetic": ""
+    },
+    {
+      "id": 820,
+      "front": "research",
+      "back": "研究、調査、研究する、調査する",
+      "phonetic": ""
+    },
+    {
+      "id": 821,
+      "front": "attend",
+      "back": "出席する、参加する",
+      "phonetic": ""
+    },
+    {
+      "id": 822,
+      "front": "employee",
+      "back": "社員、従業員",
+      "phonetic": ""
+    },
+    {
+      "id": 823,
+      "front": "currently",
+      "back": "現在",
+      "phonetic": ""
+    },
+    {
+      "id": 824,
+      "front": "client",
+      "back": "客、クライアント",
+      "phonetic": ""
+    },
+    {
+      "id": 825,
+      "front": "payment",
+      "back": "支払い",
+      "phonetic": ""
+    },
+    {
+      "id": 826,
+      "front": "award",
+      "back": "賞、授与する",
+      "phonetic": ""
+    },
+    {
+      "id": 827,
+      "front": "display",
+      "back": "展示、展示する",
+      "phonetic": ""
+    },
+    {
+      "id": 828,
+      "front": "membership",
+      "back": "会員(であること)、会員資格、会員数",
+      "phonetic": ""
+    },
+    {
+      "id": 829,
+      "front": "based",
+      "back": "拠点のある、基づく",
+      "phonetic": ""
+    },
+    {
+      "id": 830,
+      "front": "excellent",
+      "back": "素晴らしい",
+      "phonetic": ""
+    },
+    {
+      "id": 831,
+      "front": "submit",
+      "back": "提出する",
+      "phonetic": ""
+    },
+    {
+      "id": 832,
+      "front": "résumé",
+      "back": "履歴書",
+      "phonetic": ""
+    },
+    {
+      "id": 833,
+      "front": "bill",
+      "back": "請求書、請求書を送る",
+      "phonetic": ""
+    },
+    {
+      "id": 834,
+      "front": "opportunity",
+      "back": "機会、チャンス",
+      "phonetic": ""
+    },
+    {
+      "id": 835,
+      "front": "branch",
+      "back": "支店",
+      "phonetic": ""
+    },
+    {
+      "id": 836,
+      "front": "unfortunately",
+      "back": "残念なことに、残念ながら",
+      "phonetic": ""
+    },
+    {
+      "id": 837,
+      "front": "experienced",
+      "back": "経験豊富な",
+      "phonetic": ""
+    },
+    {
+      "id": 838,
+      "front": "packaging",
+      "back": "梱包、パッケージ",
+      "phonetic": ""
+    },
+    {
+      "id": 839,
+      "front": "headquarters",
+      "back": "本社",
+      "phonetic": ""
+    },
+    {
+      "id": 840,
+      "front": "commercial",
+      "back": "商業(用)の、商業的な、CM",
+      "phonetic": ""
+    },
+    {
+      "id": 841,
+      "front": "device",
+      "back": "機器、装置",
+      "phonetic": ""
+    },
+    {
+      "id": 842,
+      "front": "mail",
+      "back": "郵便物、郵便配達、郵送する",
+      "phonetic": ""
+    },
+    {
+      "id": 843,
+      "front": "renew",
+      "back": "更新する",
+      "phonetic": ""
+    },
+    {
+      "id": 844,
+      "front": "advise",
+      "back": "勧める、忠告する、助言する",
+      "phonetic": ""
+    },
+    {
+      "id": 845,
+      "front": "range",
+      "back": "範囲",
+      "phonetic": ""
+    },
+    {
+      "id": 846,
+      "front": "fit",
+      "back": "合う、入る",
+      "phonetic": ""
+    },
+    {
+      "id": 847,
+      "front": "cafeteria",
+      "back": "社員食堂",
+      "phonetic": ""
+    },
+    {
+      "id": 848,
+      "front": "overseas",
+      "back": "海外の、海外で",
+      "phonetic": ""
+    },
+    {
+      "id": 849,
+      "front": "appear",
+      "back": "現れる、掲載される、～のように見える",
+      "phonetic": ""
+    },
+    {
+      "id": 850,
+      "front": "develop",
+      "back": "(計画等を)作り出す、開発する、(スキルを)高める",
+      "phonetic": ""
+    },
+    {
+      "id": 851,
+      "front": "seek",
+      "back": "探し求める",
+      "phonetic": ""
+    },
+    {
+      "id": 852,
+      "front": "crew",
+      "back": "グループ、班、乗員",
+      "phonetic": ""
+    },
+    {
+      "id": 853,
+      "front": "raise",
+      "back": "上げる、(お金を)集める、高める、昇給",
+      "phonetic": ""
+    },
+    {
+      "id": 854,
+      "front": "modern",
+      "back": "現代的な、近代的な",
+      "phonetic": ""
+    },
+    {
+      "id": 855,
+      "front": "tip",
+      "back": "アドバイス、コツ",
+      "phonetic": ""
+    },
+    {
+      "id": 856,
+      "front": "historical",
+      "back": "歴史(上)の",
+      "phonetic": ""
+    },
+    {
+      "id": 857,
+      "front": "helpful",
+      "back": "役立つ、助けになる",
+      "phonetic": ""
+    },
+    {
+      "id": 858,
+      "front": "organize",
+      "back": "(イベントなどを)計画する、取りまとめる、組織化する",
+      "phonetic": ""
+    },
+    {
+      "id": 859,
+      "front": "standard",
+      "back": "基準、標準の",
+      "phonetic": ""
+    },
+    {
+      "id": 860,
+      "front": "background",
+      "back": "経歴、背景",
+      "phonetic": ""
+    },
+    {
+      "id": 861,
+      "front": "guided",
+      "back": "ガイド付きの",
+      "phonetic": ""
+    },
+    {
+      "id": 862,
+      "front": "decade",
+      "back": "10年間、10年",
+      "phonetic": ""
+    },
+    {
+      "id": 863,
+      "front": "celebration",
+      "back": "お祝い、祝典",
+      "phonetic": ""
+    },
+    {
+      "id": 864,
+      "front": "various",
+      "back": "さまざまな",
+      "phonetic": ""
+    },
+    {
+      "id": 865,
+      "front": "full-time",
+      "back": "常勤の",
+      "phonetic": ""
+    },
+    {
+      "id": 866,
+      "front": "honor",
+      "back": "称える、(契約等を)守る、名誉",
+      "phonetic": ""
+    },
+    {
+      "id": 867,
+      "front": "electronic",
+      "back": "電子の、電子的な",
+      "phonetic": ""
+    },
+    {
+      "id": 868,
+      "front": "overnight",
+      "back": "一晩の、翌日配送の、一晩",
+      "phonetic": ""
+    },
+    {
+      "id": 869,
+      "front": "scholarship",
+      "back": "奨学金",
+      "phonetic": ""
+    },
+    {
+      "id": 870,
+      "front": "automobile",
+      "back": "自動車の、自動車",
+      "phonetic": ""
+    },
+    {
+      "id": 871,
+      "front": "capacity",
+      "back": "(生産)能力、収容能力、役割",
+      "phonetic": ""
+    },
+    {
+      "id": 872,
+      "front": "function",
+      "back": "機能、機能する",
+      "phonetic": ""
+    },
+    {
+      "id": 873,
+      "front": "crop",
+      "back": "作物、収穫量",
+      "phonetic": ""
+    },
+    {
+      "id": 874,
+      "front": "loyal",
+      "back": "忠実な",
+      "phonetic": ""
+    },
+    {
+      "id": 875,
+      "front": "stress",
+      "back": "強調する、ストレス、強調",
+      "phonetic": ""
+    },
+    {
+      "id": 876,
+      "front": "flyer",
+      "back": "チラシ、(飛行機の)乗客",
+      "phonetic": ""
+    },
+    {
+      "id": 877,
+      "front": "ease",
+      "back": "容易さ、たやすさ、やわらげる、容易にする",
+      "phonetic": ""
+    },
+    {
+      "id": 878,
+      "front": "absolutely",
+      "back": "完全に、間違いなく",
+      "phonetic": ""
+    },
+    {
+      "id": 879,
+      "front": "contrast",
+      "back": "対照、はっきりした違い、対照的である",
+      "phonetic": ""
+    },
+    {
+      "id": 880,
+      "front": "monitor",
+      "back": "監視する、(コンピュータの)モニター",
+      "phonetic": ""
+    },
+    {
+      "id": 881,
+      "front": "serious",
+      "back": "重大な、真剣な、重要な",
+      "phonetic": ""
+    },
+    {
+      "id": 882,
+      "front": "submission",
+      "back": "提出物、提出",
+      "phonetic": ""
+    },
+    {
+      "id": 883,
+      "front": "wildlife",
+      "back": "野生動物",
+      "phonetic": ""
+    },
+    {
+      "id": 884,
+      "front": "renovate",
+      "back": "改装する",
+      "phonetic": ""
+    },
+    {
+      "id": 885,
+      "front": "agenda",
+      "back": "議題、協議事項",
+      "phonetic": ""
+    },
+    {
+      "id": 886,
+      "front": "orientation",
+      "back": "新入社員向け説明会",
+      "phonetic": ""
+    },
+    {
+      "id": 887,
+      "front": "renowned",
+      "back": "名高い、著名な",
+      "phonetic": ""
+    },
+    {
+      "id": 888,
+      "front": "storage",
+      "back": "保管、貯蔵",
+      "phonetic": ""
+    },
+    {
+      "id": 889,
+      "front": "patron",
+      "back": "愛用者、利用者",
+      "phonetic": ""
+    },
+    {
+      "id": 890,
+      "front": "household",
+      "back": "家庭用の、家庭",
+      "phonetic": ""
+    },
+    {
+      "id": 891,
+      "front": "negotiate",
+      "back": "交渉する",
+      "phonetic": ""
+    },
+    {
+      "id": 892,
+      "front": "motivate",
+      "back": "やる気にさせる",
+      "phonetic": ""
+    },
+    {
+      "id": 893,
+      "front": "alert",
+      "back": "(重要なことを)知らせる、警戒した、警報",
+      "phonetic": ""
+    },
+    {
+      "id": 894,
+      "front": "overtime",
+      "back": "残業、時間外に",
+      "phonetic": ""
+    },
+    {
+      "id": 895,
+      "front": "tenant",
+      "back": "賃借人、入居者",
+      "phonetic": ""
+    },
+    {
+      "id": 896,
+      "front": "recruit",
+      "back": "採用する、募集する、名乗る人",
+      "phonetic": ""
+    },
+    {
+      "id": 897,
+      "front": "afterwards",
+      "back": "その後で",
+      "phonetic": ""
+    },
+    {
+      "id": 898,
+      "front": "reward",
+      "back": "報いる、ほうびを与える、報酬、ほうび",
+      "phonetic": ""
+    },
+    {
+      "id": 899,
+      "front": "timely",
+      "back": "タイミングの良い、タイムリーな",
+      "phonetic": ""
+    },
+    {
+      "id": 900,
+      "front": "capture",
+      "back": "(映像や写真に)記録する、とらえる",
+      "phonetic": ""
+    },
+    {
+      "id": 901,
+      "front": "checkout",
+      "back": "レジ、(ホテルの)チェックアウト",
+      "phonetic": ""
+    },
+    {
+      "id": 902,
+      "front": "outlet",
+      "back": "店舗、コンセント",
+      "phonetic": ""
+    },
+    {
+      "id": 903,
+      "front": "boost",
+      "back": "押し上げる、引き上げる、押し上げること",
+      "phonetic": ""
+    },
+    {
+      "id": 904,
+      "front": "influence",
+      "back": "影響を与える、影響",
+      "phonetic": ""
+    },
+    {
+      "id": 905,
+      "front": "output",
+      "back": "生産高、生産量",
+      "phonetic": ""
+    },
+    {
+      "id": 906,
+      "front": "consent",
+      "back": "同意",
+      "phonetic": ""
+    },
+    {
+      "id": 907,
+      "front": "supplement",
+      "back": "補う、付録、付記、栄養補助食品",
+      "phonetic": ""
+    },
+    {
+      "id": 908,
+      "front": "logical",
+      "back": "妥当な、論理的な、筋の通った",
+      "phonetic": ""
+    },
+    {
+      "id": 909,
+      "front": "nominate",
+      "back": "(候補として)推薦する、ノミネートする",
+      "phonetic": ""
+    },
+    {
+      "id": 910,
+      "front": "array",
+      "back": "大量、多数",
+      "phonetic": ""
+    },
+    {
+      "id": 911,
+      "front": "functional",
+      "back": "機能を果たせる、機能的な",
+      "phonetic": ""
+    },
+    {
+      "id": 912,
+      "front": "subsidiary",
+      "back": "子会社",
+      "phonetic": ""
+    },
+    {
+      "id": 913,
+      "front": "tutorial",
+      "back": "指導書、個別指導",
+      "phonetic": ""
+    },
+    {
+      "id": 914,
+      "front": "activate",
+      "back": "使えるようにする、始動させる",
+      "phonetic": ""
+    },
+    {
+      "id": 915,
+      "front": "unveil",
+      "back": "披露する、公表する",
+      "phonetic": ""
+    },
+    {
+      "id": 916,
+      "front": "periodical",
+      "back": "定期的に",
+      "phonetic": ""
+    },
+    {
+      "id": 917,
+      "front": "exempt",
+      "back": "免除された、免除する",
+      "phonetic": ""
+    },
+    {
+      "id": 918,
+      "front": "sustainable",
+      "back": "環境に優しい",
+      "phonetic": ""
+    },
+    {
+      "id": 919,
+      "front": "botanical",
+      "back": "植物の、植物学の",
+      "phonetic": ""
+    },
+    {
+      "id": 920,
+      "front": "tenure",
+      "back": "在職期間",
+      "phonetic": ""
+    },
+    {
+      "id": 921,
+      "front": "fraud",
+      "back": "詐欺",
+      "phonetic": ""
+    },
+    {
+      "id": 922,
+      "front": "anyway",
+      "back": "とにかく",
+      "phonetic": ""
+    },
+    {
+      "id": 923,
+      "front": "department",
+      "back": "部門、売り場",
+      "phonetic": ""
+    },
+    {
+      "id": 924,
+      "front": "local",
+      "back": "地元の、地元の人",
+      "phonetic": ""
+    },
+    {
+      "id": 925,
+      "front": "delivery",
+      "back": "配達(物)",
+      "phonetic": ""
+    },
+    {
+      "id": 926,
+      "front": "located",
+      "back": "位置して",
+      "phonetic": ""
+    },
+    {
+      "id": 927,
+      "front": "announce",
+      "back": "発表する",
+      "phonetic": ""
+    },
+    {
+      "id": 928,
+      "front": "charge",
+      "back": "請求する、料金、責任",
+      "phonetic": ""
+    },
+    {
+      "id": 929,
+      "front": "budget",
+      "back": "予算、予算に計上する",
+      "phonetic": ""
+    },
+    {
+      "id": 930,
+      "front": "management",
+      "back": "経営(陣)、管理",
+      "phonetic": ""
+    },
+    {
+      "id": 931,
+      "front": "clothing",
+      "back": "衣類",
+      "phonetic": ""
+    },
+    {
+      "id": 932,
+      "front": "session",
+      "back": "時間、集まり",
+      "phonetic": ""
+    },
+    {
+      "id": 933,
+      "front": "successful",
+      "back": "成功した、うまく行く",
+      "phonetic": ""
+    },
+    {
+      "id": 934,
+      "front": "hire",
+      "back": "雇う",
+      "phonetic": ""
+    },
+    {
+      "id": 935,
+      "front": "deadline",
+      "back": "締め切り、期限",
+      "phonetic": ""
+    },
+    {
+      "id": 936,
+      "front": "necessary",
+      "back": "必要な",
+      "phonetic": ""
+    },
+    {
+      "id": 937,
+      "front": "create",
+      "back": "創造する、作り出す",
+      "phonetic": ""
+    },
+    {
+      "id": 938,
+      "front": "allow",
+      "back": "許す、可能にする",
+      "phonetic": ""
+    },
+    {
+      "id": 939,
+      "front": "mention",
+      "back": "述べる、言及する、言及",
+      "phonetic": ""
+    },
+    {
+      "id": 940,
+      "front": "update",
+      "back": "最新情報、更新する",
+      "phonetic": ""
+    },
+    {
+      "id": 941,
+      "front": "original",
+      "back": "元の、最初の、オリジナル、原本",
+      "phonetic": ""
+    },
+    {
+      "id": 942,
+      "front": "cause",
+      "back": "原因、大義、引き起こす",
+      "phonetic": ""
+    },
+    {
+      "id": 943,
+      "front": "host",
+      "back": "司会者、主催する",
+      "phonetic": ""
+    },
+    {
+      "id": 944,
+      "front": "document",
+      "back": "書類、(文書や映像等で)記録する",
+      "phonetic": ""
+    },
+    {
+      "id": 945,
+      "front": "ship",
+      "back": "出荷する、船",
+      "phonetic": ""
+    },
+    {
+      "id": 946,
+      "front": "potential",
+      "back": "見込みがある、潜在的な、可能性",
+      "phonetic": ""
+    },
+    {
+      "id": 947,
+      "front": "downtown",
+      "back": "中心街の、中心街で、中心街",
+      "phonetic": ""
+    },
+    {
+      "id": 948,
+      "front": "traditional",
+      "back": "伝統的な、従来の",
+      "phonetic": ""
+    },
+    {
+      "id": 949,
+      "front": "reasonable",
+      "back": "(値段が)手ごろな、妥当な",
+      "phonetic": ""
+    },
+    {
+      "id": 950,
+      "front": "legal",
+      "back": "法律に関する、合意の",
+      "phonetic": ""
+    },
+    {
+      "id": 951,
+      "front": "recommendation",
+      "back": "推薦",
+      "phonetic": ""
+    },
+    {
+      "id": 952,
+      "front": "entry",
+      "back": "エントリー(作品)、入場",
+      "phonetic": ""
+    },
+    {
+      "id": 953,
+      "front": "claim",
+      "back": "申し立て、主張、所有権、主張する、所有権を主張する",
+      "phonetic": ""
+    },
+    {
+      "id": 954,
+      "front": "unique",
+      "back": "他にはない、独自の、特有の",
+      "phonetic": ""
+    },
+    {
+      "id": 955,
+      "front": "complex",
+      "back": "複合施設、集合住宅、複雑な",
+      "phonetic": ""
+    },
+    {
+      "id": 956,
+      "front": "anniversary",
+      "back": "～周年、記念日",
+      "phonetic": ""
+    },
+    {
+      "id": 957,
+      "front": "economic",
+      "back": "経済の、経済上の",
+      "phonetic": ""
+    },
+    {
+      "id": 958,
+      "front": "amazing",
+      "back": "驚くべき",
+      "phonetic": ""
+    },
+    {
+      "id": 959,
+      "front": "vote",
+      "back": "投票する、投票",
+      "phonetic": ""
+    },
+    {
+      "id": 960,
+      "front": "mechanical",
+      "back": "機械の",
+      "phonetic": ""
+    },
+    {
+      "id": 961,
+      "front": "shuttle",
+      "back": "定期往復便",
+      "phonetic": ""
+    },
+    {
+      "id": 962,
+      "front": "connection",
+      "back": "接続、つながり、関連、乗り継ぎ",
+      "phonetic": ""
+    },
+    {
+      "id": 963,
+      "front": "eager",
+      "back": "～したがる、熱望する",
+      "phonetic": ""
+    },
+    {
+      "id": 964,
+      "front": "atmosphere",
+      "back": "雰囲気",
+      "phonetic": ""
+    },
+    {
+      "id": 965,
+      "front": "import",
+      "back": "輸入、輸入品、輸入する",
+      "phonetic": ""
+    },
+    {
+      "id": 966,
+      "front": "notify",
+      "back": "知らせる",
+      "phonetic": ""
+    },
+    {
+      "id": 967,
+      "front": "paperwork",
+      "back": "書類、書類作業",
+      "phonetic": ""
+    },
+    {
+      "id": 968,
+      "front": "guidelines",
+      "back": "指針、ガイドライン",
+      "phonetic": ""
+    },
+    {
+      "id": 969,
+      "front": "beverage",
+      "back": "飲料",
+      "phonetic": ""
+    },
+    {
+      "id": 970,
+      "front": "summary",
+      "back": "要約",
+      "phonetic": ""
+    },
+    {
+      "id": 971,
+      "front": "tourism",
+      "back": "観光事業",
+      "phonetic": ""
+    },
+    {
+      "id": 972,
+      "front": "booking",
+      "back": "予約",
+      "phonetic": ""
+    },
+    {
+      "id": 973,
+      "front": "workplace",
+      "back": "職場",
+      "phonetic": ""
+    },
+    {
+      "id": 974,
+      "front": "subscription",
+      "back": "購読、加入、会費",
+      "phonetic": ""
+    },
+    {
+      "id": 975,
+      "front": "dairy",
+      "back": "乳製品、酪農場、酪農業",
+      "phonetic": ""
+    },
+    {
+      "id": 976,
+      "front": "laundry",
+      "back": "洗濯(物)",
+      "phonetic": ""
+    },
+    {
+      "id": 977,
+      "front": "outline",
+      "back": "概要を説明する、概要",
+      "phonetic": ""
+    },
+    {
+      "id": 978,
+      "front": "routine",
+      "back": "所定の、日常的に行われる",
+      "phonetic": ""
+    },
+    {
+      "id": 979,
+      "front": "token",
+      "back": "印",
+      "phonetic": ""
+    },
+    {
+      "id": 980,
+      "front": "aim",
+      "back": "目指す、狙う、目標、狙い",
+      "phonetic": ""
+    },
+    {
+      "id": 981,
+      "front": "transform",
+      "back": "(姿、形、性質等を)一変させる",
+      "phonetic": ""
+    },
+    {
+      "id": 982,
+      "front": "blueprint",
+      "back": "設計図、青写真",
+      "phonetic": ""
+    },
+    {
+      "id": 983,
+      "front": "leak",
+      "back": "漏れる、漏らす、漏れ",
+      "phonetic": ""
+    },
+    {
+      "id": 984,
+      "front": "remote",
+      "back": "人里離れた、可能性が低い",
+      "phonetic": ""
+    },
+    {
+      "id": 985,
+      "front": "reveal",
+      "back": "明らかにする",
+      "phonetic": ""
+    },
+    {
+      "id": 986,
+      "front": "mission",
+      "back": "使命、ミッション",
+      "phonetic": ""
+    },
+    {
+      "id": 987,
+      "front": "upgrade",
+      "back": "改良、アップグレード、改良する、アップグレードする",
+      "phonetic": ""
+    },
+    {
+      "id": 988,
+      "front": "landmark",
+      "back": "名所、(場所の)目印、重要な出来事",
+      "phonetic": ""
+    },
+    {
+      "id": 989,
+      "front": "portfolio",
+      "back": "作品集、有価証券一覧",
+      "phonetic": ""
+    },
+    {
+      "id": 990,
+      "front": "prototype",
+      "back": "試作品、原型",
+      "phonetic": ""
+    },
+    {
+      "id": 991,
+      "front": "managerial",
+      "back": "管理職の、経営上の",
+      "phonetic": ""
+    },
+    {
+      "id": 992,
+      "front": "knowledgeable",
+      "back": "知識が豊富な",
+      "phonetic": ""
+    },
+    {
+      "id": 993,
+      "front": "delete",
+      "back": "削除する",
+      "phonetic": ""
+    },
+    {
+      "id": 994,
+      "front": "medication",
+      "back": "薬",
+      "phonetic": ""
+    },
+    {
+      "id": 995,
+      "front": "overview",
+      "back": "概略、概況",
+      "phonetic": ""
+    },
+    {
+      "id": 996,
+      "front": "shareholder",
+      "back": "株主",
+      "phonetic": ""
+    },
+    {
+      "id": 997,
+      "front": "last-minute",
+      "back": "土壇場の、間際になっての",
+      "phonetic": ""
+    },
+    {
+      "id": 998,
+      "front": "copyright",
+      "back": "著作権",
+      "phonetic": ""
+    },
+    {
+      "id": 999,
+      "front": "breathtaking",
+      "back": "息をのむほどの、驚くべき",
+      "phonetic": ""
+    },
+    {
+      "id": 1000,
+      "front": "anonymous",
+      "back": "匿名の",
+      "phonetic": ""
+    }
+  ],
+  "learned": []
+}
