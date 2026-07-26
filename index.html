@@ -76,6 +76,9 @@
 
   <!-- ========== SCREEN: STUDY ========== -->
   <div id="screen-study" class="screen">
+    <!-- Particle Canvas Overlay -->
+    <canvas id="particle-canvas" class="particle-canvas"></canvas>
+
     <header class="study-header">
       <button id="btn-back" class="btn-icon">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -101,6 +104,27 @@
         <div class="stat-badge stat-badge-right" id="btn-show-correct" title="覚えた単語一覧を表示">
           <span class="stat-badge-num" id="badge-correct">0</span>
           <span class="stat-badge-label">覚えた</span>
+        </div>
+      </div>
+
+      <!-- ========== STUDY PACHINKO PANEL ========== -->
+      <div class="pachinko-panel" id="pachinko-panel">
+        <div class="pachinko-header">
+          <div class="pachinko-score">
+            <span class="score-label">SCORE</span>
+            <span class="score-value" id="pachinko-score-val">00000</span>
+          </div>
+          <div class="pachinko-timer hidden" id="rush-timer-display">RUSH: 100s</div>
+        </div>
+        <div class="pachinko-body">
+          <div class="pachinko-screen">
+            <div class="slot-reel" id="reel-0">3</div>
+            <div class="slot-reel" id="reel-1">5</div>
+            <div class="slot-reel" id="reel-2">9</div>
+          </div>
+        </div>
+        <div class="pachinko-footer">
+          <div class="pachinko-status" id="pachinko-status-text">READY</div>
         </div>
       </div>
 

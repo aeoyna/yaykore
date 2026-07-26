@@ -122,6 +122,38 @@ let correctCards = [];
 let isFlipped = false;
 
 // ============================================================
+// PACHINKO & PARTICLES STATE
+// ============================================================
+const SCORE_STORAGE_KEY = 'swipecard_score';
+let score = loadScore();
+let isRushActive = false;
+let rushTimeRemaining = 0;
+let rushTimerInterval = null;
+let isReelSpinning = false;
+
+let particles = [];
+let particleCanvas = null;
+let particleCtx = null;
+let particleAnimationId = null;
+
+function loadScore() {
+  try {
+    const s = localStorage.getItem(SCORE_STORAGE_KEY);
+    return s ? parseInt(s) : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function saveScore(s) {
+  try {
+    localStorage.setItem(SCORE_STORAGE_KEY, s);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// ============================================================
 // METRONOME STATE
 // ============================================================
 let audioCtx = null;
@@ -143,6 +175,17 @@ const $ = id => document.getElementById(id);
 function showScreen(screenId) {
   if (screenId !== 'screen-study') {
     stopMetronome();
+    pauseRush();
+  } else {
+    // Entering study screen: update score display and check RUSH
+    const scoreValEl = $('pachinko-score-val');
+    if (scoreValEl) scoreValEl.textContent = String(score).padStart(5, '0');
+    
+    if (isRushActive && rushTimeRemaining > 0) {
+      resumeRush();
+    } else {
+      resetRushUI();
+    }
   }
   document.querySelectorAll('.screen').forEach(s => {
     if (s.id === screenId) {
@@ -613,11 +656,29 @@ function markCard(correct) {
   saveDecks(decks);
   studyIndex++;
   animateCardOut(correct, () => renderStudyCard());
+
+  // Audio activation and gacha roll
+  initAudioContext();
+  checkGachaChance();
 }
 
 function animateCardOut(correct, callback) {
   const el = $('current-card');
   if (!el) { callback(); return; }
+
+  // Spawn particle effect floating upwards from the card position
+  try {
+    const rect = el.getBoundingClientRect();
+    const studyScreen = $('screen-study');
+    if (studyScreen) {
+      const studyRect = studyScreen.getBoundingClientRect();
+      const canvasX = rect.left - studyRect.left + rect.width / 2;
+      const canvasY = rect.top - studyRect.top + rect.height / 2;
+      spawnParticles(canvasX, canvasY, correct ? '#34d399' : '#f87171');
+    }
+  } catch (e) {
+    console.error('Failed to spawn particles:', e);
+  }
 
   // 1. Swipe out the current card
   const dx = correct ? 120 : -120;
@@ -1230,6 +1291,495 @@ $('slider-metro-bpm').addEventListener('input', e => {
 });
 
 // ============================================================
+// AUDIO CONTEXT HELPER
+// ============================================================
+function initAudioContext() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
+// ============================================================
+// PACHINKO GACHA LOGIC
+// ============================================================
+function checkGachaChance() {
+  const roll = Math.random();
+  const triggerThreshold = isRushActive ? 1.0 : 0.2; // 100% in RUSH, 20% in normal
+  
+  if (roll < triggerThreshold) {
+    startSlotSpin();
+  }
+}
+
+function startSlotSpin() {
+  if (isReelSpinning) return;
+  isReelSpinning = true;
+  
+  const statusEl = $('pachinko-status-text');
+  if (statusEl) {
+    statusEl.textContent = 'SPINNING...';
+    statusEl.className = 'pachinko-status neon-blink';
+  }
+  
+  // 1/99 chance of winning
+  const winRoll = Math.random();
+  const isWin = winRoll < (1 / 99);
+  
+  let targetCombination = [];
+  let triggersRush = false;
+  
+  if (isWin) {
+    if (isRushActive) {
+      triggersRush = true;
+      targetCombination = [7, 7, 7];
+    } else {
+      triggersRush = Math.random() < 0.5; // 50% RUSH trigger
+      if (triggersRush) {
+        targetCombination = [7, 7, 7];
+      } else {
+        const digits = [1, 3, 5, 8];
+        const d = digits[Math.floor(Math.random() * digits.length)];
+        targetCombination = [d, d, d];
+      }
+    }
+  } else {
+    // Losing roll
+    const d1 = Math.floor(Math.random() * 9) + 1;
+    let d2 = Math.floor(Math.random() * 9) + 1;
+    let d3 = Math.floor(Math.random() * 9) + 1;
+    while (d2 === d1 && d3 === d1) {
+      d2 = Math.floor(Math.random() * 9) + 1;
+      d3 = Math.floor(Math.random() * 9) + 1;
+    }
+    targetCombination = [d1, d2, d3];
+  }
+  
+  animateReels(targetCombination, isWin, triggersRush);
+}
+
+function animateReels(targets, isWin, triggersRush) {
+  const reel0 = $('reel-0');
+  const reel1 = $('reel-1');
+  const reel2 = $('reel-2');
+  if (!reel0 || !reel1 || !reel2) return;
+  
+  let count0 = 0;
+  let count1 = 0;
+  let count2 = 0;
+  const spinInterval = 60;
+  
+  playSlotSpinSound();
+
+  const int0 = setInterval(() => {
+    reel0.textContent = Math.floor(Math.random() * 9) + 1;
+    count0++;
+    playReelTickSound();
+    if (count0 > 15) {
+      clearInterval(int0);
+      reel0.textContent = targets[0];
+      playReelStopSound();
+    }
+  }, spinInterval);
+
+  const int1 = setInterval(() => {
+    reel1.textContent = Math.floor(Math.random() * 9) + 1;
+    count1++;
+    playReelTickSound();
+    if (count1 > 25) {
+      clearInterval(int1);
+      reel1.textContent = targets[1];
+      playReelStopSound();
+    }
+  }, spinInterval);
+
+  const int2 = setInterval(() => {
+    reel2.textContent = Math.floor(Math.random() * 9) + 1;
+    count2++;
+    playReelTickSound();
+    if (count2 > 35) {
+      clearInterval(int2);
+      reel2.textContent = targets[2];
+      playReelStopSound();
+      
+      evaluateSlotResult(isWin, triggersRush);
+    }
+  }, spinInterval);
+}
+
+function evaluateSlotResult(isWin, triggersRush) {
+  isReelSpinning = false;
+  const statusEl = $('pachinko-status-text');
+  if (!statusEl) return;
+  statusEl.className = 'pachinko-status';
+  
+  if (isWin) {
+    statusEl.textContent = 'WIN!';
+    statusEl.classList.add('win-flash');
+    
+    const points = isRushActive ? 3000 : 1000;
+    animateScoreIncrease(points);
+    playWinFanfareSound();
+    
+    // Spawn winner particles above the reels
+    const rect = $('pachinko-panel').getBoundingClientRect();
+    const studyScreen = $('screen-study');
+    if (studyScreen) {
+      const studyRect = studyScreen.getBoundingClientRect();
+      const x = rect.left - studyRect.left + rect.width / 2;
+      const y = rect.top - studyRect.top + rect.height / 2;
+      spawnParticles(x, y, '#fbbf24');
+    }
+
+    setTimeout(() => {
+      statusEl.classList.remove('win-flash');
+      if (triggersRush) {
+        if (isRushActive) {
+          rushTimeRemaining += 30; // Extend RUSH
+          const timerEl = $('rush-timer-display');
+          if (timerEl) timerEl.textContent = `RUSH: ${rushTimeRemaining}s`;
+          showToast('⚡ RUSH EXTENDED +30s! ⚡');
+          playRushExtendSound();
+        } else {
+          isRushActive = true;
+          startRush();
+        }
+      } else {
+        statusEl.textContent = 'READY';
+      }
+    }, 2000);
+  } else {
+    statusEl.textContent = 'READY';
+  }
+}
+
+function animateScoreIncrease(amount) {
+  const scoreValEl = $('pachinko-score-val');
+  if (!scoreValEl) return;
+  const targetScore = score + amount;
+  const step = Math.ceil(amount / 20);
+  
+  const timer = setInterval(() => {
+    score += step;
+    if (score >= targetScore) {
+      score = targetScore;
+      clearInterval(timer);
+      saveScore(score);
+    }
+    scoreValEl.textContent = String(score).padStart(5, '0');
+  }, 30);
+}
+
+// ============================================================
+// RUSH TIMER LOGIC
+// ============================================================
+function startRush() {
+  if (rushTimerInterval) clearInterval(rushTimerInterval);
+  
+  if (rushTimeRemaining <= 0) {
+    rushTimeRemaining = 100;
+  }
+  
+  showToast('🔥 RUSH ENTERED! 100% GACHA RATE 🔥');
+  playRushSirenSound();
+  resumeRush();
+}
+
+function resumeRush() {
+  if (rushTimerInterval) clearInterval(rushTimerInterval);
+  
+  const panel = $('pachinko-panel');
+  if (panel) panel.classList.add('rush-active');
+  
+  const timerEl = $('rush-timer-display');
+  if (timerEl) {
+    timerEl.classList.remove('hidden');
+    timerEl.textContent = `RUSH: ${rushTimeRemaining}s`;
+  }
+  
+  const statusEl = $('pachinko-status-text');
+  if (statusEl) statusEl.textContent = 'RUSH ACTIVE!';
+
+  rushTimerInterval = setInterval(() => {
+    rushTimeRemaining--;
+    if (rushTimeRemaining <= 0) {
+      endRush();
+    } else {
+      if (timerEl) timerEl.textContent = `RUSH: ${rushTimeRemaining}s`;
+    }
+  }, 1000);
+}
+
+function pauseRush() {
+  if (rushTimerInterval) {
+    clearInterval(rushTimerInterval);
+    rushTimerInterval = null;
+  }
+}
+
+function endRush() {
+  rushTimeRemaining = 0;
+  isRushActive = false;
+  pauseRush();
+  
+  showToast('RUSH ENDED');
+  playRushEndSound();
+  resetRushUI();
+}
+
+function resetRushUI() {
+  const panel = $('pachinko-panel');
+  if (panel) panel.classList.remove('rush-active');
+  const timerEl = $('rush-timer-display');
+  if (timerEl) timerEl.classList.add('hidden');
+  const statusEl = $('pachinko-status-text');
+  if (statusEl) statusEl.textContent = 'READY';
+}
+
+// ============================================================
+// PARTICLE ANIMATION ENGINE
+// ============================================================
+function initParticleCanvas() {
+  particleCanvas = $('particle-canvas');
+  if (!particleCanvas) return;
+  particleCtx = particleCanvas.getContext('2d');
+  
+  resizeParticleCanvas();
+  window.addEventListener('resize', resizeParticleCanvas);
+}
+
+function resizeParticleCanvas() {
+  if (!particleCanvas) return;
+  const studyScreen = $('screen-study');
+  if (studyScreen) {
+    const rect = studyScreen.getBoundingClientRect();
+    particleCanvas.width = rect.width;
+    particleCanvas.height = rect.height;
+  }
+}
+
+function spawnParticles(x, y, color) {
+  for (let i = 0; i < 40; i++) {
+    particles.push({
+      x: x + (Math.random() - 0.5) * 80,
+      y: y + (Math.random() - 0.5) * 120,
+      vx: (Math.random() - 0.5) * 4,
+      vy: -Math.random() * 6 - 3, // fly upwards
+      alpha: 1.0,
+      decay: Math.random() * 0.015 + 0.01,
+      size: Math.random() * 4 + 2,
+      color: color || '#fbbf24'
+    });
+  }
+  
+  if (!particleAnimationId) {
+    updateParticles();
+  }
+}
+
+function updateParticles() {
+  if (!particleCanvas || !particleCtx) return;
+  particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+  
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.alpha -= p.decay;
+    
+    if (p.alpha <= 0) {
+      particles.splice(i, 1);
+    } else {
+      particleCtx.save();
+      particleCtx.globalAlpha = p.alpha;
+      
+      // glow
+      particleCtx.shadowBlur = p.size * 2;
+      particleCtx.shadowColor = p.color;
+      
+      particleCtx.fillStyle = p.color;
+      particleCtx.beginPath();
+      particleCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      particleCtx.fill();
+      particleCtx.restore();
+    }
+  }
+  
+  if (particles.length > 0) {
+    particleAnimationId = requestAnimationFrame(updateParticles);
+  } else {
+    particleAnimationId = null;
+  }
+}
+
+// ============================================================
+// AUDIO SOUND SYNTHESIS
+// ============================================================
+function playReelTickSound() {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  
+  osc.frequency.value = 1400;
+  gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.02);
+  
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.02);
+}
+
+function playReelStopSound() {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  
+  osc.type = 'triangle';
+  osc.frequency.value = 650;
+  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+  
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.08);
+}
+
+// Metronome Event Listeners
+$('btn-metro-toggle').addEventListener('click', toggleMetronome);
+$('slider-metro-bpm').addEventListener('input', e => {
+  metroBpm = parseInt(e.target.value);
+  $('label-metro-bpm').textContent = `${metroBpm} BPM`;
+});
+
+// Debug triggers on Score badge:
+// - Single click: force a slot spin
+// - Double click: toggle RUSH mode
+setTimeout(() => {
+  const scoreBadgeEl = document.querySelector('.pachinko-score');
+  if (scoreBadgeEl) {
+    scoreBadgeEl.addEventListener('click', e => {
+      if (e.detail === 1) {
+        setTimeout(() => {
+          if (!isRushActive && !isReelSpinning) {
+            initAudioContext();
+            startSlotSpin();
+          }
+        }, 220);
+      }
+    });
+    scoreBadgeEl.addEventListener('dblclick', () => {
+      initAudioContext();
+      if (isRushActive) {
+        endRush();
+      } else {
+        isRushActive = true;
+        startRush();
+      }
+    });
+  }
+}, 100);
+
+function playSlotSpinSound() {
+  if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  
+  osc.frequency.setValueAtTime(800, now);
+  osc.frequency.setValueAtTime(1100, now + 0.06);
+  
+  gain.gain.setValueAtTime(0.08, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+  
+  osc.start(now);
+  osc.stop(now + 0.12);
+}
+
+function playWinFanfareSound() {
+  if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  const notes = [523.25, 659.25, 783.99, 1046.50];
+  notes.forEach((freq, idx) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.frequency.value = freq;
+    
+    const time = now + idx * 0.12;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.setValueAtTime(0.1, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.25);
+    
+    osc.start(time);
+    osc.stop(time + 0.25);
+  });
+}
+
+function playRushSirenSound() {
+  if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  
+  osc.type = 'sawtooth';
+  osc.frequency.setValueAtTime(350, now);
+  osc.frequency.exponentialRampToValueAtTime(1300, now + 0.8);
+  
+  gain.gain.setValueAtTime(0.08, now);
+  gain.gain.linearRampToValueAtTime(0.08, now + 0.6);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+  
+  osc.start(now);
+  osc.stop(now + 0.8);
+}
+
+function playRushExtendSound() {
+  if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  
+  osc.frequency.setValueAtTime(900, now);
+  osc.frequency.setValueAtTime(1300, now + 0.1);
+  osc.frequency.setValueAtTime(1800, now + 0.2);
+  
+  gain.gain.setValueAtTime(0.1, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+  
+  osc.start(now);
+  osc.stop(now + 0.35);
+}
+
+function playRushEndSound() {
+  if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  
+  osc.frequency.setValueAtTime(750, now);
+  osc.frequency.linearRampToValueAtTime(180, now + 0.5);
+  
+  gain.gain.setValueAtTime(0.08, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+  
+  osc.start(now);
+  osc.stop(now + 0.5);
+}
+
+// ============================================================
 // INIT
 // ============================================================
 
@@ -1250,6 +1800,7 @@ async function initApp() {
   }
   renderHome();
   updateMetroDots();
+  initParticleCanvas();
 }
 
 initApp();
