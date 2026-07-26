@@ -1228,11 +1228,6 @@ $('slider-metro-bpm').addEventListener('input', e => {
   metroBpm = parseInt(e.target.value);
   $('label-metro-bpm').textContent = `${metroBpm} BPM`;
 });
-$('select-metro-beats').addEventListener('change', e => {
-  beatsPerMeasure = parseInt(e.target.value);
-  currentBeat = 0;
-  updateMetroDots();
-});
 
 // ============================================================
 // INIT
