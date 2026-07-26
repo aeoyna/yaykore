@@ -118,6 +118,7 @@ let studyIndex = 0;
 let sessionCorrect = 0;
 let sessionWrong = 0;
 let wrongCards = [];
+let correctCards = [];
 let isFlipped = false;
 
 // ============================================================
@@ -191,6 +192,11 @@ function renderHome() {
     const learned = deck.learned ? deck.learned.length : 0;
     const pct = total > 0 ? Math.round((learned / total) * 100) : 0;
 
+    // Count due cards
+    const now = Date.now();
+    const dueCount = deck.cards.filter(c => !c.srs || !c.srs.nextReview || c.srs.nextReview <= now).length;
+    const dueText = dueCount > 0 ? `<span class="due-badge">${dueCount} 復習</span>` : '<span class="due-clean">完了</span>';
+
     const card = document.createElement('div');
     card.className = 'deck-card';
     card.style.animationDelay = `${i * 60}ms`;
@@ -198,7 +204,7 @@ function renderHome() {
       <div class="deck-emoji">${deck.emoji}</div>
       <div class="deck-info">
         <div class="deck-title">${escHtml(deck.name)}</div>
-        <div class="deck-meta">${total} 単語 · 習得 ${pct}%</div>
+        <div class="deck-meta">${total} 単語 · 習得 ${pct}% · ${dueText}</div>
         <div class="deck-progress-wrap">
           <div class="deck-progress" style="width:${pct}%"></div>
         </div>
@@ -377,9 +383,28 @@ function startStudy(deckIdx, wrongOnly = false) {
     return;
   }
 
-  studyQueue = wrongOnly
-    ? wrongCards.map(c => currentDeck.cards.indexOf(c)).filter(i => i >= 0)
-    : [...Array(currentDeck.cards.length).keys()];
+  if (wrongOnly) {
+    studyQueue = wrongCards.map(c => currentDeck.cards.indexOf(c)).filter(i => i >= 0);
+  } else {
+    const now = Date.now();
+    const dueIndices = currentDeck.cards
+      .map((c, idx) => ({ card: c, idx }))
+      .filter(item => !item.card.srs || !item.card.srs.nextReview || item.card.srs.nextReview <= now)
+      .map(item => item.idx);
+
+    if (dueIndices.length > 0) {
+      studyQueue = dueIndices;
+      showToast(`📝 復習対象の単語 ${dueIndices.length} 枚を学習します`);
+    } else {
+      if (confirm('現在、復習が必要な単語はありません。すべての単語を学習しますか？')) {
+        studyQueue = [...Array(currentDeck.cards.length).keys()];
+      } else {
+        showScreen('screen-home');
+        renderHome();
+        return;
+      }
+    }
+  }
 
   // Shuffle
   if (settings.shuffle !== false) {
@@ -393,6 +418,7 @@ function startStudy(deckIdx, wrongOnly = false) {
   sessionCorrect = 0;
   sessionWrong = 0;
   wrongCards = [];
+  correctCards = [];
   isFlipped = false;
 
   $('study-deck-name').textContent = currentDeck.emoji + ' ' + currentDeck.name;
@@ -507,22 +533,61 @@ function updateProgress() {
   $('progress-bar').style.width = `${total > 0 ? (done / total) * 100 : 0}%`;
 
   // Update stat badges
-  const remaining = Math.max(total - done, 0);
   const badgeL = $('badge-learning');
   const badgeR = $('badge-correct');
-  if (badgeL) badgeL.textContent = remaining;
+  if (badgeL) badgeL.textContent = sessionWrong;
   if (badgeR) badgeR.textContent = sessionCorrect;
 }
 
 function markCard(correct) {
   const card = currentDeck.cards[studyQueue[studyIndex]];
+  
+  if (!card.srs) {
+    card.srs = {
+      lastReviewed: 0,
+      interval: 0,
+      easeFactor: 2.5,
+      repetitions: 0,
+      nextReview: 0
+    };
+  }
+
+  const now = Date.now();
+  card.srs.lastReviewed = now;
+
   if (correct) {
     sessionCorrect++;
+    correctCards.push(card);
+    
+    // Interval Calculation (1 min -> 5 min -> 15 min -> previous interval * easeFactor)
+    let nextInterval = 0;
+    if (card.srs.repetitions === 0) {
+      nextInterval = 1;
+    } else if (card.srs.repetitions === 1) {
+      nextInterval = 5;
+    } else if (card.srs.repetitions === 2) {
+      nextInterval = 15;
+    } else {
+      nextInterval = Math.round(card.srs.interval * card.srs.easeFactor);
+    }
+    
+    card.srs.interval = nextInterval;
+    card.srs.repetitions++;
+    card.srs.nextReview = now + nextInterval * 60 * 1000;
+    card.srs.easeFactor = Math.min(3.0, card.srs.easeFactor + 0.1);
+
     if (!currentDeck.learned) currentDeck.learned = [];
     if (!currentDeck.learned.includes(card.id)) currentDeck.learned.push(card.id);
   } else {
     sessionWrong++;
     wrongCards.push(card);
+    
+    // Reset on fail (immediate review)
+    card.srs.interval = 0;
+    card.srs.repetitions = 0;
+    card.srs.nextReview = now;
+    card.srs.easeFactor = Math.max(1.3, card.srs.easeFactor - 0.2);
+
     // Remove from learned if re-marked wrong
     if (currentDeck.learned) {
       currentDeck.learned = currentDeck.learned.filter(id => id !== card.id);
@@ -918,6 +983,120 @@ document.addEventListener('touchmove', e => {
     }
   }
 }, { passive: true });
+
+// ============================================================
+// CARD LIST MODAL LOGIC
+// ============================================================
+
+function getSrsInfo(card) {
+  if (!card.srs || card.srs.lastReviewed === 0) {
+    return { retention: 0, nextText: '未学習' };
+  }
+  
+  const now = Date.now();
+  const elapsed = now - card.srs.lastReviewed;
+  const intervalMs = card.srs.interval * 60 * 1000;
+  
+  let retention = 100;
+  if (intervalMs > 0) {
+    // Retention rate decays to 50% at the interval time (Leitner/SM2 scheduling)
+    retention = Math.round(Math.exp(-0.693 * elapsed / intervalMs) * 100);
+    retention = Math.max(0, Math.min(100, retention));
+  } else {
+    retention = 0;
+  }
+  
+  let nextText = '';
+  const diffMin = Math.round((card.srs.nextReview - now) / (60 * 1000));
+  if (diffMin <= 0) {
+    nextText = '今すぐ復習';
+  } else if (diffMin < 60) {
+    nextText = `${diffMin}分後`;
+  } else {
+    const diffHours = Math.round(diffMin / 60);
+    if (diffHours < 24) {
+      nextText = `${diffHours}時間後`;
+    } else {
+      nextText = `${Math.round(diffHours / 24)}日後`;
+    }
+  }
+  
+  return { retention, nextText };
+}
+
+function openCardListModal(type) {
+  const modal = $('modal-card-list');
+  const titleEl = $('modal-card-list-title');
+  const container = $('card-list-container');
+  
+  const list = type === 'correct' ? correctCards : wrongCards;
+  const label = type === 'correct' ? '覚えた単語' : '学習中の単語';
+  
+  titleEl.textContent = `${label} (${list.length})`;
+  container.innerHTML = '';
+  
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state" style="padding: 24px 0;">
+        <div class="empty-state-icon" style="font-size: 2.5rem;">📭</div>
+        <p>該当する単語はありません</p>
+      </div>`;
+  } else {
+    list.forEach(card => {
+      const srs = getSrsInfo(card);
+      let retentionColor = '#f87171'; // Red
+      if (srs.retention >= 80) {
+        retentionColor = '#34d399'; // Green
+      } else if (srs.retention >= 50) {
+        retentionColor = '#fbbf24'; // Yellow
+      }
+      
+      const item = document.createElement('div');
+      item.className = 'list-card-item';
+      item.innerHTML = `
+        <div class="list-card-left">
+          <div class="list-card-front">${escHtml(card.front)}</div>
+          <div class="list-card-back">${escHtml(card.back)}</div>
+          <div class="list-card-srs">
+            <span class="srs-retention" style="color: ${retentionColor}">定着率: ${srs.retention}%</span>
+            <span class="srs-separator">·</span>
+            <span class="srs-next">次回: ${srs.nextText}</span>
+          </div>
+        </div>
+        <button class="list-card-speak" title="英語読み上げ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        </button>`;
+      
+      const speakBtn = item.querySelector('.list-card-speak');
+      speakBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        speakText(card.front);
+      });
+      
+      container.appendChild(item);
+    });
+  }
+  
+  modal.classList.remove('hidden');
+}
+
+function closeCardListModal() {
+  $('modal-card-list').classList.add('hidden');
+}
+
+// Badge click events
+$('btn-show-learning').addEventListener('click', () => openCardListModal('learning'));
+$('btn-show-correct').addEventListener('click', () => openCardListModal('correct'));
+
+// Card list modal close events
+$('modal-card-list-close').addEventListener('click', closeCardListModal);
+$('btn-close-card-list').addEventListener('click', closeCardListModal);
+$('modal-card-list').addEventListener('click', e => {
+  if (e.target === $('modal-card-list')) closeCardListModal();
+});
 
 // ============================================================
 // INIT

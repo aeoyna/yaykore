@@ -94,11 +94,11 @@
     <main class="study-main">
       <!-- Stat badges -->
       <div class="study-stat-badges">
-        <div class="stat-badge stat-badge-left">
+        <div class="stat-badge stat-badge-left" id="btn-show-learning" title="学習中の単語一覧を表示">
           <span class="stat-badge-num" id="badge-learning">0</span>
           <span class="stat-badge-label">学習中</span>
         </div>
-        <div class="stat-badge stat-badge-right">
+        <div class="stat-badge stat-badge-right" id="btn-show-correct" title="覚えた単語一覧を表示">
           <span class="stat-badge-num" id="badge-correct">0</span>
           <span class="stat-badge-label">覚えた</span>
         </div>
@@ -215,6 +215,28 @@
 
   <!-- Toast -->
   <div id="toast" class="toast hidden"></div>
+
+  <!-- ========== MODAL: Card List ========== -->
+  <div id="modal-card-list" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modal-card-list-title">単語一覧</h3>
+        <button id="modal-card-list-close" class="btn-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+        <div id="card-list-container" class="card-list-container">
+          <!-- JSで動的に追加されます -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-close-card-list" class="btn-primary" style="width: 100%;">閉じる</button>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>

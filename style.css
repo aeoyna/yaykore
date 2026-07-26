@@ -539,7 +539,8 @@ body::before {
   justify-content: space-between;
   width: 100%;
   max-width: 400px;
-  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: auto;
   padding: 0 4px;
   box-sizing: border-box;
 }
@@ -554,6 +555,28 @@ body::before {
   padding: 6px 18px;
   min-width: 70px;
   backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s, border-color 0.2s;
+}
+
+.stat-badge:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.stat-badge:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.stat-badge-left:hover {
+  border-color: rgba(248, 113, 113, 0.6);
+  background: rgba(248, 113, 113, 0.06);
+}
+
+.stat-badge-right:hover {
+  border-color: rgba(52, 211, 153, 0.6);
+  background: rgba(52, 211, 153, 0.06);
 }
 
 .stat-badge-left {
@@ -594,6 +617,8 @@ body::before {
   height: clamp(220px, 40vh, 340px);
   perspective: 1000px;
   transform-style: preserve-3d;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 /* Stack shadow cards */
@@ -867,6 +892,8 @@ body::before {
   padding: 32px 24px;
   max-width: 400px;
   animation: fadeSlideIn 0.4s ease;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .complete-icon {
@@ -1565,4 +1592,96 @@ input, textarea {
   cursor: pointer;
 }
 
+/* Card list modal specific styles */
+.card-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 0;
+}
 
+.list-card-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  gap: 12px;
+  transition: background 0.2s;
+}
+
+.list-card-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.list-card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.list-card-front {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.list-card-back {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.list-card-speak {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.list-card-speak:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* デッキ一覧の復習ステータスバッジ */
+.due-badge {
+  background: rgba(248, 113, 113, 0.15);
+  color: var(--red);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.due-clean {
+  background: rgba(52, 211, 153, 0.15);
+  color: var(--green);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+/* 単語リストの忘却曲線ステータス表示 */
+.list-card-srs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  color: var(--text-muted);
+}
+
+.srs-separator {
+  opacity: 0.5;
+}
