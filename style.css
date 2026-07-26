@@ -1685,3 +1685,134 @@ input, textarea {
 .srs-separator {
   opacity: 0.5;
 }
+
+/* ============================
+   STUDY METRONOME PANEL
+   ============================ */
+.study-metronome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 12px 20px;
+  gap: 16px;
+  margin: 0 auto 12px auto;
+  box-sizing: border-box;
+  backdrop-filter: blur(12px);
+}
+
+.metro-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.metro-btn-play {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--purple-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.metro-btn-play:hover {
+  background: rgba(59, 130, 246, 0.3);
+  transform: scale(1.08);
+  color: #fff;
+}
+
+.metro-btn-play.playing {
+  background: rgba(248, 113, 113, 0.2);
+  border-color: rgba(248, 113, 113, 0.4);
+  color: var(--red);
+}
+
+.metro-btn-play.playing:hover {
+  background: rgba(248, 113, 113, 0.35);
+}
+
+.metro-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.metro-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 0.1s, transform 0.1s, box-shadow 0.1s;
+}
+
+/* 拍ごとの点滅エフェクト */
+.metro-dot.active-0 {
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green-glow);
+  transform: scale(1.2);
+}
+
+.metro-dot.active-other {
+  background: var(--purple-light);
+  box-shadow: 0 0 10px rgba(147, 197, 253, 0.4);
+  transform: scale(1.1);
+}
+
+.metro-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.metro-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--border);
+  accent-color: var(--purple);
+  cursor: pointer;
+}
+
+.metro-bpm-text {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 54px;
+  text-align: right;
+}
+
+.metro-right {
+  display: flex;
+  align-items: center;
+}
+
+.metro-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  outline: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: var(--transition);
+}
+
+.metro-select:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--border-strong);
+}

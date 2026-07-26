@@ -122,6 +122,36 @@
       </div>
     </main>
 
+    <!-- ========== STUDY METRONOME ========== -->
+    <div class="study-metronome" id="study-metronome">
+      <div class="metro-left">
+        <button id="btn-metro-toggle" class="metro-btn-play" title="メトロノームの再生/一時停止">
+          <!-- Play Icon -->
+          <svg class="icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          <!-- Stop Icon -->
+          <svg class="icon-stop hidden" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+          </svg>
+        </button>
+        <div class="metro-dots">
+          <!-- 動的に拍数のドットが追加されます -->
+        </div>
+      </div>
+      <div class="metro-center">
+        <input type="range" id="slider-metro-bpm" min="40" max="220" value="60" class="metro-slider">
+        <span id="label-metro-bpm" class="metro-bpm-text">60 BPM</span>
+      </div>
+      <div class="metro-right">
+        <select id="select-metro-beats" class="metro-select">
+          <option value="2" selected>2 拍子</option>
+          <option value="3">3 拍子</option>
+          <option value="4">4 拍子</option>
+        </select>
+      </div>
+    </div>
+
     <!-- Action buttons -->
     <footer class="study-footer" id="study-footer">
       <button id="btn-flip" class="action-btn action-btn-flip" title="カードをめくる">

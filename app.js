@@ -122,12 +122,28 @@ let correctCards = [];
 let isFlipped = false;
 
 // ============================================================
+// METRONOME STATE
+// ============================================================
+let audioCtx = null;
+let isMetroPlaying = false;
+let metroBpm = 60;
+let beatsPerMeasure = 2;
+let currentBeat = 0;
+let nextNoteTime = 0.0;
+let lookahead = 25.0; // ms
+let scheduleAheadTime = 0.1; // sec
+let metroTimerId = null;
+
+// ============================================================
 // DOM HELPERS
 // ============================================================
 
 const $ = id => document.getElementById(id);
 
 function showScreen(screenId) {
+  if (screenId !== 'screen-study') {
+    stopMetronome();
+  }
   document.querySelectorAll('.screen').forEach(s => {
     if (s.id === screenId) {
       s.classList.remove('slide-out');
@@ -1099,6 +1115,126 @@ $('modal-card-list').addEventListener('click', e => {
 });
 
 // ============================================================
+// METRONOME LOGIC
+// ============================================================
+
+function updateMetroDots() {
+  const container = document.querySelector('.metro-dots');
+  if (!container) return;
+  container.innerHTML = '';
+  for (let i = 0; i < beatsPerMeasure; i++) {
+    const dot = document.createElement('span');
+    dot.className = 'metro-dot';
+    dot.id = `metro-dot-${i}`;
+    container.appendChild(dot);
+  }
+}
+
+function highlightBeat(beatNumber) {
+  for (let i = 0; i < beatsPerMeasure; i++) {
+    const dot = $(`metro-dot-${i}`);
+    if (dot) dot.className = 'metro-dot';
+  }
+  const currentDot = $(`metro-dot-${beatNumber}`);
+  if (currentDot) {
+    if (beatNumber === 0) {
+      currentDot.classList.add('active-0');
+    } else {
+      currentDot.classList.add('active-other');
+    }
+  }
+}
+
+function clearActiveDots() {
+  for (let i = 0; i < beatsPerMeasure; i++) {
+    const dot = $(`metro-dot-${i}`);
+    if (dot) dot.className = 'metro-dot';
+  }
+}
+
+function nextBeat() {
+  const secondsPerBeat = 60.0 / metroBpm;
+  nextNoteTime += secondsPerBeat;
+  currentBeat = (currentBeat + 1) % beatsPerMeasure;
+}
+
+function scheduleNote(beatNumber, time) {
+  if (!audioCtx) return;
+  
+  const osc = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+  osc.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
+  osc.frequency.value = beatNumber === 0 ? 1000 : 800;
+  
+  gainNode.gain.setValueAtTime(1, time);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+
+  osc.start(time);
+  osc.stop(time + 0.05);
+
+  const delay = (time - audioCtx.currentTime) * 1000;
+  setTimeout(() => {
+    if (isMetroPlaying) highlightBeat(beatNumber);
+  }, Math.max(0, delay));
+}
+
+function metroScheduler() {
+  while (nextNoteTime < audioCtx.currentTime + scheduleAheadTime) {
+    scheduleNote(currentBeat, nextNoteTime);
+    nextBeat();
+  }
+  metroTimerId = setTimeout(metroScheduler, lookahead);
+}
+
+function toggleMetronome() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+
+  const btn = $('btn-metro-toggle');
+  if (isMetroPlaying) {
+    stopMetronome();
+  } else {
+    isMetroPlaying = true;
+    currentBeat = 0;
+    nextNoteTime = audioCtx.currentTime;
+    btn.classList.add('playing');
+    btn.querySelector('.icon-play').classList.add('hidden');
+    btn.querySelector('.icon-stop').classList.remove('hidden');
+    metroScheduler();
+  }
+}
+
+function stopMetronome() {
+  isMetroPlaying = false;
+  clearTimeout(metroTimerId);
+  const btn = $('btn-metro-toggle');
+  if (btn) {
+    btn.classList.remove('playing');
+    btn.querySelector('.icon-play').classList.remove('hidden');
+    btn.querySelector('.icon-stop').classList.add('hidden');
+  }
+  clearActiveDots();
+}
+
+// Metronome Event Listeners
+$('btn-metro-toggle').addEventListener('click', toggleMetronome);
+$('slider-metro-bpm').addEventListener('input', e => {
+  metroBpm = parseInt(e.target.value);
+  $('label-metro-bpm').textContent = `${metroBpm} BPM`;
+});
+$('select-metro-beats').addEventListener('change', e => {
+  beatsPerMeasure = parseInt(e.target.value);
+  currentBeat = 0;
+  updateMetroDots();
+});
+
+// ============================================================
 // INIT
 // ============================================================
 
@@ -1118,6 +1254,7 @@ async function initApp() {
     }
   }
   renderHome();
+  updateMetroDots();
 }
 
 initApp();
