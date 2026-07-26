@@ -1318,10 +1318,27 @@ function startSlotSpin() {
   if (isReelSpinning) return;
   isReelSpinning = true;
   
-  const statusEl = $('pachinko-status-text');
+  // Show slot gacha popup modal
+  const modal = $('modal-pachinko-slot');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+  }
+  
+  // Update modal RUSH styles
+  const modalContent = document.querySelector('.pachinko-modal-content');
+  if (modalContent) {
+    if (isRushActive) {
+      modalContent.classList.add('rush-active');
+    } else {
+      modalContent.classList.remove('rush-active');
+    }
+  }
+  
+  const statusEl = $('pachinko-modal-status');
   if (statusEl) {
     statusEl.textContent = 'SPINNING...';
-    statusEl.className = 'pachinko-status neon-blink';
+    statusEl.className = 'pachinko-modal-title neon-blink';
   }
   
   // 1/99 chance of winning
@@ -1411,9 +1428,9 @@ function animateReels(targets, isWin, triggersRush) {
 
 function evaluateSlotResult(isWin, triggersRush) {
   isReelSpinning = false;
-  const statusEl = $('pachinko-status-text');
+  const statusEl = $('pachinko-modal-status');
   if (!statusEl) return;
-  statusEl.className = 'pachinko-status';
+  statusEl.className = 'pachinko-modal-title';
   
   if (isWin) {
     statusEl.textContent = 'WIN!';
@@ -1423,35 +1440,49 @@ function evaluateSlotResult(isWin, triggersRush) {
     animateScoreIncrease(points);
     playWinFanfareSound();
     
-    // Spawn winner particles above the reels
-    const rect = $('pachinko-panel').getBoundingClientRect();
+    // Spawn winner particles from the center of the screen
     const studyScreen = $('screen-study');
     if (studyScreen) {
       const studyRect = studyScreen.getBoundingClientRect();
-      const x = rect.left - studyRect.left + rect.width / 2;
-      const y = rect.top - studyRect.top + rect.height / 2;
+      const x = studyRect.width / 2;
+      const y = studyRect.height / 2;
       spawnParticles(x, y, '#fbbf24');
     }
 
     setTimeout(() => {
       statusEl.classList.remove('win-flash');
+      statusEl.textContent = 'READY';
+      
+      // Close modal
+      const modal = $('modal-pachinko-slot');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = '';
+      }
+      
       if (triggersRush) {
         if (isRushActive) {
           rushTimeRemaining += 30; // Extend RUSH
-          const timerEl = $('rush-timer-display');
-          if (timerEl) timerEl.textContent = `RUSH: ${rushTimeRemaining}s`;
+          const statusEl = $('score-badge-status-text');
+          if (statusEl) statusEl.textContent = `RUSH: ${rushTimeRemaining}s`;
           showToast('⚡ RUSH EXTENDED +30s! ⚡');
           playRushExtendSound();
         } else {
           isRushActive = true;
           startRush();
         }
-      } else {
-        statusEl.textContent = 'READY';
       }
-    }, 2000);
+    }, 2200); // stay open for 2.2s on win
   } else {
     statusEl.textContent = 'READY';
+    setTimeout(() => {
+      // Close modal on miss
+      const modal = $('modal-pachinko-slot');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = '';
+      }
+    }, 1200); // stay open for 1.2s on miss
   }
 }
 
@@ -1490,24 +1521,18 @@ function startRush() {
 function resumeRush() {
   if (rushTimerInterval) clearInterval(rushTimerInterval);
   
-  const panel = $('pachinko-panel');
-  if (panel) panel.classList.add('rush-active');
+  const scoreBadge = $('btn-pachinko-score');
+  if (scoreBadge) scoreBadge.classList.add('rush-active');
   
-  const timerEl = $('rush-timer-display');
-  if (timerEl) {
-    timerEl.classList.remove('hidden');
-    timerEl.textContent = `RUSH: ${rushTimeRemaining}s`;
-  }
-  
-  const statusEl = $('pachinko-status-text');
-  if (statusEl) statusEl.textContent = 'RUSH ACTIVE!';
+  const statusEl = $('score-badge-status-text');
+  if (statusEl) statusEl.textContent = `RUSH: ${rushTimeRemaining}s`;
 
   rushTimerInterval = setInterval(() => {
     rushTimeRemaining--;
     if (rushTimeRemaining <= 0) {
       endRush();
     } else {
-      if (timerEl) timerEl.textContent = `RUSH: ${rushTimeRemaining}s`;
+      if (statusEl) statusEl.textContent = `RUSH: ${rushTimeRemaining}s`;
     }
   }, 1000);
 }
@@ -1530,12 +1555,10 @@ function endRush() {
 }
 
 function resetRushUI() {
-  const panel = $('pachinko-panel');
-  if (panel) panel.classList.remove('rush-active');
-  const timerEl = $('rush-timer-display');
-  if (timerEl) timerEl.classList.add('hidden');
-  const statusEl = $('pachinko-status-text');
-  if (statusEl) statusEl.textContent = 'READY';
+  const scoreBadge = $('btn-pachinko-score');
+  if (scoreBadge) scoreBadge.classList.remove('rush-active');
+  const statusEl = $('score-badge-status-text');
+  if (statusEl) statusEl.textContent = 'SCORE';
 }
 
 // ============================================================
@@ -1659,7 +1682,7 @@ $('slider-metro-bpm').addEventListener('input', e => {
 // - Single click: force a slot spin
 // - Double click: toggle RUSH mode
 setTimeout(() => {
-  const scoreBadgeEl = document.querySelector('.pachinko-score');
+  const scoreBadgeEl = document.querySelector('.study-score-badge');
   if (scoreBadgeEl) {
     scoreBadgeEl.addEventListener('click', e => {
       if (e.detail === 1) {
