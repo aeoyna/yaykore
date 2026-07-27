@@ -1329,6 +1329,15 @@ function startSlotSpin() {
     }
   }
   
+  const scoreWrap = $('footer-score-wrap');
+  if (scoreWrap) {
+    if (isRushActive) {
+      scoreWrap.classList.add('rush-active');
+    } else {
+      scoreWrap.classList.remove('rush-active');
+    }
+  }
+  
   const statusEl = $('pachinko-modal-status');
   if (statusEl) {
     statusEl.textContent = 'SPINNING...';
@@ -1514,6 +1523,9 @@ function resumeRush() {
   const scoreBadge = $('btn-pachinko-score');
   if (scoreBadge) scoreBadge.classList.add('rush-active');
   
+  const scoreWrap = $('footer-score-wrap');
+  if (scoreWrap) scoreWrap.classList.add('rush-active');
+  
   const statusEl = $('score-badge-status-text');
   if (statusEl) statusEl.textContent = `RUSH: ${rushTimeRemaining}s`;
 
@@ -1547,6 +1559,10 @@ function endRush() {
 function resetRushUI() {
   const scoreBadge = $('btn-pachinko-score');
   if (scoreBadge) scoreBadge.classList.remove('rush-active');
+  
+  const scoreWrap = $('footer-score-wrap');
+  if (scoreWrap) scoreWrap.classList.remove('rush-active');
+  
   const statusEl = $('score-badge-status-text');
   if (statusEl) statusEl.textContent = 'SCORE';
 }

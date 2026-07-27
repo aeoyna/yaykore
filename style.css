@@ -811,10 +811,13 @@ body::before {
 .study-footer {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px 20px;
-  padding-bottom: max(20px, env(safe-area-inset-bottom));
+  justify-content: space-between;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 16px 20px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  box-sizing: border-box;
 }
 
 .action-btn {
@@ -1883,30 +1886,46 @@ input, textarea {
   100% { transform: scale(1.04); box-shadow: 0 0 14px rgba(239, 68, 68, 0.35); }
 }
 
-.score-badge-val {
+.footer-left-spacer {
+  min-width: 80px;
+}
+
+.footer-score-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 80px;
+  transition: var(--transition);
+}
+
+.footer-score-val {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: #10b981; /* green LED */
   text-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
   letter-spacing: 0.5px;
+  line-height: 1;
 }
 
-.study-score-badge.rush-active .score-badge-val {
+.footer-score-wrap.rush-active .footer-score-val {
   color: #fbbf24; /* gold in RUSH */
   text-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
 }
 
-.score-badge-label {
-  font-size: 0.6rem;
+.footer-score-label {
+  font-size: 0.55rem;
   font-weight: 700;
   color: var(--text-muted);
-  margin-top: 2px;
+  margin-top: 4px;
   letter-spacing: 0.5px;
-  text-align: center;
+  text-align: right;
+  text-transform: uppercase;
+  line-height: 1;
 }
 
-.study-score-badge.rush-active .score-badge-label {
+.footer-score-wrap.rush-active .footer-score-label {
   color: #ef4444;
   font-weight: 800;
 }
