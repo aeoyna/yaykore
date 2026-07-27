@@ -167,6 +167,7 @@ let scheduleAheadTime = 0.1; // sec
 let metroTimerId = null;
 let metroStartTime = 0.0;
 let hasFlipBonusAwarded = false;
+let gachaProbabilityMultiplier = 1.0;
 
 // ============================================================
 // DOM HELPERS
@@ -495,6 +496,7 @@ function renderStudyCard(isSwipe = false) {
   const stack = $('card-stack');
   isFlipped = false;
   hasFlipBonusAwarded = false;
+  gachaProbabilityMultiplier = 1.0;
 
   if (studyIndex >= studyQueue.length) {
     showComplete();
@@ -1301,8 +1303,13 @@ function stopMetronome() {
 
 // Rhythm Game Bonus Check Logic
 function checkRhythmFlip() {
-  if (!isMetroPlaying || !audioCtx) return;
   if (hasFlipBonusAwarded) return;
+  hasFlipBonusAwarded = true;
+  
+  if (!isMetroPlaying || !audioCtx) {
+    gachaProbabilityMultiplier = 1.0;
+    return;
+  }
   
   const elapsed = audioCtx.currentTime - metroStartTime;
   const beatLen = 60.0 / metroBpm;
@@ -1311,8 +1318,11 @@ function checkRhythmFlip() {
   const dist = Math.min(pos, measureLen - pos);
   
   if (dist <= 0.15) { // 150ms timing window
-    hasFlipBonusAwarded = true;
-    awardRhythmBonus(500, 'GREAT FLIP!');
+    gachaProbabilityMultiplier = 1.6 + Math.random() * 0.4; // 1.6 ~ 2.0
+    awardRhythmBonus(50, 'GREAT FLIP!', gachaProbabilityMultiplier, true);
+  } else {
+    gachaProbabilityMultiplier = 0.9 + Math.random() * 0.2; // 0.9 ~ 1.1
+    awardRhythmBonus(0, 'FLIP', gachaProbabilityMultiplier, false);
   }
 }
 
@@ -1326,19 +1336,27 @@ function checkRhythmSwipe() {
   const dist = Math.abs(pos - beatLen);
   
   if (dist <= 0.15) { // 150ms timing window
-    awardRhythmBonus(1000, 'PERFECT SWIPE!');
+    awardRhythmBonus(100, 'PERFECT SWIPE!', gachaProbabilityMultiplier, true);
   }
 }
 
-function awardRhythmBonus(points, message) {
-  animateScoreIncrease(points);
-  playRhythmBonusSound();
+function awardRhythmBonus(points, message, multiplier, isOnBeat = true) {
+  if (points > 0) {
+    animateScoreIncrease(points);
+    playRhythmBonusSound();
+  }
   
   const container = $('screen-study');
   if (container) {
     const feedback = document.createElement('div');
-    feedback.className = 'rhythm-feedback';
-    feedback.innerHTML = `<span class="rhythm-msg">${message}</span><span class="rhythm-pts">+${points}</span>`;
+    feedback.className = `rhythm-feedback ${isOnBeat ? 'on-beat' : 'off-beat'}`;
+    
+    let multText = `x${multiplier.toFixed(2)}`;
+    feedback.innerHTML = `
+      <span class="rhythm-msg">${message}</span>
+      <span class="rhythm-mult">${multText} CHANCE</span>
+      ${points > 0 ? `<span class="rhythm-pts">+${points}</span>` : ''}
+    `;
     
     feedback.style.left = `calc(50% + ${(Math.random() - 0.5) * 60}px)`;
     feedback.style.top = `calc(40% + ${(Math.random() - 0.5) * 60}px)`;
@@ -1399,7 +1417,8 @@ function initAudioContext() {
 // ============================================================
 function checkGachaChance() {
   const roll = Math.random();
-  const triggerThreshold = isRushActive ? 1.0 : 0.2; // 100% in RUSH, 20% in normal
+  const baseThreshold = isRushActive ? 1.0 : 0.2; // 100% in RUSH, 20% in normal
+  const triggerThreshold = baseThreshold * gachaProbabilityMultiplier;
   
   if (roll < triggerThreshold) {
     startSlotSpin();
