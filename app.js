@@ -1313,15 +1313,14 @@ function checkRhythmFlip() {
   
   const elapsed = audioCtx.currentTime - metroStartTime;
   const beatLen = 60.0 / metroBpm;
-  const measureLen = beatLen * 2;
-  const pos = elapsed % measureLen;
-  const dist = Math.min(pos, measureLen - pos);
+  const pos = elapsed % beatLen;
+  const dist = Math.min(pos, beatLen - pos);
   
   if (dist <= 0.15) { // 150ms timing window
-    gachaProbabilityMultiplier = 1.1; // Set to 1.1 (average 1.1)
+    gachaProbabilityMultiplier = 1.1; // Set to 1.1
     awardRhythmBonus(50, 'GREAT FLIP!', gachaProbabilityMultiplier, true);
   } else {
-    gachaProbabilityMultiplier = 0.9; // Set to 0.9 (average 0.9)
+    gachaProbabilityMultiplier = 0.9; // Set to 0.9
     awardRhythmBonus(0, 'FLIP', gachaProbabilityMultiplier, false);
   }
 }
@@ -1331,9 +1330,8 @@ function checkRhythmSwipe() {
   
   const elapsed = audioCtx.currentTime - metroStartTime;
   const beatLen = 60.0 / metroBpm;
-  const measureLen = beatLen * 2;
-  const pos = elapsed % measureLen;
-  const dist = Math.abs(pos - beatLen);
+  const pos = elapsed % beatLen;
+  const dist = Math.min(pos, beatLen - pos);
   
   if (dist <= 0.15) { // 150ms timing window
     awardRhythmBonus(100, 'PERFECT SWIPE!', gachaProbabilityMultiplier, true);

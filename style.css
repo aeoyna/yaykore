@@ -1988,58 +1988,54 @@ input, textarea {
 }
 
 .rhythm-msg {
-  font-size: 1.4rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: #fbbf24; /* Gold */
-  text-shadow: 0 0 10px rgba(251, 191, 36, 0.8), 0 0 20px rgba(0, 0, 0, 0.9);
-  letter-spacing: 1px;
+  text-shadow: 0 0 6px rgba(251, 191, 36, 0.7), 0 0 10px rgba(0, 0, 0, 0.9);
+  letter-spacing: 0.5px;
 }
 
 .rhythm-feedback.off-beat .rhythm-msg {
   color: var(--text-secondary);
-  font-size: 1.15rem;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.15), 0 0 10px rgba(0, 0, 0, 0.85);
+  font-size: 0.85rem;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.1), 0 0 10px rgba(0, 0, 0, 0.85);
   font-weight: 700;
 }
 
 .rhythm-mult {
-  font-size: 1.25rem;
+  font-size: 0.9rem;
   font-weight: 800;
   color: #3b82f6; /* Blue glow for multiplier */
-  text-shadow: 0 0 8px rgba(59, 130, 246, 0.8), 0 0 15px rgba(0, 0, 0, 0.9);
-  margin-top: 2px;
-  letter-spacing: 0.5px;
+  text-shadow: 0 0 5px rgba(59, 130, 246, 0.7), 0 0 10px rgba(0, 0, 0, 0.9);
+  margin-top: 1px;
+  letter-spacing: 0.3px;
 }
 
 .rhythm-feedback.off-beat .rhythm-mult {
   color: var(--text-muted);
-  font-size: 1.0rem;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.05), 0 0 10px rgba(0, 0, 0, 0.85);
+  font-size: 0.8rem;
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.05), 0 0 10px rgba(0, 0, 0, 0.85);
 }
 
 .rhythm-pts {
-  font-size: 1.1rem;
+  font-size: 0.85rem;
   font-weight: 800;
   color: #10b981; /* Green */
-  text-shadow: 0 0 8px rgba(16, 185, 129, 0.8), 0 0 15px rgba(0, 0, 0, 0.9);
-  margin-top: 2px;
+  text-shadow: 0 0 5px rgba(16, 185, 129, 0.7), 0 0 10px rgba(0, 0, 0, 0.9);
+  margin-top: 1px;
 }
 
 @keyframes rhythmFloatFade {
   0% {
-    transform: translate(-50%, -50%) scale(0.6);
+    transform: translate(-50%, -30%) scale(0.85);
     opacity: 0;
   }
-  15% {
-    transform: translate(-50%, -60%) scale(1.1);
-    opacity: 1;
-  }
-  30% {
-    transform: translate(-50%, -65%) scale(1.0);
+  20% {
+    transform: translate(-50%, -45%) scale(1.0);
     opacity: 1;
   }
   100% {
-    transform: translate(-50%, -100%) scale(0.9);
+    transform: translate(-50%, -75%) scale(0.95);
     opacity: 0;
   }
 }
