@@ -489,9 +489,8 @@ function startStudy(deckIdx, wrongOnly = false) {
   setTimeout(() => renderStudyCard(), 200);
 }
 
-function renderStudyCard() {
+function renderStudyCard(isSwipe = false) {
   const stack = $('card-stack');
-  stack.innerHTML = '';
   isFlipped = false;
 
   if (studyIndex >= studyQueue.length) {
@@ -501,13 +500,15 @@ function renderStudyCard() {
 
   updateProgress();
 
+  const newChildren = [];
+
   // Render Background Card 2 (Bottom)
   if (studyIndex + 2 < studyQueue.length) {
     const cardNext2 = currentDeck.cards[studyQueue[studyIndex + 2]];
     const bg2 = document.createElement('div');
     bg2.className = 'flash-card-bg-2';
     bg2.innerHTML = `<div class="card-word">${escHtml(cardNext2.front)}</div>`;
-    stack.appendChild(bg2);
+    newChildren.push(bg2);
   }
 
   // Render Background Card 1 (Middle)
@@ -516,7 +517,7 @@ function renderStudyCard() {
     const bg1 = document.createElement('div');
     bg1.className = 'flash-card-bg-1';
     bg1.innerHTML = `<div class="card-word">${escHtml(cardNext1.front)}</div>`;
-    stack.appendChild(bg1);
+    newChildren.push(bg1);
   }
 
   // Render Active Card (Top)
@@ -548,7 +549,10 @@ function renderStudyCard() {
       </div>
     </div>`;
 
-  stack.appendChild(el);
+  newChildren.push(el);
+
+  // Atomic update of DOM children to prevent flickering
+  stack.replaceChildren(...newChildren);
 
   // Setup manual speaker button event handler
   const speakBtn = el.querySelector('#btn-speak-current');
@@ -568,14 +572,16 @@ function renderStudyCard() {
   // Auto pronunciation
   speakText(card.front);
 
-  // Entrance animation
-  el.style.opacity = '0';
-  el.style.transform = 'scale(0.92) translateY(12px)';
-  requestAnimationFrame(() => {
-    el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-    el.style.opacity = '1';
-    el.style.transform = 'scale(1) translateY(0)';
-  });
+  // Entrance animation (only run when NOT swiping)
+  if (!isSwipe) {
+    el.style.opacity = '0';
+    el.style.transform = 'scale(0.92) translateY(12px)';
+    requestAnimationFrame(() => {
+      el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      el.style.opacity = '1';
+      el.style.transform = 'scale(1) translateY(0)';
+    });
+  }
 }
 
 function flipCard() {
@@ -655,7 +661,7 @@ function markCard(correct) {
 
   saveDecks(decks);
   studyIndex++;
-  animateCardOut(correct, () => renderStudyCard());
+  animateCardOut(correct, () => renderStudyCard(true));
 
   // Audio activation and gacha roll
   initAudioContext();
@@ -1389,7 +1395,7 @@ function animateReels(targets, isWin, triggersRush) {
   let count0 = 0;
   let count1 = 0;
   let count2 = 0;
-  const spinInterval = 60;
+  const spinInterval = 45; // Shortened spin interval for faster reels
   
   playSlotSpinSound();
 
@@ -1397,7 +1403,7 @@ function animateReels(targets, isWin, triggersRush) {
     reel0.textContent = Math.floor(Math.random() * 9) + 1;
     count0++;
     playReelTickSound();
-    if (count0 > 15) {
+    if (count0 > 10) { // Reel 0 stops at 450ms (previously 900ms)
       clearInterval(int0);
       reel0.textContent = targets[0];
       playReelStopSound();
@@ -1408,7 +1414,7 @@ function animateReels(targets, isWin, triggersRush) {
     reel1.textContent = Math.floor(Math.random() * 9) + 1;
     count1++;
     playReelTickSound();
-    if (count1 > 25) {
+    if (count1 > 16) { // Reel 1 stops at 720ms (previously 1500ms)
       clearInterval(int1);
       reel1.textContent = targets[1];
       playReelStopSound();
@@ -1419,7 +1425,7 @@ function animateReels(targets, isWin, triggersRush) {
     reel2.textContent = Math.floor(Math.random() * 9) + 1;
     count2++;
     playReelTickSound();
-    if (count2 > 35) {
+    if (count2 > 22) { // Reel 2 stops at 990ms (previously 2100ms)
       clearInterval(int2);
       reel2.textContent = targets[2];
       playReelStopSound();

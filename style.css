@@ -765,21 +765,12 @@ body::before {
   border: 1px solid rgba(52,211,153,0.2);
 }
 
-@keyframes fadeInWord {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 .card-word {
   font-size: var(--card-word-size, clamp(2.4rem, 7vw, 3.4rem));
   font-weight: 700;
   letter-spacing: -0.5px;
   line-height: 1.2;
   color: var(--text-primary);
-}
-
-.flash-card .card-word {
-  animation: fadeInWord 0.22s cubic-bezier(0.25, 0.8, 0.25, 1) both;
 }
 
 .card-phonetic {
