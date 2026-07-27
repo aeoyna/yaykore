@@ -158,13 +158,15 @@ function saveScore(s) {
 // ============================================================
 let audioCtx = null;
 let isMetroPlaying = false;
-let metroBpm = 60;
+let metroBpm = 120;
 let beatsPerMeasure = 2;
 let currentBeat = 0;
 let nextNoteTime = 0.0;
 let lookahead = 25.0; // ms
 let scheduleAheadTime = 0.1; // sec
 let metroTimerId = null;
+let metroStartTime = 0.0;
+let hasFlipBonusAwarded = false;
 
 // ============================================================
 // DOM HELPERS
@@ -492,6 +494,7 @@ function startStudy(deckIdx, wrongOnly = false) {
 function renderStudyCard(isSwipe = false) {
   const stack = $('card-stack');
   isFlipped = false;
+  hasFlipBonusAwarded = false;
 
   if (studyIndex >= studyQueue.length) {
     showComplete();
@@ -589,6 +592,9 @@ function flipCard() {
   if (!el) return;
   isFlipped = !isFlipped;
   el.classList.toggle('flipped', isFlipped);
+  
+  // Check rhythm timing for bonus
+  checkRhythmFlip();
 }
 
 function updateProgress() {
@@ -605,6 +611,9 @@ function updateProgress() {
 }
 
 function markCard(correct) {
+  // Check rhythm timing for bonus
+  checkRhythmSwipe();
+  
   const card = currentDeck.cards[studyQueue[studyIndex]];
   
   if (!card.srs) {
@@ -1269,7 +1278,8 @@ function toggleMetronome() {
   } else {
     isMetroPlaying = true;
     currentBeat = 0;
-    nextNoteTime = audioCtx.currentTime;
+    metroStartTime = audioCtx.currentTime; // Track absolute start time of metronome session
+    nextNoteTime = metroStartTime;
     btn.classList.add('playing');
     btn.querySelector('.icon-play').classList.add('hidden');
     btn.querySelector('.icon-stop').classList.remove('hidden');
@@ -1289,11 +1299,87 @@ function stopMetronome() {
   clearActiveDots();
 }
 
+// Rhythm Game Bonus Check Logic
+function checkRhythmFlip() {
+  if (!isMetroPlaying || !audioCtx) return;
+  if (hasFlipBonusAwarded) return;
+  
+  const elapsed = audioCtx.currentTime - metroStartTime;
+  const beatLen = 60.0 / metroBpm;
+  const measureLen = beatLen * 2;
+  const pos = elapsed % measureLen;
+  const dist = Math.min(pos, measureLen - pos);
+  
+  if (dist <= 0.15) { // 150ms timing window
+    hasFlipBonusAwarded = true;
+    awardRhythmBonus(500, 'GREAT FLIP!');
+  }
+}
+
+function checkRhythmSwipe() {
+  if (!isMetroPlaying || !audioCtx) return;
+  
+  const elapsed = audioCtx.currentTime - metroStartTime;
+  const beatLen = 60.0 / metroBpm;
+  const measureLen = beatLen * 2;
+  const pos = elapsed % measureLen;
+  const dist = Math.abs(pos - beatLen);
+  
+  if (dist <= 0.15) { // 150ms timing window
+    awardRhythmBonus(1000, 'PERFECT SWIPE!');
+  }
+}
+
+function awardRhythmBonus(points, message) {
+  animateScoreIncrease(points);
+  playRhythmBonusSound();
+  
+  const container = $('screen-study');
+  if (container) {
+    const feedback = document.createElement('div');
+    feedback.className = 'rhythm-feedback';
+    feedback.innerHTML = `<span class="rhythm-msg">${message}</span><span class="rhythm-pts">+${points}</span>`;
+    
+    feedback.style.left = `calc(50% + ${(Math.random() - 0.5) * 60}px)`;
+    feedback.style.top = `calc(40% + ${(Math.random() - 0.5) * 60}px)`;
+    
+    container.appendChild(feedback);
+    
+    setTimeout(() => {
+      feedback.remove();
+    }, 800);
+  }
+}
+
+function playRhythmBonusSound() {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+  osc.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+  osc.frequency.setValueAtTime(1320, audioCtx.currentTime + 0.05); // E6
+  
+  gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+  
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.15);
+}
+
 // Metronome Event Listeners
 $('btn-metro-toggle').addEventListener('click', toggleMetronome);
 $('slider-metro-bpm').addEventListener('input', e => {
   metroBpm = parseInt(e.target.value);
   $('label-metro-bpm').textContent = `${metroBpm} BPM`;
+  if (isMetroPlaying) {
+    // Reset alignment after BPM change to ensure rhythm game timing sync
+    metroStartTime = audioCtx.currentTime;
+    currentBeat = 0;
+    nextNoteTime = metroStartTime;
+  }
 });
 
 // ============================================================
@@ -1683,12 +1769,6 @@ function playReelStopSound() {
   osc.stop(audioCtx.currentTime + 0.08);
 }
 
-// Metronome Event Listeners
-$('btn-metro-toggle').addEventListener('click', toggleMetronome);
-$('slider-metro-bpm').addEventListener('input', e => {
-  metroBpm = parseInt(e.target.value);
-  $('label-metro-bpm').textContent = `${metroBpm} BPM`;
-});
 
 // Debug triggers on Score badge:
 // - Single click: force a slot spin
