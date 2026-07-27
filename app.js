@@ -1318,10 +1318,10 @@ function checkRhythmFlip() {
   const dist = Math.min(pos, measureLen - pos);
   
   if (dist <= 0.15) { // 150ms timing window
-    gachaProbabilityMultiplier = 1.6 + Math.random() * 0.4; // 1.6 ~ 2.0
+    gachaProbabilityMultiplier = 1.1; // Set to 1.1 (average 1.1)
     awardRhythmBonus(50, 'GREAT FLIP!', gachaProbabilityMultiplier, true);
   } else {
-    gachaProbabilityMultiplier = 0.9 + Math.random() * 0.2; // 0.9 ~ 1.1
+    gachaProbabilityMultiplier = 0.9; // Set to 0.9 (average 0.9)
     awardRhythmBonus(0, 'FLIP', gachaProbabilityMultiplier, false);
   }
 }
