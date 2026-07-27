@@ -1318,18 +1318,14 @@ function startSlotSpin() {
   if (isReelSpinning) return;
   isReelSpinning = true;
   
-  // Show slot gacha mini dropdown overlay
-  const modal = $('pachinko-mini-slot');
-  if (modal) {
-    modal.classList.remove('hidden');
-  }
-  
-  // Update mini slot RUSH styles
-  if (modal) {
+  // Update score badge spinning and RUSH styles
+  const badge = $('btn-pachinko-score');
+  if (badge) {
+    badge.classList.add('spinning');
     if (isRushActive) {
-      modal.classList.add('rush-active');
+      badge.classList.add('rush-active');
     } else {
-      modal.classList.remove('rush-active');
+      badge.classList.remove('rush-active');
     }
   }
   
@@ -1451,10 +1447,9 @@ function evaluateSlotResult(isWin, triggersRush) {
       statusEl.classList.remove('win-flash');
       statusEl.textContent = 'READY';
       
-      // Close mini slot dropdown
-      const modal = $('pachinko-mini-slot');
-      if (modal) {
-        modal.classList.add('hidden');
+      const badge = $('btn-pachinko-score');
+      if (badge) {
+        badge.classList.remove('spinning');
       }
       
       if (triggersRush) {
@@ -1473,10 +1468,9 @@ function evaluateSlotResult(isWin, triggersRush) {
   } else {
     statusEl.textContent = 'READY';
     setTimeout(() => {
-      // Close mini slot dropdown on miss
-      const modal = $('pachinko-mini-slot');
-      if (modal) {
-        modal.classList.add('hidden');
+      const badge = $('btn-pachinko-score');
+      if (badge) {
+        badge.classList.remove('spinning');
       }
     }, 1200); // stay open for 1.2s on miss
   }

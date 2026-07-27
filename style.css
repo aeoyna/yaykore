@@ -537,6 +537,7 @@ body::before {
 .study-stat-badges {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   max-width: 400px;
   margin-top: 10px;
@@ -1831,29 +1832,49 @@ input, textarea {
 }
 
 /* スコア表示バッジ (学習中と覚えたの間) */
+/* スコア表示バッジ (学習中と覚えたの間) - スロット統合型 */
 .study-score-badge {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(20, 24, 38, 0.6) 0%, rgba(10, 12, 20, 0.8) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-md);
-  padding: 6px 14px;
-  min-width: 80px;
+  padding: 8px 12px;
+  min-width: 100px;
   cursor: pointer;
   transition: var(--transition);
+  gap: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(59, 130, 246, 0.15);
 }
 
 .study-score-badge:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, rgba(30, 36, 56, 0.8) 0%, rgba(15, 18, 30, 0.95) 100%);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 15px rgba(59, 130, 246, 0.25);
+  transform: translateY(-2px);
+}
+
+.study-score-badge:active {
+  transform: translateY(0) scale(0.96);
+}
+
+.study-score-badge.spinning {
+  border-color: #3b82f6;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  animation: badgeSpinPulse 0.6s infinite alternate;
+}
+
+@keyframes badgeSpinPulse {
+  0% { border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 0 8px rgba(59, 130, 246, 0.3); }
+  100% { border-color: rgba(59, 130, 246, 1); box-shadow: 0 0 18px rgba(59, 130, 246, 0.6); }
 }
 
 .study-score-badge.rush-active {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.4);
-  box-shadow: 0 0 12px rgba(239, 68, 68, 0.15);
+  background: linear-gradient(135deg, rgba(35, 15, 15, 0.8) 0%, rgba(20, 5, 5, 0.95) 100%);
+  border-color: rgba(239, 68, 68, 0.6);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.3);
   animation: scoreBadgePulse 1.5s infinite alternate;
 }
 
@@ -1888,37 +1909,6 @@ input, textarea {
 .study-score-badge.rush-active .score-badge-label {
   color: #ef4444;
   font-weight: 800;
-}
-
-/* ガチャ液晶スロット ミニポップアップ (非ブロッキング) */
-.pachinko-mini-slot {
-  position: absolute;
-  top: 110%; /* SCOREバッジのすぐ下 */
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, rgba(20, 24, 38, 0.98) 0%, rgba(10, 12, 20, 1) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-md);
-  padding: 8px 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 15px rgba(59, 130, 246, 0.2);
-  z-index: 50;
-  pointer-events: none; /* 作業を絶対に邪魔しない */
-  animation: miniSlotPop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  min-width: 100px;
-}
-
-.pachinko-mini-slot.rush-active {
-  border-color: #ef4444;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 20px rgba(239, 68, 68, 0.35);
-}
-
-@keyframes miniSlotPop {
-  0% { transform: translate(-50%, -8px) scale(0.85); opacity: 0; }
-  100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
 }
 
 .pachinko-screen-mini {
