@@ -104,6 +104,16 @@
         <div class="study-score-badge" id="btn-pachinko-score" title="スコア / ダブルクリックで確変デバッグ">
           <span class="score-badge-val" id="pachinko-score-val">00000</span>
           <span class="score-badge-label" id="score-badge-status-text">SCORE</span>
+          
+          <!-- Mini Slot Machine overlay (Non-blocking) -->
+          <div class="pachinko-mini-slot hidden" id="pachinko-mini-slot">
+            <div class="pachinko-screen-mini">
+              <div class="slot-reel-mini" id="reel-0">3</div>
+              <div class="slot-reel-mini" id="reel-1">5</div>
+              <div class="slot-reel-mini" id="reel-2">9</div>
+            </div>
+            <div class="pachinko-status-mini" id="pachinko-modal-status">READY</div>
+          </div>
         </div>
         <div class="stat-badge stat-badge-right" id="btn-show-correct" title="覚えた単語一覧を表示">
           <span class="stat-badge-num" id="badge-correct">0</span>
@@ -268,21 +278,7 @@
     </div>
   </div>
 
-  <!-- ========== MODAL: PACHINKO SLOT GACHA ========== -->
-  <div id="modal-pachinko-slot" class="modal-overlay hidden" style="justify-content: center; align-items: center;">
-    <div class="pachinko-modal-content">
-      <div class="pachinko-modal-header">
-        <span class="pachinko-modal-title" id="pachinko-modal-status">READY</span>
-      </div>
-      <div class="pachinko-modal-body">
-        <div class="pachinko-screen" style="justify-content: center;">
-          <div class="slot-reel" id="reel-0">3</div>
-          <div class="slot-reel" id="reel-1">5</div>
-          <div class="slot-reel" id="reel-2">9</div>
-        </div>
-      </div>
-    </div>
-  </div>
+
 
   <script src="app.js"></script>
 </body>

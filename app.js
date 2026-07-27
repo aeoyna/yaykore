@@ -1318,27 +1318,25 @@ function startSlotSpin() {
   if (isReelSpinning) return;
   isReelSpinning = true;
   
-  // Show slot gacha popup modal
-  const modal = $('modal-pachinko-slot');
+  // Show slot gacha mini dropdown overlay
+  const modal = $('pachinko-mini-slot');
   if (modal) {
     modal.classList.remove('hidden');
-    modal.style.display = 'flex';
   }
   
-  // Update modal RUSH styles
-  const modalContent = document.querySelector('.pachinko-modal-content');
-  if (modalContent) {
+  // Update mini slot RUSH styles
+  if (modal) {
     if (isRushActive) {
-      modalContent.classList.add('rush-active');
+      modal.classList.add('rush-active');
     } else {
-      modalContent.classList.remove('rush-active');
+      modal.classList.remove('rush-active');
     }
   }
   
   const statusEl = $('pachinko-modal-status');
   if (statusEl) {
     statusEl.textContent = 'SPINNING...';
-    statusEl.className = 'pachinko-modal-title neon-blink';
+    statusEl.className = 'pachinko-status-mini neon-blink';
   }
   
   // 1/99 chance of winning
@@ -1430,7 +1428,7 @@ function evaluateSlotResult(isWin, triggersRush) {
   isReelSpinning = false;
   const statusEl = $('pachinko-modal-status');
   if (!statusEl) return;
-  statusEl.className = 'pachinko-modal-title';
+  statusEl.className = 'pachinko-status-mini';
   
   if (isWin) {
     statusEl.textContent = 'WIN!';
@@ -1453,11 +1451,10 @@ function evaluateSlotResult(isWin, triggersRush) {
       statusEl.classList.remove('win-flash');
       statusEl.textContent = 'READY';
       
-      // Close modal
-      const modal = $('modal-pachinko-slot');
+      // Close mini slot dropdown
+      const modal = $('pachinko-mini-slot');
       if (modal) {
         modal.classList.add('hidden');
-        modal.style.display = '';
       }
       
       if (triggersRush) {
@@ -1476,11 +1473,10 @@ function evaluateSlotResult(isWin, triggersRush) {
   } else {
     statusEl.textContent = 'READY';
     setTimeout(() => {
-      // Close modal on miss
-      const modal = $('modal-pachinko-slot');
+      // Close mini slot dropdown on miss
+      const modal = $('pachinko-mini-slot');
       if (modal) {
         modal.classList.add('hidden');
-        modal.style.display = '';
       }
     }, 1200); // stay open for 1.2s on miss
   }

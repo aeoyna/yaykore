@@ -1890,65 +1890,60 @@ input, textarea {
   font-weight: 800;
 }
 
-/* ガチャ液晶スロットポップアップモーダル */
-.pachinko-modal-content {
+/* ガチャ液晶スロット ミニポップアップ (非ブロッキング) */
+.pachinko-mini-slot {
+  position: absolute;
+  top: 110%; /* SCOREバッジのすぐ下 */
+  left: 50%;
+  transform: translateX(-50%);
   background: linear-gradient(135deg, rgba(20, 24, 38, 0.98) 0%, rgba(10, 12, 20, 1) 100%);
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  width: 90%;
-  max-width: 320px;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.15);
-  animation: modalPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  margin: auto;
-}
-
-.pachinko-modal-content.rush-active {
-  border-color: #ef4444;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 50px rgba(239, 68, 68, 0.3);
-}
-
-.pachinko-modal-header {
-  margin-bottom: 16px;
-}
-
-.pachinko-modal-title {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--text-secondary);
-  letter-spacing: 1.5px;
-}
-
-@keyframes modalPopIn {
-  0% { transform: scale(0.85); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.pachinko-screen {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
   display: flex;
-  gap: 12px;
-  background: #05070a;
-  border: 2px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 14px 28px;
-  box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.8);
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 15px rgba(59, 130, 246, 0.2);
+  z-index: 50;
+  pointer-events: none; /* 作業を絶対に邪魔しない */
+  animation: miniSlotPop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 100px;
 }
 
-.slot-reel {
-  width: 46px;
-  height: 56px;
+.pachinko-mini-slot.rush-active {
+  border-color: #ef4444;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 20px rgba(239, 68, 68, 0.35);
+}
+
+@keyframes miniSlotPop {
+  0% { transform: translate(-50%, -8px) scale(0.85); opacity: 0; }
+  100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+}
+
+.pachinko-screen-mini {
+  display: flex;
+  gap: 6px;
+  background: #05070a;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+
+.slot-reel-mini {
+  width: 22px;
+  height: 28px;
   background: #11141d;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.4rem;
-  font-weight: 900;
+  font-size: 1.15rem;
+  font-weight: 800;
   color: var(--text-primary);
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-  box-shadow: inset 0 2px 4px rgba(255,255,255,0.05), 0 4px 8px rgba(0,0,0,0.5);
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.05), 0 2px 4px rgba(0,0,0,0.5);
 }
 
 /* Neon blinking styling during spin */
@@ -1972,9 +1967,10 @@ input, textarea {
   100% { transform: scale(1.1); }
 }
 
-.pachinko-status {
-  font-size: 0.75rem;
+.pachinko-status-mini {
+  font-size: 0.55rem;
   font-weight: 800;
   color: var(--text-secondary);
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  text-align: center;
 }
