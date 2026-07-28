@@ -1527,15 +1527,20 @@ function startSlotSpin() {
   if (isWin) {
     if (isRushActive) {
       triggersRush = true;
-      targetCombination = [7, 7, 7];
+      targetCombination = [7, 7, 7]; // RUSH延長
     } else {
-      triggersRush = Math.random() < 0.5; // 50% RUSH trigger
+      triggersRush = Math.random() < 0.5; // 50% RUSHトリガー
       if (triggersRush) {
-        targetCombination = [7, 7, 7];
+        targetCombination = [7, 7, 7]; // RUSH入
       } else {
-        const digits = [1, 3, 5, 8];
-        const d = digits[Math.floor(Math.random() * digits.length)];
-        targetCombination = [d, d, d];
+        // 通常当たり: 50%で777(大当たりRUSH落)、残りは1/3/5/8ゾロ目
+        if (Math.random() < 0.5) {
+          targetCombination = [7, 7, 7]; // 777が出るがラッシュなし
+        } else {
+          const digits = [1, 3, 5, 8];
+          const d = digits[Math.floor(Math.random() * digits.length)];
+          targetCombination = [d, d, d];
+        }
       }
     }
   } else {
@@ -1615,8 +1620,8 @@ function evaluateSlotResult(isWin, triggersRush, winDigit) {
     
     const points = isRushActive ? 3000 : 1000;
     animateScoreIncrease(points);
-    // 当たり音: ゾロ目の種類 × RUSH有無でファイルを選択
-    playWinSound(winDigit, isRushActive);
+    // 当たり音: ゾロ目の種類 × RUSHトリガー有無でファイルを選択
+    playWinSound(winDigit, triggersRush, isRushActive);
     
     // Spawn winner particles from the center of the screen
     const studyScreen = $('screen-study');
@@ -1688,7 +1693,7 @@ function startRush() {
   }
   
   showToast('🔥 RUSH ENTERED! 100% GACHA RATE 🔥');
-  playRushSirenSound();
+  // 音は evaluateSlotResult の playWinSound内で再生済みのためここでは再生しない
   resumeRush();
 }
 
@@ -1948,20 +1953,31 @@ function playAudioFile(src, volume = 1.0) {
   }
 }
 
-// 当たり音: ゾロ目の数字 × RUSH状態で分岐
-function playWinSound(digit, rushActive) {
-  // 777 は RUSH 突入/延長音で処理されるため、ここでは RUSH 中の777以外を対象
+// 当たり音: ゾロ目の数字 × triggersRush × RUSH状態で分岐
+function playWinSound(digit, triggersRush, rushActive) {
+  if (digit === 7) {
+    // 777 が出た場合
+    if (triggersRush) {
+      // RUSH入 or RUSH延長 → 大当たりRUSH入.mp4
+      // 延長の場合は後に playRushExtendSound() も呼ばれるが、入りかたのインパクトとしておく
+      playAudioFile('大当たりRUSH入.mp4', 1.0);
+    } else {
+      // 777 が出たが RUSH なし → 大当たりRUSH落.mp4
+      playAudioFile('大当たりRUSH落.mp4', 0.9);
+    }
+    return;
+  }
+  // 777 以外のゾロ目
   const map = {
-    1: { normal: '1111.mp4',   rush: 'RUSH1111.mp4'  },
-    3: { normal: '3333.mp3',   rush: 'RUSH3333.mp3'  },
-    5: { normal: '5555.mp4',   rush: 'RUSH5555.mp3'  },
-    8: { normal: '8888.mp3',   rush: 'RUSH8888.mp3'  },
+    1: { normal: '1111.mp4',  rush: 'RUSH1111.mp4' },
+    3: { normal: '3333.mp3',  rush: 'RUSH3333.mp3' },
+    5: { normal: '5555.mp4',  rush: 'RUSH5555.mp3' },
+    8: { normal: '8888.mp3',  rush: 'RUSH8888.mp3' },
   };
   const entry = map[digit];
   if (entry) {
     playAudioFile(rushActive ? entry.rush : entry.normal, 0.9);
   } else {
-    // 777 など未登録の場合は合成音にフォールバック
     playWinFanfareSound();
   }
 }
