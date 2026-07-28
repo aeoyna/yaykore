@@ -498,6 +498,8 @@ body::before {
   position: relative;
   overflow: hidden;
   padding: 20px;
+  /* メトロノームパネル分の余白 */
+  padding-bottom: calc(20px + 64px + env(safe-area-inset-bottom));
 }
 
 /* Swipe hints */
@@ -805,9 +807,8 @@ body::before {
   justify-content: space-between;
   width: 100%;
   max-width: 400px;
-  margin: 0 auto;
-  padding: 16px 20px;
-  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  margin: 12px auto 0 auto;
+  padding: 8px 20px 12px;
   box-sizing: border-box;
 }
 
@@ -850,18 +851,25 @@ body::before {
   transform: scale(1.08);
 }
 
-.action-btn-flip {
+.action-btn-prev {
   width: 52px;
   height: 52px;
   background: var(--bg-glass);
   color: var(--text-secondary);
   border: 1px solid var(--border);
+  transition: var(--transition-spring), opacity 0.2s ease;
 }
 
-.action-btn-flip:hover {
+.action-btn-prev:hover:not(:disabled) {
   background: var(--bg-glass-hover);
   color: var(--text-primary);
   transform: scale(1.08);
+}
+
+.action-btn-prev:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .action-btn-correct {
@@ -1375,7 +1383,7 @@ input, textarea {
     height: 54px;
   }
 
-  .action-btn-flip {
+  .action-btn-prev {
     width: 46px;
     height: 46px;
   }
@@ -1475,7 +1483,7 @@ input, textarea {
     height: 68px;
   }
 
-  .action-btn-flip {
+  .action-btn-prev {
     width: 58px;
     height: 58px;
   }
@@ -1685,19 +1693,24 @@ input, textarea {
    STUDY METRONOME PANEL
    ============================ */
 .study-metronome {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 90%;
-  max-width: 400px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 480px;
+  background: rgba(10, 12, 16, 0.92);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   padding: 12px 20px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
   gap: 16px;
-  margin: 0 auto 12px auto;
   box-sizing: border-box;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  z-index: 50;
 }
 
 .metro-left {
@@ -1877,8 +1890,56 @@ input, textarea {
   100% { transform: scale(1.04); box-shadow: 0 0 14px rgba(239, 68, 68, 0.35); }
 }
 
-.footer-left-spacer {
-  min-width: 80px;
+/* Rush Timer in footer (left side) */
+.footer-rush-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 72px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.footer-rush-timer.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.footer-rush-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+  animation: none;
+}
+
+.footer-rush-timer.active .footer-rush-icon {
+  animation: rushFlicker 0.8s infinite alternate;
+}
+
+.footer-rush-val {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ef4444;
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.7);
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.footer-rush-label {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #ef4444;
+  margin-top: 4px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+@keyframes rushFlicker {
+  0%   { transform: scale(1)    rotate(-5deg); opacity: 1; }
+  100% { transform: scale(1.15) rotate(5deg);  opacity: 0.8; }
 }
 
 .footer-score-wrap {

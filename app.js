@@ -120,6 +120,7 @@ let sessionWrong = 0;
 let wrongCards = [];
 let correctCards = [];
 let isFlipped = false;
+let cardHistory = []; // {cardIndex, correct, scoreSnapshot} stack for undo
 
 // ============================================================
 // PACHINKO & PARTICLES STATE
@@ -482,6 +483,7 @@ function startStudy(deckIdx, wrongOnly = false) {
   wrongCards = [];
   correctCards = [];
   isFlipped = false;
+  cardHistory = [];
 
   $('study-deck-name').textContent = currentDeck.emoji + ' ' + currentDeck.name;
   $('study-complete').classList.add('hidden');
@@ -599,6 +601,56 @@ function flipCard() {
   checkRhythmFlip();
 }
 
+function updatePrevCardBtn() {
+  const btn = $('btn-prev-card');
+  if (!btn) return;
+  if (cardHistory.length > 0) {
+    btn.disabled = false;
+    btn.classList.remove('action-btn-prev-disabled');
+  } else {
+    btn.disabled = true;
+    btn.classList.add('action-btn-prev-disabled');
+  }
+}
+
+function goToPrevCard() {
+  if (cardHistory.length === 0) return;
+
+  const prev = cardHistory.pop();
+
+  // Undo the score delta that was applied when this card was answered
+  const card = currentDeck.cards[studyQueue[prev.cardIndex]];
+  if (prev.correct) {
+    sessionCorrect = Math.max(0, sessionCorrect - 1);
+    correctCards = correctCards.filter(c => c !== card);
+    if (currentDeck.learned) {
+      currentDeck.learned = currentDeck.learned.filter(id => id !== card.id);
+    }
+  } else {
+    sessionWrong = Math.max(0, sessionWrong - 1);
+    wrongCards = wrongCards.filter(c => c !== card);
+  }
+
+  // Restore the card's SRS state
+  if (prev.srsSnapshot) {
+    card.srs = { ...prev.srsSnapshot };
+  }
+
+  // Restore score
+  if (typeof prev.scoreSnapshot === 'number') {
+    score = prev.scoreSnapshot;
+    const scoreValEl = $('pachinko-score-val');
+    if (scoreValEl) scoreValEl.textContent = String(score).padStart(5, '0');
+    saveScore(score);
+  }
+
+  studyIndex = prev.cardIndex;
+  saveDecks(decks);
+
+  updatePrevCardBtn();
+  renderStudyCard(false);
+}
+
 function updateProgress() {
   const total = studyQueue.length;
   const done = studyIndex;
@@ -617,6 +669,17 @@ function markCard(correct) {
   checkRhythmSwipe();
   
   const card = currentDeck.cards[studyQueue[studyIndex]];
+
+  // Save history snapshot BEFORE modifying SRS state
+  const srsBefore = card.srs ? { ...card.srs } : null;
+  cardHistory.push({
+    cardIndex: studyIndex,
+    correct: correct,
+    srsSnapshot: srsBefore,
+    scoreSnapshot: score
+  });
+  // Keep history to a reasonable limit (e.g. last 30 cards)
+  if (cardHistory.length > 30) cardHistory.shift();
   
   if (!card.srs) {
     card.srs = {
@@ -672,6 +735,7 @@ function markCard(correct) {
 
   saveDecks(decks);
   studyIndex++;
+  updatePrevCardBtn();
   animateCardOut(correct, () => renderStudyCard(true));
 
   // Audio activation and gacha roll
@@ -994,7 +1058,7 @@ $('btn-back').addEventListener('click', () => {
   renderHome();
 });
 
-$('btn-flip').addEventListener('click', flipCard);
+$('btn-prev-card').addEventListener('click', goToPrevCard);
 
 $('btn-redo-wrong').addEventListener('click', () => {
   if (wrongCards.length === 0) return;
@@ -1634,16 +1698,19 @@ function resumeRush() {
   
   const scoreWrap = $('footer-score-wrap');
   if (scoreWrap) scoreWrap.classList.add('rush-active');
-  
-  const statusEl = $('score-badge-status-text');
-  if (statusEl) statusEl.textContent = `RUSH: ${rushTimeRemaining}s`;
+
+  // Rush timer display in footer
+  const rushTimer = $('footer-rush-timer');
+  if (rushTimer) rushTimer.classList.add('active');
+  const rushVal = $('footer-rush-val');
+  if (rushVal) rushVal.textContent = `${rushTimeRemaining}s`;
 
   rushTimerInterval = setInterval(() => {
     rushTimeRemaining--;
     if (rushTimeRemaining <= 0) {
       endRush();
     } else {
-      if (statusEl) statusEl.textContent = `RUSH: ${rushTimeRemaining}s`;
+      if (rushVal) rushVal.textContent = `${rushTimeRemaining}s`;
     }
   }, 1000);
 }
@@ -1671,9 +1738,12 @@ function resetRushUI() {
   
   const scoreWrap = $('footer-score-wrap');
   if (scoreWrap) scoreWrap.classList.remove('rush-active');
-  
-  const statusEl = $('score-badge-status-text');
-  if (statusEl) statusEl.textContent = 'SCORE';
+
+  // Hide rush timer in footer
+  const rushTimer = $('footer-rush-timer');
+  if (rushTimer) rushTimer.classList.remove('active');
+  const rushVal = $('footer-rush-val');
+  if (rushVal) rushVal.textContent = '0s';
 }
 
 // ============================================================
