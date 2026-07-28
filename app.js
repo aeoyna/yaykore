@@ -1956,13 +1956,13 @@ function playAudioFile(src, volume = 1.0) {
 // 当たり音: ゾロ目の数字 × triggersRush × RUSH状態で分岐
 function playWinSound(digit, triggersRush, rushActive) {
   if (digit === 7) {
-    // 777 が出た場合
-    if (triggersRush) {
-      // RUSH入 or RUSH延長 → 大当たりRUSH入.mp4
-      // 延長の場合は後に playRushExtendSound() も呼ばれるが、入りかたのインパクトとしておく
+    if (rushActive) {
+      // RUSH中に777 → RUSH延長音は playRushExtendSound() が担当するためここでは再生しない
+    } else if (triggersRush) {
+      // RUSH外 + 777 + RUSH突入 → 大当たりRUSH入.mp4 のみ
       playAudioFile('大当たりRUSH入.mp4', 1.0);
     } else {
-      // 777 が出たが RUSH なし → 大当たりRUSH落.mp4
+      // RUSH外 + 777 + RUSH落 → 大当たりRUSH落.mp4 のみ
       playAudioFile('大当たりRUSH落.mp4', 0.9);
     }
     return;
