@@ -1550,10 +1550,11 @@ function startSlotSpin() {
     targetCombination = [d1, d2, d3];
   }
   
-  animateReels(targetCombination, isWin, triggersRush);
+  const winDigit = targetCombination[0]; // ゾロ目の数字 (1/3/5/7/8)
+  animateReels(targetCombination, isWin, triggersRush, winDigit);
 }
 
-function animateReels(targets, isWin, triggersRush) {
+function animateReels(targets, isWin, triggersRush, winDigit) {
   const reel0 = $('reel-0');
   const reel1 = $('reel-1');
   const reel2 = $('reel-2');
@@ -1597,12 +1598,12 @@ function animateReels(targets, isWin, triggersRush) {
       reel2.textContent = targets[2];
       playReelStopSound();
       
-      evaluateSlotResult(isWin, triggersRush);
+      evaluateSlotResult(isWin, triggersRush, winDigit);
     }
   }, spinInterval);
 }
 
-function evaluateSlotResult(isWin, triggersRush) {
+function evaluateSlotResult(isWin, triggersRush, winDigit) {
   isReelSpinning = false;
   const statusEl = $('pachinko-modal-status');
   if (!statusEl) return;
@@ -1614,7 +1615,8 @@ function evaluateSlotResult(isWin, triggersRush) {
     
     const points = isRushActive ? 3000 : 1000;
     animateScoreIncrease(points);
-    playWinFanfareSound();
+    // 当たり音: ゾロ目の種類 × RUSH有無でファイルを選択
+    playWinSound(winDigit, isRushActive);
     
     // Spawn winner particles from the center of the screen
     const studyScreen = $('screen-study');
@@ -1924,62 +1926,64 @@ function playWinFanfareSound() {
   });
 }
 
-function playRushSirenSound() {
-  if (!audioCtx) return;
-  const now = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  
-  osc.type = 'sawtooth';
-  osc.frequency.setValueAtTime(350, now);
-  osc.frequency.exponentialRampToValueAtTime(1300, now + 0.8);
-  
-  gain.gain.setValueAtTime(0.08, now);
-  gain.gain.linearRampToValueAtTime(0.08, now + 0.6);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
-  
-  osc.start(now);
-  osc.stop(now + 0.8);
+// ============================================================
+// AUDIO FILE PLAYER
+// ============================================================
+let _currentAudioFile = null;
+
+function playAudioFile(src, volume = 1.0) {
+  try {
+    if (_currentAudioFile) {
+      _currentAudioFile.pause();
+      _currentAudioFile.currentTime = 0;
+    }
+    const audio = new Audio(src);
+    audio.volume = volume;
+    audio.play().catch(e => console.warn('Audio play failed:', e));
+    _currentAudioFile = audio;
+    return audio;
+  } catch (e) {
+    console.warn('playAudioFile error:', e);
+    return null;
+  }
 }
+
+// 当たり音: ゾロ目の数字 × RUSH状態で分岐
+function playWinSound(digit, rushActive) {
+  // 777 は RUSH 突入/延長音で処理されるため、ここでは RUSH 中の777以外を対象
+  const map = {
+    1: { normal: '1111.mp4',   rush: 'RUSH1111.mp4'  },
+    3: { normal: '3333.mp3',   rush: 'RUSH3333.mp3'  },
+    5: { normal: '5555.mp4',   rush: 'RUSH5555.mp3'  },
+    8: { normal: '8888.mp3',   rush: 'RUSH8888.mp3'  },
+  };
+  const entry = map[digit];
+  if (entry) {
+    playAudioFile(rushActive ? entry.rush : entry.normal, 0.9);
+  } else {
+    // 777 など未登録の場合は合成音にフォールバック
+    playWinFanfareSound();
+  }
+}
+
+
+function playRushSirenSound() {
+  // 大当たりRUSH入.mp4 を再生
+  playAudioFile('大当たりRUSH入.mp4', 1.0);
+}
+
 
 function playRushExtendSound() {
-  if (!audioCtx) return;
-  const now = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  
-  osc.frequency.setValueAtTime(900, now);
-  osc.frequency.setValueAtTime(1300, now + 0.1);
-  osc.frequency.setValueAtTime(1800, now + 0.2);
-  
-  gain.gain.setValueAtTime(0.1, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-  
-  osc.start(now);
-  osc.stop(now + 0.35);
+  // RUSH延長.mp4 を再生
+  playAudioFile('RUSH延長.mp4', 1.0);
 }
 
+
 function playRushEndSound() {
-  if (!audioCtx) return;
-  const now = audioCtx.currentTime;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  
-  osc.frequency.setValueAtTime(750, now);
-  osc.frequency.linearRampToValueAtTime(180, now + 0.5);
-  
-  gain.gain.setValueAtTime(0.08, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-  
-  osc.start(now);
-  osc.stop(now + 0.5);
+  // 大当たりRUSH落.mp4 を再生
+  playAudioFile('大当たりRUSH落.mp4', 0.9);
 }
+
 
 // ============================================================
 // INIT
