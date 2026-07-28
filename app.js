@@ -1421,7 +1421,7 @@ function awardRhythmBonus(points, message, multiplier, isOnBeat = true) {
     `;
     
     feedback.style.left = `calc(50% + ${(Math.random() - 0.5) * 60}px)`;
-    feedback.style.top = `calc(40% + ${(Math.random() - 0.5) * 60}px)`;
+    feedback.style.top = `calc(28% + ${(Math.random() - 0.5) * 30}px)`;
     
     container.appendChild(feedback);
     
