@@ -1408,7 +1408,8 @@ function awardRhythmBonus(points, message, multiplier, isOnBeat = true) {
     playRhythmBonusSound();
   }
   
-  const container = $('screen-study');
+  // card-stack 内に追加することでスコア領域に被らないようにする
+  const container = $('card-stack');
   if (container) {
     const feedback = document.createElement('div');
     feedback.className = `rhythm-feedback ${isOnBeat ? 'on-beat' : 'off-beat'}`;
@@ -1420,8 +1421,9 @@ function awardRhythmBonus(points, message, multiplier, isOnBeat = true) {
       ${points > 0 ? `<span class="rhythm-pts">+${points}</span>` : ''}
     `;
     
-    feedback.style.left = `calc(50% + ${(Math.random() - 0.5) * 60}px)`;
-    feedback.style.top = `calc(28% + ${(Math.random() - 0.5) * 30}px)`;
+    // card-stack 中央付近に配置（ランダムに少しずらす）
+    feedback.style.left = `calc(50% + ${(Math.random() - 0.5) * 50}px)`;
+    feedback.style.top = `calc(50% + ${(Math.random() - 0.5) * 20}px)`;
     
     container.appendChild(feedback);
     
@@ -1517,30 +1519,30 @@ function startSlotSpin() {
     statusEl.className = 'pachinko-status-mini neon-blink';
   }
   
-  // 1/99 chance of winning
-  const winRoll = Math.random();
-  const isWin = winRoll < (1 / 99);
-  
+  let isWin = false;
   let targetCombination = [];
   let triggersRush = false;
   
-  if (isWin) {
+  // Each winning digit (1, 3, 5, 7, 8) has a 1/99 chance of winning.
+  // The total win probability is 5/99.
+  const winningDigits = [1, 3, 5, 7, 8];
+  const roll = Math.random();
+  
+  if (roll < 5 / 99) {
+    isWin = true;
+    // Map the roll value to one of the 5 digits:
+    const idx = Math.floor(roll * 99);
+    const winDigit = winningDigits[idx];
+    targetCombination = [winDigit, winDigit, winDigit];
+    
     if (isRushActive) {
       triggersRush = true;
-      targetCombination = [7, 7, 7]; // RUSH延長
     } else {
-      triggersRush = Math.random() < 0.5; // 50% RUSHトリガー
-      if (triggersRush) {
-        targetCombination = [7, 7, 7]; // RUSH入
+      // 777 has a 50% chance of triggering RUSH
+      if (winDigit === 7) {
+        triggersRush = Math.random() < 0.5;
       } else {
-        // 通常当たり: 50%で777(大当たりRUSH落)、残りは1/3/5/8ゾロ目
-        if (Math.random() < 0.5) {
-          targetCombination = [7, 7, 7]; // 777が出るがラッシュなし
-        } else {
-          const digits = [1, 3, 5, 8];
-          const d = digits[Math.floor(Math.random() * digits.length)];
-          targetCombination = [d, d, d];
-        }
+        triggersRush = false;
       }
     }
   } else {
@@ -1647,7 +1649,10 @@ function evaluateSlotResult(isWin, triggersRush, winDigit) {
           const statusEl = $('score-badge-status-text');
           if (statusEl) statusEl.textContent = `RUSH: ${rushTimeRemaining}s`;
           showToast('⚡ RUSH EXTENDED +30s! ⚡');
-          playRushExtendSound();
+          // Only play RUSH延長.mp4 if winDigit is 7 to avoid overlapping with RUSH1111/3333/etc.
+          if (winDigit === 7) {
+            playRushExtendSound();
+          }
         } else {
           isRushActive = true;
           startRush();

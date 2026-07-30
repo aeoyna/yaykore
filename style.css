@@ -498,8 +498,6 @@ body::before {
   position: relative;
   overflow: hidden;
   padding: 20px;
-  /* メトロノームパネル分の余白 */
-  padding-bottom: calc(20px + 64px + env(safe-area-inset-bottom));
 }
 
 /* Swipe hints */
@@ -1693,10 +1691,8 @@ input, textarea {
    STUDY METRONOME PANEL
    ============================ */
 .study-metronome {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1711,6 +1707,7 @@ input, textarea {
   box-sizing: border-box;
   backdrop-filter: blur(16px);
   z-index: 50;
+  flex-shrink: 0;
 }
 
 .metro-left {
@@ -2100,3 +2097,121 @@ input, textarea {
     opacity: 0;
   }
 }
+
+@media (max-height: 700px) {
+  .study-main {
+    padding: 8px 12px;
+  }
+  .study-stat-badges {
+    margin-top: 4px;
+  }
+  .stat-badge {
+    padding: 4px 12px;
+  }
+  .study-score-badge {
+    transform: scale(0.9);
+  }
+  .card-stack,
+  .flash-card,
+  .flash-card-bg-1,
+  .flash-card-bg-2 {
+    height: clamp(140px, 30vh, 220px);
+  }
+  .card-face {
+    padding: 16px 20px;
+    gap: 8px;
+  }
+  .card-word {
+    font-size: var(--card-word-size, clamp(1.8rem, 5vw, 2.4rem));
+  }
+  .card-phonetic {
+    font-size: 0.95rem;
+  }
+  .flash-card-bg-1 {
+    transform: translate3d(0, -20px, 0px) scale(0.92);
+  }
+  .flash-card-bg-2 {
+    transform: translate3d(0, -40px, -10px) scale(0.84);
+  }
+  .study-footer {
+    margin-top: 4px;
+    padding: 4px 16px 8px;
+  }
+  .action-btn-prev {
+    width: 44px;
+    height: 44px;
+  }
+  .footer-rush-timer,
+  .footer-score-wrap {
+    min-width: 64px;
+  }
+  .footer-score-val,
+  .footer-rush-val {
+    font-size: 0.95rem;
+  }
+  .study-metronome {
+    padding: 6px 16px;
+    padding-bottom: max(6px, env(safe-area-inset-bottom));
+    gap: 12px;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+  .metro-btn-play {
+    width: 32px;
+    height: 32px;
+  }
+  .metro-dot {
+    width: 8px;
+    height: 8px;
+  }
+  .metro-slider {
+    height: 4px;
+  }
+  .metro-bpm-text {
+    font-size: 0.8rem;
+    min-width: 48px;
+  }
+}
+
+@media (max-height: 520px) {
+  .study-stat-badges {
+    display: none !important;
+  }
+  .card-stack,
+  .flash-card,
+  .flash-card-bg-1,
+  .flash-card-bg-2 {
+    height: clamp(100px, 28vh, 130px);
+  }
+  .card-face {
+    padding: 8px 12px;
+    gap: 4px;
+  }
+  .card-word {
+    font-size: var(--card-word-size, clamp(1.4rem, 4vw, 1.8rem));
+  }
+  .card-phonetic {
+    font-size: 0.85rem;
+  }
+  .card-tap-hint {
+    bottom: 6px;
+    font-size: 0.6rem;
+  }
+  .card-btn-speak {
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+  }
+  .card-btn-speak svg {
+    width: 14px;
+    height: 14px;
+  }
+  .flash-card-bg-1 {
+    transform: translate3d(0, -12px, 0px) scale(0.92);
+  }
+  .flash-card-bg-2 {
+    transform: translate3d(0, -24px, -10px) scale(0.84);
+  }
+}
+
+
