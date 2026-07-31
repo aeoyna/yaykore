@@ -286,9 +286,51 @@
       </div>
     </div>
   </div>
+  <!-- ========== MODAL: Exit Record ========== -->
+  <div id="modal-exit-record" class="modal-overlay hidden">
+    <div class="modal-box exit-record-box">
+      <div class="modal-header">
+        <h3>📊 学習記録 (レコード)</h3>
+        <button id="modal-exit-close" class="btn-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body exit-record-body">
+        <div class="record-grid">
+          <div class="record-item">
+            <span class="record-label">スワイプ</span>
+            <span class="record-val" id="record-swipes">0</span>
+          </div>
+          <div class="record-item">
+            <span class="record-label">スコア</span>
+            <span class="record-val text-green" id="record-score">00000</span>
+          </div>
+          <div class="record-item">
+            <span class="record-label">🔥 大あたり</span>
+            <span class="record-val text-gold" id="record-jackpots">0</span>
+          </div>
+          <div class="record-item">
+            <span class="record-label">✨ あたり</span>
+            <span class="record-val text-blue" id="record-hits">0</span>
+          </div>
+          <div class="record-item">
+            <span class="record-label">おぼえた！</span>
+            <span class="record-val text-emerald" id="record-learned">0</span>
+          </div>
+          <div class="record-item">
+            <span class="record-label">おぼえ中！</span>
+            <span class="record-val text-red" id="record-learning">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-exit-confirm" class="btn-primary" style="width: 100%;">閉じてホームに戻る</button>
+      </div>
+    </div>
+  </div>
 
-
-
-  <script src="app.js"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

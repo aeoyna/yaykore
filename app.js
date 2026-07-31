@@ -119,6 +119,9 @@ let sessionCorrect = 0;
 let sessionWrong = 0;
 let wrongCards = [];
 let correctCards = [];
+let sessionSwipes = 0;
+let sessionJackpots = 0;
+let sessionHits = 0;
 let isFlipped = false;
 let cardHistory = []; // {cardIndex, correct, scoreSnapshot} stack for undo
 
@@ -439,6 +442,65 @@ function deleteDeck() {
 // STUDY SCREEN
 // ============================================================
 
+function maintainQueue() {
+  if (!currentDeck) return;
+  const cardsNeeded = 10;
+  const remaining = studyQueue.length - studyIndex;
+  
+  if (remaining < cardsNeeded) {
+    const now = Date.now();
+    const allCards = currentDeck.cards;
+    const upcomingQueueIndices = studyQueue.slice(studyIndex);
+    
+    // 1. Get due cards that are NOT already in the upcoming queue
+    const dueIndices = allCards
+      .map((c, idx) => ({ card: c, idx }))
+      .filter(item => {
+        if (upcomingQueueIndices.includes(item.idx)) return false;
+        return !item.card.srs || !item.card.srs.nextReview || item.card.srs.nextReview <= now;
+      })
+      .map(item => item.idx);
+      
+    // Shuffle the due cards
+    if (settings.shuffle !== false) {
+      dueIndices.sort(() => Math.random() - 0.5);
+    }
+    
+    // Append to queue
+    studyQueue.push(...dueIndices);
+    
+    // 2. If still not enough, fetch cards sorted by nearest nextReview time
+    let currentRemaining = studyQueue.length - studyIndex;
+    if (currentRemaining < cardsNeeded) {
+      const upcomingIndices = studyQueue.slice(studyIndex);
+      const otherIndices = allCards
+        .map((c, idx) => ({ card: c, idx }))
+        .filter(item => !upcomingIndices.includes(item.idx))
+        .map(item => item.idx);
+        
+      otherIndices.sort((a, b) => {
+        const srsA = allCards[a].srs;
+        const srsB = allCards[b].srs;
+        const timeA = srsA && srsA.nextReview ? srsA.nextReview : 0;
+        const timeB = srsB && srsB.nextReview ? srsB.nextReview : 0;
+        return timeA - timeB;
+      });
+      
+      const fillCount = cardsNeeded - currentRemaining;
+      studyQueue.push(...otherIndices.slice(0, fillCount));
+    }
+    
+    // 3. Absolute fallback (very small deck): allow duplicates at the end
+    currentRemaining = studyQueue.length - studyIndex;
+    if (currentRemaining < cardsNeeded) {
+      while (studyQueue.length - studyIndex < cardsNeeded) {
+        const randomIdx = Math.floor(Math.random() * allCards.length);
+        studyQueue.push(randomIdx);
+      }
+    }
+  }
+}
+
 function startStudy(deckIdx, wrongOnly = false) {
   currentDeck = decks[deckIdx];
   if (!currentDeck || currentDeck.cards.length === 0) {
@@ -477,9 +539,15 @@ function startStudy(deckIdx, wrongOnly = false) {
     }
   }
 
+  // Ensure queue is populated
+  maintainQueue();
+
   studyIndex = 0;
   sessionCorrect = 0;
   sessionWrong = 0;
+  sessionSwipes = 0;
+  sessionJackpots = 0;
+  sessionHits = 0;
   wrongCards = [];
   correctCards = [];
   isFlipped = false;
@@ -499,6 +567,9 @@ function renderStudyCard(isSwipe = false) {
   isFlipped = false;
   hasFlipBonusAwarded = false;
   gachaProbabilityMultiplier = 1.0;
+
+  // Maintain queue so it is endless
+  maintainQueue();
 
   if (studyIndex >= studyQueue.length) {
     showComplete();
@@ -629,6 +700,12 @@ function goToPrevCard() {
   } else {
     sessionWrong = Math.max(0, sessionWrong - 1);
     wrongCards = wrongCards.filter(c => c !== card);
+    // Remove the injected duplicate from the queue
+    const currentCardIdx = studyQueue[prev.cardIndex];
+    const nextOccur = studyQueue.indexOf(currentCardIdx, prev.cardIndex + 1);
+    if (nextOccur !== -1) {
+      studyQueue.splice(nextOccur, 1);
+    }
   }
 
   // Restore the card's SRS state
@@ -644,6 +721,7 @@ function goToPrevCard() {
     saveScore(score);
   }
 
+  sessionSwipes = Math.max(0, sessionSwipes - 1);
   studyIndex = prev.cardIndex;
   saveDecks(decks);
 
@@ -652,10 +730,12 @@ function goToPrevCard() {
 }
 
 function updateProgress() {
-  const total = studyQueue.length;
-  const done = studyIndex;
-  $('progress-text').textContent = `${done}/${total}`;
-  $('progress-bar').style.width = `${total > 0 ? (done / total) * 100 : 0}%`;
+  const mastered = currentDeck.learned ? currentDeck.learned.length : 0;
+  const totalCards = currentDeck.cards.length;
+  const pct = totalCards > 0 ? Math.round((mastered / totalCards) * 100) : 0;
+  
+  $('progress-text').textContent = `${sessionSwipes} 回 (習得 ${pct}%)`;
+  $('progress-bar').style.width = `${pct}%`;
 
   // Update stat badges
   const badgeL = $('badge-learning');
@@ -731,9 +811,15 @@ function markCard(correct) {
     if (currentDeck.learned) {
       currentDeck.learned = currentDeck.learned.filter(id => id !== card.id);
     }
+
+    // Inject back into queue (4 cards ahead)
+    const currentCardIdx = studyQueue[studyIndex];
+    const injectPos = Math.min(studyIndex + 1 + 4, studyQueue.length);
+    studyQueue.splice(injectPos, 0, currentCardIdx);
   }
 
   saveDecks(decks);
+  sessionSwipes++;
   studyIndex++;
   updatePrevCardBtn();
   animateCardOut(correct, () => renderStudyCard(true));
@@ -1053,9 +1139,33 @@ $('btn-add-deck').addEventListener('click', () => openDeckModal());
 $('btn-open-settings').addEventListener('click', openSettingsModal);
 
 // Study screen
+function openExitRecordModal() {
+  $('record-swipes').textContent = sessionSwipes;
+  $('record-score').textContent = String(score).padStart(5, '0');
+  $('record-jackpots').textContent = sessionJackpots;
+  $('record-hits').textContent = sessionHits;
+  $('record-learned').textContent = sessionCorrect;
+  $('record-learning').textContent = sessionWrong;
+  
+  $('modal-exit-record').classList.remove('hidden');
+}
+
+function closeExitRecordModal() {
+  $('modal-exit-record').classList.add('hidden');
+}
+
 $('btn-back').addEventListener('click', () => {
+  openExitRecordModal();
+});
+
+$('modal-exit-close').addEventListener('click', closeExitRecordModal);
+$('btn-exit-confirm').addEventListener('click', () => {
+  closeExitRecordModal();
   showScreen('screen-home');
   renderHome();
+});
+$('modal-exit-record').addEventListener('click', e => {
+  if (e.target === $('modal-exit-record')) closeExitRecordModal();
 });
 
 $('btn-prev-card').addEventListener('click', goToPrevCard);
@@ -1619,6 +1729,12 @@ function evaluateSlotResult(isWin, triggersRush, winDigit) {
   if (isWin) {
     statusEl.textContent = 'WIN!';
     statusEl.classList.add('win-flash');
+    
+    if (triggersRush) {
+      sessionJackpots++;
+    } else {
+      sessionHits++;
+    }
     
     const points = isRushActive ? 3000 : 1000;
     animateScoreIncrease(points);

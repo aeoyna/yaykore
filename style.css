@@ -2214,4 +2214,97 @@ input, textarea {
   }
 }
 
+/* ============================
+   EXIT RECORD SUMMARY STYLE
+   ============================ */
+.record-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 12px 0;
+}
 
+.record-item {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.record-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.record-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.record-val {
+  font-size: 1.8rem;
+  font-weight: 800;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.text-green {
+  color: #10b981;
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.text-gold {
+  color: #fbbf24;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.text-blue {
+  color: #3b82f6;
+  text-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+}
+
+.text-emerald {
+  color: #34d399;
+  text-shadow: 0 0 8px rgba(52, 211, 153, 0.4);
+}
+
+.text-red {
+  color: #f87171;
+  text-shadow: 0 0 8px rgba(248, 113, 113, 0.4);
+}
+
+/* Adjust exit record modal box specifically for grid layout height constraints */
+.exit-record-box {
+  max-width: 440px;
+}
+
+.exit-record-body {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 8px 24px 24px;
+}
+
+@media (max-height: 520px) {
+  .record-grid {
+    gap: 8px;
+    padding: 4px 0;
+  }
+  .record-item {
+    padding: 8px 12px;
+  }
+  .record-label {
+    font-size: 0.75rem;
+    margin-bottom: 2px;
+  }
+  .record-val {
+    font-size: 1.3rem;
+  }
+}
