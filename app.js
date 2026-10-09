@@ -452,30 +452,35 @@ function maintainQueue() {
     const allCards = currentDeck.cards;
     const upcomingQueueIndices = studyQueue.slice(studyIndex);
     
-    // 1. Get due cards that are NOT already in the upcoming queue
-    const dueIndices = allCards
+    // 1. Candidate cards not currently in upcoming queue
+    const candidateItems = allCards
       .map((c, idx) => ({ card: c, idx }))
-      .filter(item => {
-        if (upcomingQueueIndices.includes(item.idx)) return false;
-        return !item.card.srs || !item.card.srs.nextReview || item.card.srs.nextReview <= now;
-      })
+      .filter(item => !upcomingQueueIndices.includes(item.idx));
+
+    // Unlearned cards come first
+    const unlearnedIndices = candidateItems
+      .filter(item => !item.card.srs || !item.card.srs.lastReviewed)
       .map(item => item.idx);
-      
-    // Shuffle the due cards
+
+    // Due review cards come second
+    const dueIndices = candidateItems
+      .filter(item => item.card.srs && item.card.srs.lastReviewed > 0 && (!item.card.srs.nextReview || item.card.srs.nextReview <= now))
+      .map(item => item.idx);
+
     if (settings.shuffle !== false) {
+      unlearnedIndices.sort(() => Math.random() - 0.5);
       dueIndices.sort(() => Math.random() - 0.5);
     }
+
+    studyQueue.push(...unlearnedIndices, ...dueIndices);
     
-    // Append to queue
-    studyQueue.push(...dueIndices);
-    
-    // 2. If still not enough, fetch cards sorted by nearest nextReview time
+    // 2. If still not enough, fetch remaining cards sorted by nearest nextReview time
     let currentRemaining = studyQueue.length - studyIndex;
     if (currentRemaining < cardsNeeded) {
-      const upcomingIndices = studyQueue.slice(studyIndex);
+      const currentUpcoming = studyQueue.slice(studyIndex);
       const otherIndices = allCards
         .map((c, idx) => ({ card: c, idx }))
-        .filter(item => !upcomingIndices.includes(item.idx))
+        .filter(item => !currentUpcoming.includes(item.idx))
         .map(item => item.idx);
         
       otherIndices.sort((a, b) => {
@@ -512,30 +517,48 @@ function startStudy(deckIdx, wrongOnly = false) {
     studyQueue = wrongCards.map(c => currentDeck.cards.indexOf(c)).filter(i => i >= 0);
   } else {
     const now = Date.now();
-    const dueIndices = currentDeck.cards
+    
+    // Separate unlearned cards and due review cards to prioritize unlearned cards first
+    const unlearnedIndices = currentDeck.cards
       .map((c, idx) => ({ card: c, idx }))
-      .filter(item => !item.card.srs || !item.card.srs.nextReview || item.card.srs.nextReview <= now)
+      .filter(item => !item.card.srs || !item.card.srs.lastReviewed)
       .map(item => item.idx);
 
-    if (dueIndices.length > 0) {
-      studyQueue = dueIndices;
-      showToast(`📝 復習対象の単語 ${dueIndices.length} 枚を学習します`);
+    const dueIndices = currentDeck.cards
+      .map((c, idx) => ({ card: c, idx }))
+      .filter(item => item.card.srs && item.card.srs.lastReviewed > 0 && (!item.card.srs.nextReview || item.card.srs.nextReview <= now))
+      .map(item => item.idx);
+
+    // Shuffle unlearned and due groups independently
+    if (settings.shuffle !== false) {
+      unlearnedIndices.sort(() => Math.random() - 0.5);
+      dueIndices.sort(() => Math.random() - 0.5);
+    }
+
+    // Combine: Unlearned cards ALWAYS come first, followed by due review cards
+    const activeIndices = [...unlearnedIndices, ...dueIndices];
+
+    if (activeIndices.length > 0) {
+      studyQueue = activeIndices;
+      if (unlearnedIndices.length > 0 && dueIndices.length > 0) {
+        showToast(`✨ 未学習 ${unlearnedIndices.length}枚 / 復習 ${dueIndices.length}枚 を優先順に学習します`);
+      } else if (unlearnedIndices.length > 0) {
+        showToast(`✨ 未学習の単語 ${unlearnedIndices.length}枚 を優先して学習します`);
+      } else {
+        showToast(`📝 復習対象の単語 ${dueIndices.length}枚 を学習します`);
+      }
     } else {
       if (confirm('現在、復習が必要な単語はありません。すべての単語を学習しますか？')) {
-        studyQueue = [...Array(currentDeck.cards.length).keys()];
+        const allIndices = [...Array(currentDeck.cards.length).keys()];
+        if (settings.shuffle !== false) {
+          allIndices.sort(() => Math.random() - 0.5);
+        }
+        studyQueue = allIndices;
       } else {
         showScreen('screen-home');
         renderHome();
         return;
       }
-    }
-  }
-
-  // Shuffle
-  if (settings.shuffle !== false) {
-    for (let i = studyQueue.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [studyQueue[i], studyQueue[j]] = [studyQueue[j], studyQueue[i]];
     }
   }
 
@@ -812,10 +835,9 @@ function markCard(correct) {
       currentDeck.learned = currentDeck.learned.filter(id => id !== card.id);
     }
 
-    // Inject back into queue (4 cards ahead)
+    // Append back to end of queue so unlearned cards are completed first
     const currentCardIdx = studyQueue[studyIndex];
-    const injectPos = Math.min(studyIndex + 1 + 4, studyQueue.length);
-    studyQueue.splice(injectPos, 0, currentCardIdx);
+    studyQueue.push(currentCardIdx);
   }
 
   saveDecks(decks);
