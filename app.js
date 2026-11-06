@@ -2,6 +2,11 @@
    SwipeCard App - app.js
    ============================ */
 
+// DOM HELPER (関数宣言により巻き上げ対応)
+function $(id) {
+  return document.getElementById(id);
+}
+
 // ============================================================
 // DATA LAYER
 // ============================================================
@@ -179,8 +184,6 @@ let gachaProbabilityMultiplier = 1.0;
 // ============================================================
 // DOM HELPERS
 // ============================================================
-
-const $ = id => document.getElementById(id);
 
 function showScreen(screenId) {
   if (screenId !== 'screen-study') {
