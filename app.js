@@ -66,7 +66,8 @@ function saveDecks(decks) {
 const SETTINGS_KEY = 'swipecard_settings';
 const DEFAULT_SETTINGS = {
   fontSize: 'large',
-  shuffle: true
+  shuffle: true,
+  autoFlip: false
 };
 
 let settings = loadSettings();
@@ -99,6 +100,7 @@ function applySettings() {
   };
   const sizeValue = fontSizes[settings.fontSize] || fontSizes.large;
   document.documentElement.style.setProperty('--card-word-size', sizeValue);
+  updateAutoFlipUI();
 }
 
 applySettings();
@@ -123,6 +125,7 @@ let sessionSwipes = 0;
 let sessionJackpots = 0;
 let sessionHits = 0;
 let isFlipped = false;
+let isCardTransitioning = false;
 let cardHistory = []; // {cardIndex, correct, scoreSnapshot} stack for undo
 
 // ============================================================
@@ -588,6 +591,7 @@ function startStudy(deckIdx, wrongOnly = false) {
 function renderStudyCard(isSwipe = false) {
   const stack = $('card-stack');
   isFlipped = false;
+  isCardTransitioning = false;
   hasFlipBonusAwarded = false;
   gachaProbabilityMultiplier = 1.0;
 
@@ -757,7 +761,24 @@ function updateProgress() {
   const totalCards = currentDeck.cards.length;
   const pct = totalCards > 0 ? Math.round((mastered / totalCards) * 100) : 0;
   
-  $('progress-text').textContent = `${sessionSwipes} 回 (習得 ${pct}%)`;
+  // 題名横の習得度
+  const masteryEl = $('study-deck-mastery');
+  if (masteryEl) {
+    masteryEl.textContent = `習得 ${pct}%`;
+  }
+
+  // 右側のスワイプ回数を大きく表示
+  const countNumEl = $('progress-count-num');
+  if (countNumEl) {
+    countNumEl.textContent = sessionSwipes;
+  }
+
+  // 既存要素への互換性対応
+  const progressText = $('progress-text');
+  if (progressText) {
+    progressText.textContent = `${sessionSwipes} 回 (習得 ${pct}%)`;
+  }
+
   $('progress-bar').style.width = `${pct}%`;
 
   // Update stat badges
@@ -768,6 +789,9 @@ function updateProgress() {
 }
 
 function markCard(correct) {
+  if (isCardTransitioning) return;
+  isCardTransitioning = true;
+
   // Check rhythm timing for bonus
   checkRhythmSwipe();
   
@@ -844,7 +868,10 @@ function markCard(correct) {
   sessionSwipes++;
   studyIndex++;
   updatePrevCardBtn();
-  animateCardOut(correct, () => renderStudyCard(true));
+  animateCardOut(correct, () => {
+    renderStudyCard(true);
+    isCardTransitioning = false;
+  });
 
   // Audio activation and gacha roll
   initAudioContext();
@@ -853,7 +880,11 @@ function markCard(correct) {
 
 function animateCardOut(correct, callback) {
   const el = $('current-card');
-  if (!el) { callback(); return; }
+  if (!el) {
+    isCardTransitioning = false;
+    callback();
+    return;
+  }
 
   // Spawn particle effect floating upwards from the card position
   try {
@@ -941,6 +972,7 @@ function animateCardOut(correct, callback) {
 }
 
 function showComplete() {
+  stopMetronome();
   $('card-stack').style.display = 'none';
   $('study-footer').style.display = 'none';
 
@@ -1127,6 +1159,9 @@ function openSettingsModal() {
   });
   
   $('setting-shuffle-toggle').checked = settings.shuffle !== false;
+  if ($('setting-autoflip-toggle')) {
+    $('setting-autoflip-toggle').checked = !!settings.autoFlip;
+  }
   
   $('modal-settings').classList.remove('hidden');
 }
@@ -1143,13 +1178,50 @@ function saveSettingsFromUI() {
   });
   
   const isShuffle = $('setting-shuffle-toggle').checked;
+  const isAutoFlip = $('setting-autoflip-toggle') ? $('setting-autoflip-toggle').checked : !!settings.autoFlip;
   
   saveSettings({
     fontSize: selectedFontSize,
-    shuffle: isShuffle
+    shuffle: isShuffle,
+    autoFlip: isAutoFlip
   });
   
   closeSettingsModal();
+}
+
+function updateAutoFlipUI() {
+  const btn = $('btn-auto-flip-toggle');
+  const modalToggle = $('setting-autoflip-toggle');
+  const isEnabled = !!(settings && settings.autoFlip);
+
+  if (btn) {
+    btn.classList.toggle('active', isEnabled);
+    const statusText = btn.querySelector('.auto-status-text');
+    if (statusText) statusText.textContent = isEnabled ? 'ON' : 'OFF';
+  }
+
+  if (modalToggle) {
+    modalToggle.checked = isEnabled;
+  }
+}
+
+function toggleAutoFlip() {
+  const newState = !settings.autoFlip;
+  saveSettings({
+    ...settings,
+    autoFlip: newState
+  });
+  updateAutoFlipUI();
+
+  if (newState) {
+    showToast('🔄 テンポ自動めくり: ON (1拍目:めくる / 2拍目:次へ)');
+    // もしメトロノームが鳴っていなければ自動でメトロノームも再生開始
+    if (!isMetroPlaying) {
+      toggleMetronome();
+    }
+  } else {
+    showToast('⏸ テンポ自動めくり: OFF');
+  }
 }
 
 // ============================================================
@@ -1389,6 +1461,356 @@ $('modal-card-list').addEventListener('click', e => {
 });
 
 // ============================================================
+// DECK DETAIL MODAL LOGIC (プロジェクト詳細・グラデーション円グラフ)
+// ============================================================
+
+let detailFilteredCards = [];
+let detailRenderedCount = 0;
+const DETAIL_CHUNK_SIZE = 50;
+
+function getCardStudyStatus(card) {
+  if (!currentDeck) return { type: 'unlearned', label: '未学習', badgeClass: 'badge-status-unlearned', retention: 0, nextText: '未着手', barClass: 'unlearned', icon: '○' };
+
+  const isMastered = currentDeck.learned && currentDeck.learned.includes(card.id);
+  const isSessionWrong = wrongCards.includes(card);
+  const hasReviewed = card.srs && card.srs.lastReviewed > 0;
+  
+  const srs = getSrsInfo(card);
+
+  if (isMastered) {
+    const ret = Math.max(80, srs.retention || 100);
+    return {
+      type: 'mastered',
+      label: '覚えた',
+      badgeClass: 'badge-status-mastered',
+      retention: ret,
+      nextText: srs.nextText === '未学習' ? '習得済' : `次回: ${srs.nextText}`,
+      barClass: 'mastered',
+      icon: '✓'
+    };
+  } else if (isSessionWrong || hasReviewed) {
+    return {
+      type: 'learning',
+      label: '学習中',
+      badgeClass: 'badge-status-learning',
+      retention: srs.retention,
+      nextText: srs.nextText ? `次回: ${srs.nextText}` : '復習対象',
+      barClass: 'learning',
+      icon: '🔥'
+    };
+  } else {
+    return {
+      type: 'unlearned',
+      label: '未学習',
+      badgeClass: 'badge-status-unlearned',
+      retention: 0,
+      nextText: '未着手',
+      barClass: 'unlearned',
+      icon: '○'
+    };
+  }
+}
+
+function openDeckDetailModal() {
+  if (!currentDeck) return;
+
+  const modal = $('modal-deck-detail');
+  if (!modal) return;
+
+  // 1. デッキヘッダーの反映
+  const emojiEl = $('detail-deck-emoji');
+  if (emojiEl) emojiEl.textContent = currentDeck.emoji || '📙';
+  const nameEl = $('detail-deck-name');
+  if (nameEl) nameEl.textContent = currentDeck.name || 'プロジェクト詳細';
+  const subEl = $('detail-deck-sub');
+  if (subEl) subEl.textContent = `全 ${currentDeck.cards.length} 単語の学習進捗と習得度`;
+
+  // 2. 覚えた / 学習中 / 未学習の集計
+  const total = currentDeck.cards.length;
+  let masteredCount = 0;
+  let learningCount = 0;
+  let unlearnedCount = 0;
+
+  currentDeck.cards.forEach(card => {
+    const st = getCardStudyStatus(card);
+    if (st.type === 'mastered') masteredCount++;
+    else if (st.type === 'learning') learningCount++;
+    else unlearnedCount++;
+  });
+
+  const pctMastered = total > 0 ? Math.round((masteredCount / total) * 100) : 0;
+  const pctLearning = total > 0 ? Math.round((learningCount / total) * 100) : 0;
+  const pctUnlearned = total > 0 ? Math.max(0, 100 - pctMastered - pctLearning) : 0;
+
+  // 3. グラデーション円グラフ (SVG ドーナツ) の更新
+  const C = 2 * Math.PI * 62; // 半径62の円周: 約 389.56
+  const segU = $('donut-seg-unlearned');
+  const segL = $('donut-seg-learning');
+  const segM = $('donut-seg-mastered');
+
+  if (total > 0) {
+    const uLen = (unlearnedCount / total) * C;
+    const lLen = (learningCount / total) * C;
+    const mLen = (masteredCount / total) * C;
+
+    if (segU) {
+      segU.style.strokeDasharray = `${uLen} ${C}`;
+      segU.style.strokeDashoffset = '0';
+    }
+    if (segL) {
+      segL.style.strokeDasharray = `${lLen} ${C}`;
+      segL.style.strokeDashoffset = `${-uLen}`;
+    }
+    if (segM) {
+      segM.style.strokeDasharray = `${mLen} ${C}`;
+      segM.style.strokeDashoffset = `${-(uLen + lLen)}`;
+    }
+  } else {
+    if (segU) segU.style.strokeDasharray = `0 ${C}`;
+    if (segL) segL.style.strokeDasharray = `0 ${C}`;
+    if (segM) segM.style.strokeDasharray = `0 ${C}`;
+  }
+
+  // 中央の数値
+  const donutPct = $('donut-pct');
+  if (donutPct) donutPct.textContent = `${pctMastered}%`;
+  const donutCount = $('donut-count');
+  if (donutCount) donutCount.textContent = `${masteredCount} / ${total} 語`;
+
+  // 4. メトリクス数値の更新
+  const metricMNum = $('metric-mastered-num');
+  if (metricMNum) metricMNum.textContent = masteredCount;
+  const metricMPct = $('metric-mastered-pct');
+  if (metricMPct) metricMPct.textContent = `${pctMastered}%`;
+
+  const metricLNum = $('metric-learning-num');
+  if (metricLNum) metricLNum.textContent = learningCount;
+  const metricLPct = $('metric-learning-pct');
+  if (metricLPct) metricLPct.textContent = `${pctLearning}%`;
+
+  const metricUNum = $('metric-unlearned-num');
+  if (metricUNum) metricUNum.textContent = unlearnedCount;
+  const metricUPct = $('metric-unlearned-pct');
+  if (metricUPct) metricUPct.textContent = `${pctUnlearned}%`;
+
+  // 5. 検索窓 & タブのリセット
+  const searchInput = $('detail-search-input');
+  if (searchInput) searchInput.value = '';
+
+  const tabs = document.querySelectorAll('.detail-tab');
+  tabs.forEach(t => t.classList.toggle('active', t.dataset.filter === 'all'));
+
+  // 6. カードリストの描画
+  filterAndRenderDetailCards(true);
+
+  modal.classList.remove('hidden');
+}
+
+function closeDeckDetailModal() {
+  const modal = $('modal-deck-detail');
+  if (modal) modal.classList.add('hidden');
+}
+
+function filterAndRenderDetailCards(reset = true) {
+  if (!currentDeck) return;
+
+  const query = ($('detail-search-input')?.value || '').trim().toLowerCase();
+  const activeTab = document.querySelector('.detail-tab.active')?.dataset.filter || 'all';
+
+  if (reset) {
+    detailRenderedCount = 0;
+    const container = $('detail-card-list');
+    if (container) container.scrollTop = 0;
+  }
+
+  detailFilteredCards = currentDeck.cards.map((card, idx) => ({
+    card,
+    idx: idx + 1,
+    status: getCardStudyStatus(card)
+  })).filter(item => {
+    if (activeTab !== 'all' && item.status.type !== activeTab) {
+      return false;
+    }
+    if (query) {
+      const front = (item.card.front || '').toLowerCase();
+      const back = (item.card.back || '').toLowerCase();
+      const example = (item.card.example || '').toLowerCase();
+      return front.includes(query) || back.includes(query) || example.includes(query);
+    }
+    return true;
+  });
+
+  const badge = $('detail-cards-count-badge');
+  if (badge) badge.textContent = `${detailFilteredCards.length}枚`;
+
+  const container = $('detail-card-list');
+  if (!container) return;
+
+  if (reset) {
+    container.innerHTML = '';
+  }
+
+  if (detailFilteredCards.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state" style="padding: 32px 0;">
+        <div class="empty-state-icon" style="font-size: 2.2rem;">🔍</div>
+        <p>該当する単語は見つかりませんでした</p>
+      </div>`;
+    return;
+  }
+
+  renderMoreDetailCards();
+}
+
+function renderMoreDetailCards() {
+  const container = $('detail-card-list');
+  if (!container) return;
+
+  const nextSlice = detailFilteredCards.slice(detailRenderedCount, detailRenderedCount + DETAIL_CHUNK_SIZE);
+  if (nextSlice.length === 0) return;
+
+  const fragment = document.createDocumentFragment();
+
+  nextSlice.forEach(item => {
+    const { card, idx, status } = item;
+    const row = document.createElement('div');
+    row.className = 'detail-card-item';
+    row.innerHTML = `
+      <div class="detail-card-left">
+        <div class="detail-card-front-row">
+          <span class="detail-card-idx">#${idx}</span>
+          <span class="detail-card-front">${escHtml(card.front)}</span>
+          ${card.phonetic ? `<span class="detail-card-phonetic">${escHtml(card.phonetic)}</span>` : ''}
+        </div>
+        <div class="detail-card-back">${escHtml(card.back)}</div>
+        ${card.example ? `<div class="detail-card-example">"${escHtml(card.example)}"</div>` : ''}
+      </div>
+      <div class="detail-card-right">
+        <div class="detail-card-actions">
+          <span class="card-status-badge ${status.badgeClass}">${status.icon} ${status.label}</span>
+          <button class="detail-card-speak" title="英語読み上げ">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="card-mastery-bar-wrap" title="定着率: ${status.retention}%">
+          <div class="card-mastery-bar ${status.barClass}" style="width: ${status.retention}%"></div>
+        </div>
+        <div class="card-srs-hint">${status.nextText}</div>
+      </div>
+    `;
+
+    const speakBtn = row.querySelector('.detail-card-speak');
+    if (speakBtn) {
+      speakBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        speakText(card.front);
+      });
+    }
+
+    fragment.appendChild(row);
+  });
+
+  container.appendChild(fragment);
+  detailRenderedCount += nextSlice.length;
+}
+
+// 題名クリックイベント (プロジェクト詳細を開く)
+const deckTitleBtn = $('study-deck-title-btn');
+if (deckTitleBtn) {
+  deckTitleBtn.addEventListener('click', openDeckDetailModal);
+  deckTitleBtn.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openDeckDetailModal();
+    }
+  });
+}
+
+// プロジェクト詳細モーダルのイベント
+const modalDetailClose = $('modal-deck-detail-close');
+if (modalDetailClose) modalDetailClose.addEventListener('click', closeDeckDetailModal);
+
+const modalDetailCloseBtn = $('modal-deck-detail-close-btn');
+if (modalDetailCloseBtn) modalDetailCloseBtn.addEventListener('click', closeDeckDetailModal);
+
+const modalDeckDetail = $('modal-deck-detail');
+if (modalDeckDetail) {
+  modalDeckDetail.addEventListener('click', e => {
+    if (e.target === modalDeckDetail) closeDeckDetailModal();
+  });
+}
+
+// 検索入力イベント
+const searchInput = $('detail-search-input');
+if (searchInput) {
+  searchInput.addEventListener('input', () => filterAndRenderDetailCards(true));
+}
+
+// フィルタータブ切り替えイベント
+const detailTabsWrap = $('detail-tabs');
+if (detailTabsWrap) {
+  detailTabsWrap.addEventListener('click', e => {
+    const tab = e.target.closest('.detail-tab');
+    if (!tab) return;
+    document.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    filterAndRenderDetailCards(true);
+  });
+}
+
+// レジェンドカードクリックで該当フィルターへ素早くジャンプ
+const filterCardM = $('filter-card-mastered');
+if (filterCardM) {
+  filterCardM.addEventListener('click', () => {
+    const targetTab = document.querySelector('.detail-tab[data-filter="mastered"]');
+    if (targetTab) {
+      document.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+      targetTab.classList.add('active');
+      filterAndRenderDetailCards(true);
+    }
+  });
+}
+
+const filterCardL = $('filter-card-learning');
+if (filterCardL) {
+  filterCardL.addEventListener('click', () => {
+    const targetTab = document.querySelector('.detail-tab[data-filter="learning"]');
+    if (targetTab) {
+      document.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+      targetTab.classList.add('active');
+      filterAndRenderDetailCards(true);
+    }
+  });
+}
+
+const filterCardU = $('filter-card-unlearned');
+if (filterCardU) {
+  filterCardU.addEventListener('click', () => {
+    const targetTab = document.querySelector('.detail-tab[data-filter="unlearned"]');
+    if (targetTab) {
+      document.querySelectorAll('.detail-tab').forEach(t => t.classList.remove('active'));
+      targetTab.classList.add('active');
+      filterAndRenderDetailCards(true);
+    }
+  });
+}
+
+// カードリストの無限スクロール
+const detailCardListEl = $('detail-card-list');
+if (detailCardListEl) {
+  detailCardListEl.addEventListener('scroll', () => {
+    if (detailCardListEl.scrollTop + detailCardListEl.clientHeight >= detailCardListEl.scrollHeight - 100) {
+      if (detailRenderedCount < detailFilteredCards.length) {
+        renderMoreDetailCards();
+      }
+    }
+  }, { passive: true });
+}
+
+// ============================================================
 // METRONOME LOGIC
 // ============================================================
 
@@ -1450,8 +1872,37 @@ function scheduleNote(beatNumber, time) {
 
   const delay = (time - audioCtx.currentTime) * 1000;
   setTimeout(() => {
-    if (isMetroPlaying) highlightBeat(beatNumber);
+    if (isMetroPlaying) {
+      highlightBeat(beatNumber);
+      handleAutoBeat(beatNumber);
+    }
   }, Math.max(0, delay));
+}
+
+function handleAutoBeat(beatNumber) {
+  if (!settings || !settings.autoFlip) return;
+  if (!currentDeck || studyIndex >= studyQueue.length) return;
+
+  const studyScreen = $('screen-study');
+  if (!studyScreen || !studyScreen.classList.contains('active')) return;
+
+  const completeEl = $('study-complete');
+  if (completeEl && !completeEl.classList.contains('hidden')) return;
+
+  const currentCard = $('current-card');
+  if (!currentCard || isCardTransitioning) return;
+
+  if (beatNumber === 0) {
+    // 1拍目: まだめくられていなければ裏面へめくる
+    if (!isFlipped) {
+      flipCard();
+    }
+  } else if (beatNumber === 1) {
+    // 2拍目: めくられて裏面になっていれば次のカードへ進める
+    if (isFlipped) {
+      markCard(true);
+    }
+  }
 }
 
 function metroScheduler() {
@@ -1585,6 +2036,9 @@ function playRhythmBonusSound() {
 
 // Metronome Event Listeners
 $('btn-metro-toggle').addEventListener('click', toggleMetronome);
+if ($('btn-auto-flip-toggle')) {
+  $('btn-auto-flip-toggle').addEventListener('click', toggleAutoFlip);
+}
 $('slider-metro-bpm').addEventListener('input', e => {
   metroBpm = parseInt(e.target.value);
   $('label-metro-bpm').textContent = `${metroBpm} BPM`;
@@ -2166,6 +2620,7 @@ async function initApp() {
   renderHome();
   updateMetroDots();
   initParticleCanvas();
+  updateAutoFlipUI();
 }
 
 initApp();

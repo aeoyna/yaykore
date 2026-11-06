@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=3" />
+  <link rel="stylesheet" href="style.css?v=4" />
 </head>
 <body>
   <!-- ========== SCREEN: HOME ========== -->
@@ -86,12 +86,23 @@
         </svg>
       </button>
       <div class="study-header-center">
-        <div id="study-deck-name" class="study-deck-name"></div>
+        <div id="study-deck-title-btn" class="study-deck-title-btn" role="button" tabindex="0" title="プロジェクト詳細を表示">
+          <span id="study-deck-name" class="study-deck-name"></span>
+          <span id="study-deck-mastery" class="study-deck-mastery">習得 0%</span>
+          <svg class="deck-detail-hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </div>
         <div id="progress-bar-wrap" class="progress-bar-wrap">
           <div id="progress-bar" class="progress-bar"></div>
         </div>
       </div>
-      <div id="progress-text" class="progress-text">0/0</div>
+      <div id="progress-counter-box" class="progress-counter-box" title="スワイプ回数">
+        <span id="progress-count-num" class="progress-count-num">0</span>
+        <span class="progress-count-unit">回</span>
+      </div>
     </header>
 
     <main class="study-main">
@@ -176,8 +187,14 @@
         </div>
       </div>
       <div class="metro-center">
-        <input type="range" id="slider-metro-bpm" min="110" max="130" value="120" class="metro-slider">
+        <input type="range" id="slider-metro-bpm" min="60" max="150" value="120" class="metro-slider">
         <span id="label-metro-bpm" class="metro-bpm-text">120 BPM</span>
+      </div>
+      <div class="metro-right">
+        <button id="btn-auto-flip-toggle" class="metro-btn-auto" title="テンポ連動自動めくり (1拍目:めくる / 2拍目:次へ)">
+          <span class="auto-badge">AUTO</span>
+          <span class="auto-status-text">OFF</span>
+        </button>
       </div>
     </div>
   </div>
@@ -255,6 +272,14 @@
             <span class="switch-text">学習開始時に単語をシャッフルする</span>
           </label>
         </div>
+
+        <div class="setting-item" style="margin-top: 20px;">
+          <label class="form-label">テンポ連動自動めくり</label>
+          <label class="switch-label">
+            <input type="checkbox" id="setting-autoflip-toggle" />
+            <span class="switch-text">1拍目でめくり、2拍目で次のカードへ自動送り</span>
+          </label>
+        </div>
       </div>
       <div class="modal-footer">
         <button id="btn-save-settings" class="btn-primary" style="width: 100%;">閉じる</button>
@@ -264,6 +289,136 @@
 
   <!-- Toast -->
   <div id="toast" class="toast hidden"></div>
+
+  <!-- ========== MODAL: Deck Detail (プロジェクト詳細) ========== -->
+  <div id="modal-deck-detail" class="modal-overlay hidden">
+    <div class="modal-box modal-deck-detail-box">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span id="detail-deck-emoji" class="detail-deck-emoji">📙</span>
+          <div>
+            <h3 id="detail-deck-name">プロジェクト詳細</h3>
+            <div id="detail-deck-sub" class="detail-deck-sub">全単語の学習進捗と習得度</div>
+          </div>
+        </div>
+        <button id="modal-deck-detail-close" class="btn-icon" title="閉じる">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body deck-detail-body">
+        <!-- 円グラフ（グラデーション） & サマリー -->
+        <div class="deck-chart-section">
+          <!-- グラデーション円グラフ -->
+          <div class="donut-chart-container">
+            <svg class="donut-chart-svg" viewBox="0 0 160 160">
+              <defs>
+                <linearGradient id="chartGradMastered" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#34d399"/>
+                  <stop offset="100%" stop-color="#059669"/>
+                </linearGradient>
+                <linearGradient id="chartGradLearning" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#fbbf24"/>
+                  <stop offset="100%" stop-color="#f87171"/>
+                </linearGradient>
+                <linearGradient id="chartGradUnlearned" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#3b82f6"/>
+                  <stop offset="100%" stop-color="#6366f1"/>
+                </linearGradient>
+                <filter id="chartGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#34d399" flood-opacity="0.4"/>
+                </filter>
+              </defs>
+              <circle class="donut-track" cx="80" cy="80" r="62" />
+              <!-- 円グラフの各セグメント (JSで動的に更新) -->
+              <circle id="donut-seg-unlearned" class="donut-segment donut-seg-unlearned" cx="80" cy="80" r="62" stroke="url(#chartGradUnlearned)" />
+              <circle id="donut-seg-learning" class="donut-segment donut-seg-learning" cx="80" cy="80" r="62" stroke="url(#chartGradLearning)" />
+              <circle id="donut-seg-mastered" class="donut-segment donut-seg-mastered" cx="80" cy="80" r="62" stroke="url(#chartGradMastered)" filter="url(#chartGlow)" />
+            </svg>
+            <div class="donut-chart-center">
+              <span class="donut-label">習得度</span>
+              <span id="donut-pct" class="donut-pct">0%</span>
+              <span id="donut-count" class="donut-count">0 / 0</span>
+            </div>
+          </div>
+
+          <!-- 凡例 & メトリクス -->
+          <div class="chart-legend-wrap">
+            <div class="legend-card legend-mastered" id="filter-card-mastered">
+              <div class="legend-header">
+                <span class="legend-dot dot-mastered"></span>
+                <span class="legend-title">覚えた</span>
+              </div>
+              <div class="legend-val-row">
+                <span id="metric-mastered-num" class="legend-val text-emerald">0</span>
+                <span id="metric-mastered-pct" class="legend-sub">0%</span>
+              </div>
+            </div>
+
+            <div class="legend-card legend-learning" id="filter-card-learning">
+              <div class="legend-header">
+                <span class="legend-dot dot-learning"></span>
+                <span class="legend-title">学習中</span>
+              </div>
+              <div class="legend-val-row">
+                <span id="metric-learning-num" class="legend-val text-gold">0</span>
+                <span id="metric-learning-pct" class="legend-sub">0%</span>
+              </div>
+            </div>
+
+            <div class="legend-card legend-unlearned" id="filter-card-unlearned">
+              <div class="legend-header">
+                <span class="legend-dot dot-unlearned"></span>
+                <span class="legend-title">未学習</span>
+              </div>
+              <div class="legend-val-row">
+                <span id="metric-unlearned-num" class="legend-val text-blue">0</span>
+                <span id="metric-unlearned-pct" class="legend-sub">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 全カード一覧セクション -->
+        <div class="detail-cards-section">
+          <div class="detail-cards-header">
+            <div class="detail-cards-title-row">
+              <h4>全カード一覧</h4>
+              <span id="detail-cards-count-badge" class="badge">0枚</span>
+            </div>
+            
+            <!-- 検索 & フィルター -->
+            <div class="detail-filter-bar">
+              <div class="detail-search-wrap">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input id="detail-search-input" type="text" placeholder="単語・訳を検索..." />
+              </div>
+              <div class="detail-tabs" id="detail-tabs">
+                <button class="detail-tab active" data-filter="all">すべて</button>
+                <button class="detail-tab" data-filter="mastered">覚えた</button>
+                <button class="detail-tab" data-filter="learning">学習中</button>
+                <button class="detail-tab" data-filter="unlearned">未学習</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- カードリストコンテナ -->
+          <div id="detail-card-list" class="detail-card-list">
+            <!-- JSで動的に追加されます -->
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="modal-deck-detail-close-btn" class="btn-primary" style="width: 100%;">閉じる</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ========== MODAL: Card List ========== -->
   <div id="modal-card-list" class="modal-overlay hidden">
@@ -331,6 +486,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
