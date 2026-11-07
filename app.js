@@ -3227,8 +3227,8 @@ document.addEventListener('pointerdown', () => {
 // ============================================================
 
 async function initApp() {
-  const hasGoldPhrase = decks.some(d => d.id === 'gold-phrase');
-  if (!hasGoldPhrase) {
+  const existingGold = decks.find(d => d.id === 'gold-phrase');
+  if (!existingGold) {
     try {
       const response = await fetch('gold_phrase.json');
       if (response.ok) {
@@ -3240,6 +3240,11 @@ async function initApp() {
     } catch (e) {
       console.error('Failed to auto-load gold_phrase.json:', e);
     }
+  } else if (existingGold.name !== 'キンカニ') {
+    // 既存保存データの名称と絵文字を「キンカニ」に自動更新
+    existingGold.name = 'キンカニ';
+    existingGold.emoji = '🦀';
+    saveDecks(decks);
   }
   renderHome();
   updateMetroDots();
