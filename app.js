@@ -1193,18 +1193,28 @@ function saveSettingsFromUI() {
 }
 
 function updateAutoFlipUI() {
-  const btn = $('btn-auto-flip-toggle');
-  const modalToggle = $('setting-autoflip-toggle');
   const isEnabled = !!(settings && settings.autoFlip);
 
+  const slotBadge = $('btn-pachinko-score');
+  if (slotBadge) {
+    slotBadge.classList.toggle('auto-active', isEnabled);
+  }
+
+  const autoPill = $('slot-auto-pill');
+  if (autoPill) {
+    autoPill.textContent = isEnabled ? 'AUTO ON' : 'AUTO OFF';
+    autoPill.classList.toggle('active', isEnabled);
+  }
+
+  const btn = $('btn-auto-flip-toggle');
   if (btn) {
     btn.classList.toggle('active', isEnabled);
     const statusText = btn.querySelector('.auto-status-text');
     if (statusText) statusText.textContent = isEnabled ? 'ON' : 'OFF';
   }
 
-  if (modalToggle) {
-    modalToggle.checked = isEnabled;
+  if ($('setting-autoflip-toggle')) {
+    $('setting-autoflip-toggle').checked = isEnabled;
   }
 }
 
@@ -2307,8 +2317,11 @@ function evaluateSlotResult(isWin, triggersRush, winDigit) {
             playRushExtendSound();
           }
         } else {
-          isRushActive = true;
-          startRush();
+          // RUSH突入演出: 「大当たりRUSH入」の演出に合わせて今より10秒遅らせて赤くなる演出・タイマーを開始
+          setTimeout(() => {
+            isRushActive = true;
+            startRush();
+          }, 10000);
         }
       }
     }, 2200); // stay open for 2.2s on win
@@ -2522,30 +2535,14 @@ function playReelStopSound() {
 }
 
 
-// Debug triggers on Score badge:
-// - Single click: force a slot spin
-// - Double click: toggle RUSH mode
+// スロット部分のクリックイベント: AUTO（テンポ連動自動めくり）のON/OFF切り替え
 setTimeout(() => {
   const scoreBadgeEl = document.querySelector('.study-score-badge');
   if (scoreBadgeEl) {
     scoreBadgeEl.addEventListener('click', e => {
-      if (e.detail === 1) {
-        setTimeout(() => {
-          if (!isRushActive && !isReelSpinning) {
-            initAudioContext();
-            startSlotSpin();
-          }
-        }, 220);
-      }
-    });
-    scoreBadgeEl.addEventListener('dblclick', () => {
+      e.stopPropagation();
       initAudioContext();
-      if (isRushActive) {
-        endRush();
-      } else {
-        isRushActive = true;
-        startRush();
-      }
+      toggleAutoFlip();
     });
   }
 }, 100);
@@ -2614,7 +2611,7 @@ function playAudioFile(src, volume = WIN_SOUND_VOLUME) {
   }
 }
 
-// 当たり音: 音を統一し、全体的に小さめの音量（WIN_SOUND_VOLUME）で再生
+// 当たり音: ゾロ目の数字ごとにそれぞれの専用音を、控えめな統一音量(WIN_SOUND_VOLUME = 0.25)で再生
 function playWinSound(digit, triggersRush, rushActive) {
   if (digit === 7) {
     if (rushActive) {
@@ -2628,9 +2625,19 @@ function playWinSound(digit, triggersRush, rushActive) {
     }
     return;
   }
-  // 777 以外のゾロ目当たり音を統一（数字にかかわらず共通のクリアな当たり音を再生）
-  const winSoundFile = rushActive ? 'RUSH3333.mp3' : '3333.mp3';
-  playAudioFile(winSoundFile, WIN_SOUND_VOLUME);
+  // 777 以外のゾロ目: 数字ごとの専用当たり音ファイルを小さめの音量で再生
+  const map = {
+    1: { normal: '1111.mp4',  rush: 'RUSH1111.mp4' },
+    3: { normal: '3333.mp3',  rush: 'RUSH3333.mp3' },
+    5: { normal: '5555.mp4',  rush: 'RUSH5555.mp3' },
+    8: { normal: '8888.mp3',  rush: 'RUSH8888.mp3' },
+  };
+  const entry = map[digit];
+  if (entry) {
+    playAudioFile(rushActive ? entry.rush : entry.normal, WIN_SOUND_VOLUME);
+  } else {
+    playWinFanfareSound();
+  }
 }
 
 

@@ -21,7 +21,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=7" />
+  <link rel="stylesheet" href="style.css?v=8" />
 </head>
 
 <body>
@@ -123,7 +123,8 @@
           <span class="stat-badge-num" id="badge-learning">0</span>
           <span class="stat-badge-label">学習中</span>
         </div>
-        <div class="study-score-badge" id="btn-pachinko-score" title="スロット / ダブルクリックで確変デバッグ">
+        <div class="study-score-badge" id="btn-pachinko-score" title="タップで自動めくり(AUTO) ON/OFF">
+          <div class="slot-auto-pill" id="slot-auto-pill">AUTO OFF</div>
           <!-- Mini Slot Machine Inline -->
           <div class="pachinko-screen-mini">
             <div class="slot-reel-mini" id="reel-0">3</div>
@@ -201,12 +202,6 @@
       <div class="metro-center">
         <input type="range" id="slider-metro-bpm" min="60" max="150" value="120" class="metro-slider">
         <span id="label-metro-bpm" class="metro-bpm-text">120 BPM</span>
-      </div>
-      <div class="metro-right">
-        <button id="btn-auto-flip-toggle" class="metro-btn-auto" title="テンポ連動自動めくり (1拍目:めくる / 2拍目:次へ)">
-          <span class="auto-badge">AUTO</span>
-          <span class="auto-status-text">OFF</span>
-        </button>
       </div>
     </div>
   </div>
@@ -512,7 +507,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=7"></script>
+  <script src="app.js?v=8"></script>
 </body>
 
 </html>

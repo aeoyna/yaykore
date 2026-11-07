@@ -2021,6 +2021,38 @@ input, textarea {
   transform: translateY(0) scale(0.96);
 }
 
+.study-score-badge.auto-active {
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), 0 0 14px rgba(56, 189, 248, 0.3);
+}
+
+.study-score-badge.auto-active:hover {
+  border-color: rgba(56, 189, 248, 0.75);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.45);
+}
+
+.slot-auto-pill {
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  letter-spacing: 0.5px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 2px;
+  user-select: none;
+}
+
+.slot-auto-pill.active {
+  background: rgba(56, 189, 248, 0.18);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.35);
+  text-shadow: 0 0 6px rgba(56, 189, 248, 0.5);
+}
+
 .study-score-badge.spinning {
   border-color: #3b82f6;
   box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
