@@ -1959,9 +1959,9 @@ function handleAutoBeat(beatNumber) {
       flipCard();
     }
   } else if (beatNumber === 1) {
-    // 2拍目: めくられて裏面になっていれば次のカードへ進める
+    // 2拍目: めくられて裏面になっていれば次のカードへ進める（AUTO時は「学習中」に組分け）
     if (isFlipped) {
-      markCard(true);
+      markCard(false);
     }
   }
 }
@@ -2581,7 +2581,7 @@ function playWinFanfareSound() {
     
     const time = now + idx * 0.12;
     gain.gain.setValueAtTime(0, now);
-    gain.gain.setValueAtTime(0.1, time);
+    gain.gain.setValueAtTime(0.03, time);
     gain.gain.exponentialRampToValueAtTime(0.001, time + 0.25);
     
     osc.start(time);
@@ -2594,7 +2594,10 @@ function playWinFanfareSound() {
 // ============================================================
 let _currentAudioFile = null;
 
-function playAudioFile(src, volume = 1.0) {
+// 当たり音・RUSH音の統一音量 (全体的に小さく控えめな音量に設定: 25%)
+const WIN_SOUND_VOLUME = 0.25;
+
+function playAudioFile(src, volume = WIN_SOUND_VOLUME) {
   try {
     if (_currentAudioFile) {
       _currentAudioFile.pause();
@@ -2611,51 +2614,41 @@ function playAudioFile(src, volume = 1.0) {
   }
 }
 
-// 当たり音: ゾロ目の数字 × triggersRush × RUSH状態で分岐
+// 当たり音: 音を統一し、全体的に小さめの音量（WIN_SOUND_VOLUME）で再生
 function playWinSound(digit, triggersRush, rushActive) {
   if (digit === 7) {
     if (rushActive) {
       // RUSH中に777 → RUSH延長音は playRushExtendSound() が担当するためここでは再生しない
     } else if (triggersRush) {
-      // RUSH外 + 777 + RUSH突入 → 大当たりRUSH入.mp4 のみ
-      playAudioFile('大当たりRUSH入.mp4', 1.0);
+      // RUSH外 + 777 + RUSH突入 → 大当たりRUSH入.mp4
+      playAudioFile('大当たりRUSH入.mp4', WIN_SOUND_VOLUME);
     } else {
-      // RUSH外 + 777 + RUSH落 → 大当たりRUSH落.mp4 のみ
-      playAudioFile('大当たりRUSH落.mp4', 0.9);
+      // RUSH外 + 777 + RUSH落 → 大当たりRUSH落.mp4
+      playAudioFile('大当たりRUSH落.mp4', WIN_SOUND_VOLUME);
     }
     return;
   }
-  // 777 以外のゾロ目
-  const map = {
-    1: { normal: '1111.mp4',  rush: 'RUSH1111.mp4' },
-    3: { normal: '3333.mp3',  rush: 'RUSH3333.mp3' },
-    5: { normal: '5555.mp4',  rush: 'RUSH5555.mp3' },
-    8: { normal: '8888.mp3',  rush: 'RUSH8888.mp3' },
-  };
-  const entry = map[digit];
-  if (entry) {
-    playAudioFile(rushActive ? entry.rush : entry.normal, 0.9);
-  } else {
-    playWinFanfareSound();
-  }
+  // 777 以外のゾロ目当たり音を統一（数字にかかわらず共通のクリアな当たり音を再生）
+  const winSoundFile = rushActive ? 'RUSH3333.mp3' : '3333.mp3';
+  playAudioFile(winSoundFile, WIN_SOUND_VOLUME);
 }
 
 
 function playRushSirenSound() {
   // 大当たりRUSH入.mp4 を再生
-  playAudioFile('大当たりRUSH入.mp4', 1.0);
+  playAudioFile('大当たりRUSH入.mp4', WIN_SOUND_VOLUME);
 }
 
 
 function playRushExtendSound() {
   // RUSH延長.mp4 を再生
-  playAudioFile('RUSH延長.mp4', 1.0);
+  playAudioFile('RUSH延長.mp4', WIN_SOUND_VOLUME);
 }
 
 
 function playRushEndSound() {
   // 大当たりRUSH落.mp4 を再生
-  playAudioFile('大当たりRUSH落.mp4', 0.9);
+  playAudioFile('大当たりRUSH落.mp4', WIN_SOUND_VOLUME);
 }
 
 
