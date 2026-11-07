@@ -700,6 +700,14 @@ function flipCard() {
   isFlipped = !isFlipped;
   el.classList.toggle('flipped', isFlipped);
   
+  // 回転させて英語の面（表面）が出た場合、英語の音声を流す
+  if (!isFlipped && currentDeck && studyQueue[studyIndex] !== undefined) {
+    const card = currentDeck.cards[studyQueue[studyIndex]];
+    if (card && card.front) {
+      speakText(card.front);
+    }
+  }
+
   // Check rhythm timing for bonus
   checkRhythmFlip();
 }
@@ -2826,6 +2834,7 @@ const BgmManager = {
   },
   previewAudio: null,
   previewType: null,
+  isManualPaused: false,
 
   async init() {
     this.initVolumeUI();
@@ -2911,6 +2920,47 @@ const BgmManager = {
     }
     if (rushPrevBtn) rushPrevBtn.disabled = !hasRush;
     if (rushDelBtn) rushDelBtn.disabled = !hasRush;
+    this.updateHeaderBgmBtn();
+  },
+
+  updateHeaderBgmBtn() {
+    const btn = $('btn-study-bgm-toggle');
+    if (!btn) return;
+    const hasAny = !!((this.tracks.normal && this.tracks.normal.blob) || (this.tracks.rush && this.tracks.rush.blob));
+    if (!hasAny) {
+      btn.classList.add('hidden-unconfigured');
+      return;
+    }
+    btn.classList.remove('hidden-unconfigured');
+
+    const iconPlaying = btn.querySelector('.icon-bgm-playing');
+    const iconMuted = btn.querySelector('.icon-bgm-muted');
+
+    if (this.isManualPaused) {
+      btn.classList.remove('is-playing');
+      btn.classList.add('is-muted');
+      btn.title = 'BGM 再開';
+      if (iconPlaying) iconPlaying.classList.add('hidden');
+      if (iconMuted) iconMuted.classList.remove('hidden');
+    } else {
+      btn.classList.remove('is-muted');
+      btn.classList.add('is-playing');
+      btn.title = 'BGM 一時停止';
+      if (iconMuted) iconMuted.classList.add('hidden');
+      if (iconPlaying) iconPlaying.classList.remove('hidden');
+    }
+  },
+
+  toggleManualPause() {
+    this.isManualPaused = !this.isManualPaused;
+    if (this.isManualPaused) {
+      this.pauseStudyBgm();
+      showToast('🔇 BGMを一時停止しました');
+    } else {
+      this.playStudyBgm();
+      showToast('🎵 BGMを再開しました');
+    }
+    this.updateHeaderBgmBtn();
   },
 
   initVolumeUI() {
@@ -2999,6 +3049,15 @@ const BgmManager = {
     if (rushDelBtn) {
       rushDelBtn.addEventListener('click', () => this.handleDelete('rush'));
     }
+
+    // 学習画面ヘッダーのBGM一時停止・再開ボタン
+    const headerBgmBtn = $('btn-study-bgm-toggle');
+    if (headerBgmBtn) {
+      headerBgmBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        this.toggleManualPause();
+      });
+    }
   },
 
   async handleUpload(type, file) {
@@ -3078,6 +3137,10 @@ const BgmManager = {
 
   playStudyBgm() {
     if (this.previewAudio) return; // 試聴中は何もしない
+    if (this.isManualPaused) {
+      this.updateHeaderBgmBtn();
+      return;
+    }
 
     const studyActive = $('screen-study') && $('screen-study').classList.contains('active');
     const completeEl = $('study-complete');
@@ -3100,20 +3163,27 @@ const BgmManager = {
         this.tracks.normal.audio.play().catch(e => console.log('Normal autoplay blocked:', e));
       }
     }
+    this.updateHeaderBgmBtn();
   },
 
   pauseStudyBgm() {
     if (this.tracks.normal.audio) this.tracks.normal.audio.pause();
     if (this.tracks.rush.audio) this.tracks.rush.audio.pause();
+    this.updateHeaderBgmBtn();
   },
 
   onRushStart() {
     if (this.tracks.normal.audio) this.tracks.normal.audio.pause();
+    if (this.isManualPaused) {
+      this.updateHeaderBgmBtn();
+      return;
+    }
     if (this.tracks.rush.audio) {
       this.tracks.rush.audio.currentTime = 0;
       this.tracks.rush.audio.volume = volumeSettings.rushBgm;
       this.tracks.rush.audio.play().catch(e => console.log('Rush BGM play blocked:', e));
     }
+    this.updateHeaderBgmBtn();
   },
 
   onRushEnd() {
@@ -3121,11 +3191,16 @@ const BgmManager = {
       this.tracks.rush.audio.pause();
       this.tracks.rush.audio.currentTime = 0;
     }
+    if (this.isManualPaused) {
+      this.updateHeaderBgmBtn();
+      return;
+    }
     const studyActive = $('screen-study') && $('screen-study').classList.contains('active');
     if (studyActive && this.tracks.normal.audio) {
       this.tracks.normal.audio.volume = volumeSettings.normalBgm;
       this.tracks.normal.audio.play().catch(e => console.log('Normal BGM resume blocked:', e));
     }
+    this.updateHeaderBgmBtn();
   }
 };
 
@@ -3137,7 +3212,7 @@ document.addEventListener('pointerdown', () => {
   const studyActive = $('screen-study') && $('screen-study').classList.contains('active');
   const completeEl = $('study-complete');
   const isCompleted = completeEl && !completeEl.classList.contains('hidden');
-  if (studyActive && !isCompleted && typeof BgmManager !== 'undefined') {
+  if (studyActive && !isCompleted && typeof BgmManager !== 'undefined' && !BgmManager.isManualPaused) {
     if (isRushActive && BgmManager.tracks.rush.audio && BgmManager.tracks.rush.audio.paused) {
       BgmManager.playStudyBgm();
     } else if (!isRushActive && BgmManager.tracks.normal.audio && BgmManager.tracks.normal.audio.paused) {

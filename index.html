@@ -21,7 +21,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=10" />
+  <link rel="stylesheet" href="style.css?v=11" />
 </head>
 
 <body>
@@ -110,9 +110,24 @@
           <div id="progress-bar" class="progress-bar"></div>
         </div>
       </div>
-      <div id="progress-counter-box" class="progress-counter-box" title="スワイプ回数">
-        <span id="progress-count-num" class="progress-count-num">0</span>
-        <span class="progress-count-unit">回</span>
+      <div class="study-header-right">
+        <button id="btn-study-bgm-toggle" class="btn-icon btn-study-bgm" title="音楽の一時停止 / 再開">
+          <svg class="icon-bgm-playing" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18V5l12-2v13"></path>
+            <circle cx="6" cy="18" r="3"></circle>
+            <circle cx="18" cy="16" r="3"></circle>
+          </svg>
+          <svg class="icon-bgm-muted hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="2" y1="2" x2="22" y2="22"></line>
+            <path d="M9 18V5l12-2v13"></path>
+            <circle cx="6" cy="18" r="3"></circle>
+            <circle cx="18" cy="16" r="3"></circle>
+          </svg>
+        </button>
+        <div id="progress-counter-box" class="progress-counter-box" title="スワイプ回数">
+          <span id="progress-count-num" class="progress-count-num">0</span>
+          <span class="progress-count-unit">回</span>
+        </div>
       </div>
     </header>
 
@@ -595,7 +610,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=10"></script>
+  <script src="app.js?v=11"></script>
 </body>
 
 </html>
