@@ -1804,6 +1804,14 @@ if (deckTitleBtn) {
 const modalDetailClose = $('modal-deck-detail-close');
 if (modalDetailClose) modalDetailClose.addEventListener('click', closeDeckDetailModal);
 
+const modalDetailSettings = $('modal-deck-detail-settings');
+if (modalDetailSettings) {
+  modalDetailSettings.addEventListener('click', () => {
+    closeDeckDetailModal();
+    openSettingsModal();
+  });
+}
+
 const modalDetailCloseBtn = $('modal-deck-detail-close-btn');
 if (modalDetailCloseBtn) modalDetailCloseBtn.addEventListener('click', closeDeckDetailModal);
 
