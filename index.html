@@ -21,7 +21,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=9" />
+  <link rel="stylesheet" href="style.css?v=10" />
 </head>
 
 <body>
@@ -291,6 +291,87 @@
             <span class="switch-text">1拍目でめくり、2拍目で次のカードへ自動送り</span>
           </label>
         </div>
+
+        <!-- 音量調整 (3系統) & BGM BOX (IndexedDBローカル保存) -->
+        <div class="setting-item" style="margin-top: 24px; border-top: 1px solid var(--border); padding-top: 18px;">
+          <label class="form-label" style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 4px;">
+            <span style="font-size: 0.95rem; font-weight: 700; color: #fff;">🔊 音量調整</span>
+          </label>
+          <div class="volume-controls-wrap">
+            <div class="vol-slider-row">
+              <div class="vol-slider-info">
+                <span class="vol-slider-name">通常BGM</span>
+                <span id="label-vol-normal" class="vol-slider-val">50%</span>
+              </div>
+              <input type="range" id="slider-vol-normal" min="0" max="100" value="50" class="metro-slider" />
+            </div>
+
+            <div class="vol-slider-row">
+              <div class="vol-slider-info">
+                <span class="vol-slider-name">🔥 RUSH BGM</span>
+                <span id="label-vol-rush" class="vol-slider-val">60%</span>
+              </div>
+              <input type="range" id="slider-vol-rush" min="0" max="100" value="60" class="metro-slider" />
+            </div>
+
+            <div class="vol-slider-row">
+              <div class="vol-slider-info">
+                <span class="vol-slider-name">効果音 (SE)</span>
+                <span id="label-vol-se" class="vol-slider-val">25%</span>
+              </div>
+              <input type="range" id="slider-vol-se" min="0" max="100" value="25" class="metro-slider" />
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-item" style="margin-top: 20px;">
+          <label class="form-label" style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 4px;">
+            <span style="font-size: 0.95rem; font-weight: 700; color: #fff;">🎵 BGM BOX (ローカル保存)</span>
+          </label>
+          <div class="setting-subtext" style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px;">
+            端末内（IndexedDB）に完全保存されます。著作権対策のため外部サーバーには一切送信されず、ブラウザを閉じても記憶されます。
+          </div>
+
+          <!-- 通常BGM BOX -->
+          <div class="bgm-box" id="box-bgm-normal">
+            <div class="bgm-box-header">
+              <span class="bgm-box-title">通常 BGM BOX</span>
+              <span class="bgm-box-status" id="bgm-status-normal">未設定</span>
+            </div>
+            <div class="bgm-box-file" id="bgm-file-normal">
+              <span class="bgm-music-icon">🎵</span>
+              <span class="bgm-file-name" id="bgm-name-normal">曲が設定されていません</span>
+            </div>
+            <div class="bgm-box-actions">
+              <label class="btn-small btn-bgm-upload">
+                <input type="file" id="input-bgm-normal" accept="audio/*" style="display:none;" />
+                <span>📁 ファイル選択</span>
+              </label>
+              <button type="button" id="btn-preview-normal" class="btn-small btn-bgm-preview" disabled>▶ 試聴</button>
+              <button type="button" id="btn-delete-normal" class="btn-small btn-bgm-delete" disabled>🗑 削除</button>
+            </div>
+          </div>
+
+          <!-- RUSH BGM BOX -->
+          <div class="bgm-box bgm-box-rush" id="box-bgm-rush">
+            <div class="bgm-box-header">
+              <span class="bgm-box-title">🔥 RUSH BGM BOX</span>
+              <span class="bgm-box-status" id="bgm-status-rush">未設定</span>
+            </div>
+            <div class="bgm-box-file" id="bgm-file-rush">
+              <span class="bgm-music-icon">⚡</span>
+              <span class="bgm-file-name" id="bgm-name-rush">曲が設定されていません</span>
+            </div>
+            <div class="bgm-box-actions">
+              <label class="btn-small btn-bgm-upload">
+                <input type="file" id="input-bgm-rush" accept="audio/*" style="display:none;" />
+                <span>📁 ファイル選択</span>
+              </label>
+              <button type="button" id="btn-preview-rush" class="btn-small btn-bgm-preview" disabled>▶ 試聴</button>
+              <button type="button" id="btn-delete-rush" class="btn-small btn-bgm-delete" disabled>🗑 削除</button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button id="btn-save-settings" class="btn-primary" style="width: 100%;">閉じる</button>
@@ -514,7 +595,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=9"></script>
+  <script src="app.js?v=10"></script>
 </body>
 
 </html>

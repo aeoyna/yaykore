@@ -189,6 +189,7 @@ function showScreen(screenId) {
   if (screenId !== 'screen-study') {
     stopMetronome();
     pauseRush();
+    if (typeof BgmManager !== 'undefined') BgmManager.pauseStudyBgm();
   } else {
     // Entering study screen: update score display and check RUSH
     const scoreValEl = $('pachinko-score-val');
@@ -199,6 +200,7 @@ function showScreen(screenId) {
     } else {
       resetRushUI();
     }
+    if (typeof BgmManager !== 'undefined') BgmManager.playStudyBgm();
   }
   document.querySelectorAll('.screen').forEach(s => {
     if (s.id === screenId) {
@@ -976,6 +978,7 @@ function animateCardOut(correct, callback) {
 
 function showComplete() {
   stopMetronome();
+  if (typeof BgmManager !== 'undefined') BgmManager.pauseStudyBgm();
   $('card-stack').style.display = 'none';
   $('study-footer').style.display = 'none';
 
@@ -1166,10 +1169,18 @@ function openSettingsModal() {
     $('setting-autoflip-toggle').checked = !!settings.autoFlip;
   }
   
+  if (typeof BgmManager !== 'undefined') {
+    BgmManager.initVolumeUI();
+    BgmManager.updateUI();
+  }
+
   $('modal-settings').classList.remove('hidden');
 }
 
 function closeSettingsModal() {
+  if (typeof BgmManager !== 'undefined') {
+    BgmManager.stopPreview();
+  }
   $('modal-settings').classList.add('hidden');
 }
 
@@ -1935,6 +1946,8 @@ function nextBeat() {
 
 function scheduleNote(beatNumber, time) {
   if (!audioCtx) return;
+  const se = typeof volumeSettings !== 'undefined' ? volumeSettings.se : 0.25;
+  if (se <= 0) return;
   
   const osc = audioCtx.createOscillator();
   const gainNode = audioCtx.createGain();
@@ -1943,7 +1956,7 @@ function scheduleNote(beatNumber, time) {
 
   osc.frequency.value = beatNumber === 0 ? 1000 : 800;
   
-  gainNode.gain.setValueAtTime(1, time);
+  gainNode.gain.setValueAtTime(se, time);
   gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
 
   osc.start(time);
@@ -2097,6 +2110,8 @@ function awardRhythmBonus(points, message, multiplier, isOnBeat = true) {
 
 function playRhythmBonusSound() {
   if (!audioCtx) return;
+  const se = typeof volumeSettings !== 'undefined' ? volumeSettings.se : 0.25;
+  if (se <= 0) return;
   const osc = audioCtx.createOscillator();
   const gainNode = audioCtx.createGain();
   osc.connect(gainNode);
@@ -2106,7 +2121,7 @@ function playRhythmBonusSound() {
   osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
   osc.frequency.setValueAtTime(1320, audioCtx.currentTime + 0.05); // E6
   
-  gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(0.48 * se, audioCtx.currentTime);
   gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
   
   osc.start();
@@ -2373,6 +2388,7 @@ function startRush() {
   
   showToast('🔥 RUSH ENTERED! 100% GACHA RATE 🔥');
   // 音は evaluateSlotResult の playWinSound内で再生済みのためここでは再生しない
+  if (typeof BgmManager !== 'undefined') BgmManager.onRushStart();
   resumeRush();
 }
 
@@ -2416,6 +2432,7 @@ function endRush() {
   showToast('RUSH ENDED');
   playRushEndSound();
   resetRushUI();
+  if (typeof BgmManager !== 'undefined') BgmManager.onRushEnd();
 }
 
 function resetRushUI() {
@@ -2509,17 +2526,149 @@ function updateParticles() {
 }
 
 // ============================================================
-// AUDIO SOUND SYNTHESIS
+// VOLUME SETTINGS & BGM STORAGE (IndexedDB)
+// ============================================================
+const VOLUME_STORAGE_KEY = 'swipecard_volume_settings';
+let volumeSettings = loadVolumeSettings();
+
+function loadVolumeSettings() {
+  const defaults = {
+    normalBgm: 0.5,
+    rushBgm: 0.6,
+    se: 0.25
+  };
+  try {
+    const raw = localStorage.getItem(VOLUME_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (typeof parsed.normalBgm === 'number') defaults.normalBgm = parsed.normalBgm;
+      if (typeof parsed.rushBgm === 'number') defaults.rushBgm = parsed.rushBgm;
+      if (typeof parsed.se === 'number') defaults.se = parsed.se;
+    }
+  } catch (e) {
+    console.warn('Failed to load volume settings:', e);
+  }
+  return defaults;
+}
+
+function saveVolumeSettings() {
+  try {
+    localStorage.setItem(VOLUME_STORAGE_KEY, JSON.stringify(volumeSettings));
+  } catch (e) {
+    console.warn('Failed to save volume settings:', e);
+  }
+}
+
+// ============================================================
+// INDEXEDDB STORAGE FOR BGM FILES (ローカル保存・外部送信なし)
+// ============================================================
+const BGM_DB_NAME = 'yaykore_bgm_db';
+const BGM_DB_VERSION = 1;
+const BGM_STORE_NAME = 'tracks';
+
+function openBgmDB() {
+  return new Promise((resolve, reject) => {
+    if (!window.indexedDB) {
+      reject(new Error('IndexedDB not supported'));
+      return;
+    }
+    const req = indexedDB.open(BGM_DB_NAME, BGM_DB_VERSION);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(BGM_STORE_NAME)) {
+        db.createObjectStore(BGM_STORE_NAME, { keyPath: 'type' });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function saveBgmTrack(type, file) {
+  const db = await openBgmDB();
+  return new Promise(async (resolve, reject) => {
+    try {
+      const tx = db.transaction(BGM_STORE_NAME, 'readwrite');
+      const store = tx.objectStore(BGM_STORE_NAME);
+      const item = {
+        type,
+        name: file.name,
+        blob: file,
+        mimeType: file.type || 'audio/mpeg',
+        size: file.size,
+        updatedAt: Date.now()
+      };
+      
+      try {
+        const req = store.put(item);
+        req.onsuccess = () => resolve();
+        req.onerror = () => reject(req.error);
+      } catch (blobErr) {
+        // Blob保存非対応環境向け: ArrayBufferに変換して保存
+        const buffer = await file.arrayBuffer();
+        const bufferItem = {
+          type,
+          name: file.name,
+          buffer: buffer,
+          mimeType: file.type || 'audio/mpeg',
+          size: file.size,
+          updatedAt: Date.now()
+        };
+        const tx2 = db.transaction(BGM_STORE_NAME, 'readwrite');
+        const req2 = tx2.objectStore(BGM_STORE_NAME).put(bufferItem);
+        req2.onsuccess = () => resolve();
+        req2.onerror = () => reject(req2.error);
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+async function getBgmTrack(type) {
+  const db = await openBgmDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(BGM_STORE_NAME, 'readonly');
+    const store = tx.objectStore(BGM_STORE_NAME);
+    const req = store.get(type);
+    req.onsuccess = () => {
+      const result = req.result;
+      if (!result) return resolve(null);
+      if (!result.blob && result.buffer) {
+        result.blob = new Blob([result.buffer], { type: result.mimeType || 'audio/mpeg' });
+      }
+      resolve(result);
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function deleteBgmTrack(type) {
+  const db = await openBgmDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(BGM_STORE_NAME, 'readwrite');
+    const store = tx.objectStore(BGM_STORE_NAME);
+    const req = store.delete(type);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+// ============================================================
+// AUDIO SOUND SYNTHESIS (SE)
 // ============================================================
 function playReelTickSound() {
   if (!audioCtx) return;
+  const se = volumeSettings.se;
+  if (se <= 0) return;
+
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
   osc.connect(gain);
   gain.connect(audioCtx.destination);
   
   osc.frequency.value = 1400;
-  gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.16 * se, audioCtx.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.02);
   
   osc.start();
@@ -2528,6 +2677,9 @@ function playReelTickSound() {
 
 function playReelStopSound() {
   if (!audioCtx) return;
+  const se = volumeSettings.se;
+  if (se <= 0) return;
+
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
   osc.connect(gain);
@@ -2535,7 +2687,7 @@ function playReelStopSound() {
   
   osc.type = 'triangle';
   osc.frequency.value = 650;
-  gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.32 * se, audioCtx.currentTime);
   gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
   
   osc.start();
@@ -2557,6 +2709,9 @@ setTimeout(() => {
 
 function playSlotSpinSound() {
   if (!audioCtx) return;
+  const se = volumeSettings.se;
+  if (se <= 0) return;
+
   const now = audioCtx.currentTime;
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
@@ -2566,7 +2721,7 @@ function playSlotSpinSound() {
   osc.frequency.setValueAtTime(800, now);
   osc.frequency.setValueAtTime(1100, now + 0.06);
   
-  gain.gain.setValueAtTime(0.08, now);
+  gain.gain.setValueAtTime(0.32 * se, now);
   gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
   
   osc.start(now);
@@ -2575,6 +2730,9 @@ function playSlotSpinSound() {
 
 function playWinFanfareSound() {
   if (!audioCtx) return;
+  const se = volumeSettings.se;
+  if (se <= 0) return;
+
   const now = audioCtx.currentTime;
   const notes = [523.25, 659.25, 783.99, 1046.50];
   notes.forEach((freq, idx) => {
@@ -2586,7 +2744,7 @@ function playWinFanfareSound() {
     
     const time = now + idx * 0.12;
     gain.gain.setValueAtTime(0, now);
-    gain.gain.setValueAtTime(0.03, time);
+    gain.gain.setValueAtTime(0.12 * se, time);
     gain.gain.exponentialRampToValueAtTime(0.001, time + 0.25);
     
     osc.start(time);
@@ -2595,21 +2753,21 @@ function playWinFanfareSound() {
 }
 
 // ============================================================
-// AUDIO FILE PLAYER
+// AUDIO FILE PLAYER (SE / 当たり音)
 // ============================================================
 let _currentAudioFile = null;
 
-// 当たり音・RUSH音の統一音量 (全体的に小さく控えめな音量に設定: 25%)
-const WIN_SOUND_VOLUME = 0.25;
-
-function playAudioFile(src, volume = WIN_SOUND_VOLUME) {
+function playAudioFile(src, customVolume = null) {
   try {
+    const vol = customVolume !== null ? customVolume : volumeSettings.se;
+    if (vol <= 0) return null;
+
     if (_currentAudioFile) {
       _currentAudioFile.pause();
       _currentAudioFile.currentTime = 0;
     }
     const audio = new Audio(src);
-    audio.volume = volume;
+    audio.volume = Math.max(0, Math.min(1, vol));
     audio.play().catch(e => console.warn('Audio play failed:', e));
     _currentAudioFile = audio;
     return audio;
@@ -2619,21 +2777,19 @@ function playAudioFile(src, volume = WIN_SOUND_VOLUME) {
   }
 }
 
-// 当たり音: ゾロ目の数字ごとにそれぞれの専用音を、控えめな統一音量(WIN_SOUND_VOLUME = 0.25)で再生
+// 当たり音: ゾロ目の数字ごとに専用音を再生 (音量は効果音設定連動)
 function playWinSound(digit, triggersRush, rushActive) {
   if (digit === 7) {
     if (rushActive) {
-      // RUSH中に777 → RUSH延長音は playRushExtendSound() が担当するためここでは再生しない
+      // RUSH中に777 → RUSH延長音は playRushExtendSound() が担当
     } else if (triggersRush) {
-      // RUSH外 + 777 + RUSH突入 → 大当たりRUSH入.mp4
-      playAudioFile('大当たりRUSH入.mp4', WIN_SOUND_VOLUME);
+      playAudioFile('大当たりRUSH入.mp4');
     } else {
-      // RUSH外 + 777 + RUSH落 → 大当たりRUSH落.mp4
-      playAudioFile('大当たりRUSH落.mp4', WIN_SOUND_VOLUME);
+      playAudioFile('大当たりRUSH落.mp4');
     }
     return;
   }
-  // 777 以外のゾロ目: 数字ごとの専用当たり音ファイルを小さめの音量で再生
+  // 777 以外のゾロ目
   const map = {
     1: { normal: '1111.mp4',  rush: 'RUSH1111.mp4' },
     3: { normal: '3333.mp3',  rush: 'RUSH3333.mp3' },
@@ -2642,29 +2798,353 @@ function playWinSound(digit, triggersRush, rushActive) {
   };
   const entry = map[digit];
   if (entry) {
-    playAudioFile(rushActive ? entry.rush : entry.normal, WIN_SOUND_VOLUME);
+    playAudioFile(rushActive ? entry.rush : entry.normal);
   } else {
     playWinFanfareSound();
   }
 }
 
-
 function playRushSirenSound() {
-  // 大当たりRUSH入.mp4 を再生
-  playAudioFile('大当たりRUSH入.mp4', WIN_SOUND_VOLUME);
+  playAudioFile('大当たりRUSH入.mp4');
 }
-
 
 function playRushExtendSound() {
-  // RUSH延長.mp4 を再生
-  playAudioFile('RUSH延長.mp4', WIN_SOUND_VOLUME);
+  playAudioFile('RUSH延長.mp4');
 }
-
 
 function playRushEndSound() {
-  // 大当たりRUSH落.mp4 を再生
-  playAudioFile('大当たりRUSH落.mp4', WIN_SOUND_VOLUME);
+  playAudioFile('大当たりRUSH落.mp4');
 }
+
+// ============================================================
+// BGM MANAGER (IndexedDB & 3系統音量制御)
+// ============================================================
+const BgmManager = {
+  tracks: {
+    normal: { name: '', blob: null, audio: null, objectUrl: null },
+    rush:   { name: '', blob: null, audio: null, objectUrl: null }
+  },
+  previewAudio: null,
+  previewType: null,
+
+  async init() {
+    this.initVolumeUI();
+    this.initEventListeners();
+    await this.loadTrackFromDB('normal');
+    await this.loadTrackFromDB('rush');
+    this.updateUI();
+  },
+
+  async loadTrackFromDB(type) {
+    try {
+      const data = await getBgmTrack(type);
+      if (data && data.blob) {
+        this.setTrackAudio(type, data.name, data.blob);
+      } else {
+        this.clearTrack(type, false);
+      }
+    } catch (e) {
+      console.warn(`Failed to load ${type} BGM from IndexedDB:`, e);
+    }
+  },
+
+  setTrackAudio(type, name, blob) {
+    const t = this.tracks[type];
+    if (t.objectUrl) {
+      try { URL.revokeObjectURL(t.objectUrl); } catch {}
+    }
+    t.name = name;
+    t.blob = blob;
+    t.objectUrl = URL.createObjectURL(blob);
+    t.audio = new Audio(t.objectUrl);
+    t.audio.loop = true;
+    t.audio.volume = type === 'normal' ? volumeSettings.normalBgm : volumeSettings.rushBgm;
+  },
+
+  clearTrack(type, revoke = true) {
+    const t = this.tracks[type];
+    if (t.audio) {
+      t.audio.pause();
+      t.audio = null;
+    }
+    if (revoke && t.objectUrl) {
+      try { URL.revokeObjectURL(t.objectUrl); } catch {}
+    }
+    t.name = '';
+    t.blob = null;
+    t.objectUrl = null;
+  },
+
+  updateUI() {
+    // 通常BGM BOX
+    const normalNameEl = $('bgm-name-normal');
+    const normalStatusEl = $('bgm-status-normal');
+    const normalPrevBtn = $('btn-preview-normal');
+    const normalDelBtn = $('btn-delete-normal');
+    const hasNormal = !!(this.tracks.normal && this.tracks.normal.blob);
+
+    if (normalNameEl) {
+      normalNameEl.textContent = hasNormal ? this.tracks.normal.name : '曲が設定されていません';
+      normalNameEl.classList.toggle('has-file', hasNormal);
+    }
+    if (normalStatusEl) {
+      normalStatusEl.textContent = hasNormal ? '設定済' : '未設定';
+      normalStatusEl.classList.toggle('configured', hasNormal);
+    }
+    if (normalPrevBtn) normalPrevBtn.disabled = !hasNormal;
+    if (normalDelBtn) normalDelBtn.disabled = !hasNormal;
+
+    // RUSH BGM BOX
+    const rushNameEl = $('bgm-name-rush');
+    const rushStatusEl = $('bgm-status-rush');
+    const rushPrevBtn = $('btn-preview-rush');
+    const rushDelBtn = $('btn-delete-rush');
+    const hasRush = !!(this.tracks.rush && this.tracks.rush.blob);
+
+    if (rushNameEl) {
+      rushNameEl.textContent = hasRush ? this.tracks.rush.name : '曲が設定されていません';
+      rushNameEl.classList.toggle('has-file', hasRush);
+    }
+    if (rushStatusEl) {
+      rushStatusEl.textContent = hasRush ? '設定済' : '未設定';
+      rushStatusEl.classList.toggle('configured', hasRush);
+    }
+    if (rushPrevBtn) rushPrevBtn.disabled = !hasRush;
+    if (rushDelBtn) rushDelBtn.disabled = !hasRush;
+  },
+
+  initVolumeUI() {
+    const sNorm = $('slider-vol-normal');
+    const sRush = $('slider-vol-rush');
+    const sSe   = $('slider-vol-se');
+    const lNorm = $('label-vol-normal');
+    const lRush = $('label-vol-rush');
+    const lSe   = $('label-vol-se');
+
+    if (sNorm) {
+      sNorm.value = Math.round(volumeSettings.normalBgm * 100);
+      if (lNorm) lNorm.textContent = `${sNorm.value}%`;
+      sNorm.oninput = () => {
+        const val = parseInt(sNorm.value, 10) / 100;
+        volumeSettings.normalBgm = val;
+        if (lNorm) lNorm.textContent = `${sNorm.value}%`;
+        if (this.tracks.normal.audio) this.tracks.normal.audio.volume = val;
+        if (this.previewType === 'normal' && this.previewAudio) this.previewAudio.volume = val;
+        saveVolumeSettings();
+      };
+    }
+
+    if (sRush) {
+      sRush.value = Math.round(volumeSettings.rushBgm * 100);
+      if (lRush) lRush.textContent = `${sRush.value}%`;
+      sRush.oninput = () => {
+        const val = parseInt(sRush.value, 10) / 100;
+        volumeSettings.rushBgm = val;
+        if (lRush) lRush.textContent = `${sRush.value}%`;
+        if (this.tracks.rush.audio) this.tracks.rush.audio.volume = val;
+        if (this.previewType === 'rush' && this.previewAudio) this.previewAudio.volume = val;
+        saveVolumeSettings();
+      };
+    }
+
+    if (sSe) {
+      sSe.value = Math.round(volumeSettings.se * 100);
+      if (lSe) lSe.textContent = `${sSe.value}%`;
+      sSe.oninput = () => {
+        const val = parseInt(sSe.value, 10) / 100;
+        volumeSettings.se = val;
+        if (lSe) lSe.textContent = `${sSe.value}%`;
+        saveVolumeSettings();
+      };
+    }
+  },
+
+  initEventListeners() {
+    // 通常BGM ファイルアップロード
+    const normInput = $('input-bgm-normal');
+    if (normInput) {
+      normInput.addEventListener('change', e => {
+        const file = e.target.files && e.target.files[0];
+        if (file) this.handleUpload('normal', file);
+        normInput.value = '';
+      });
+    }
+
+    // RUSH BGM ファイルアップロード
+    const rushInput = $('input-bgm-rush');
+    if (rushInput) {
+      rushInput.addEventListener('change', e => {
+        const file = e.target.files && e.target.files[0];
+        if (file) this.handleUpload('rush', file);
+        rushInput.value = '';
+      });
+    }
+
+    // 試聴ボタン
+    const normPrevBtn = $('btn-preview-normal');
+    if (normPrevBtn) {
+      normPrevBtn.addEventListener('click', () => this.togglePreview('normal'));
+    }
+    const rushPrevBtn = $('btn-preview-rush');
+    if (rushPrevBtn) {
+      rushPrevBtn.addEventListener('click', () => this.togglePreview('rush'));
+    }
+
+    // 削除ボタン
+    const normDelBtn = $('btn-delete-normal');
+    if (normDelBtn) {
+      normDelBtn.addEventListener('click', () => this.handleDelete('normal'));
+    }
+    const rushDelBtn = $('btn-delete-rush');
+    if (rushDelBtn) {
+      rushDelBtn.addEventListener('click', () => this.handleDelete('rush'));
+    }
+  },
+
+  async handleUpload(type, file) {
+    if (!file) return;
+    try {
+      showToast(`${file.name} を保存中...`);
+      await saveBgmTrack(type, file);
+      this.setTrackAudio(type, file.name, file);
+      this.updateUI();
+      showToast(`🎵 ${type === 'normal' ? '通常BGM' : 'RUSH BGM'}を保存しました`);
+    } catch (e) {
+      console.error('Failed to save BGM:', e);
+      showToast('⚠️ 保存に失敗しました');
+    }
+  },
+
+  async handleDelete(type) {
+    const label = type === 'normal' ? '通常BGM' : 'RUSH BGM';
+    if (!confirm(`${label}を削除しますか？`)) return;
+    try {
+      this.stopPreview();
+      await deleteBgmTrack(type);
+      this.clearTrack(type, true);
+      this.updateUI();
+      showToast(`🗑 ${label}を削除しました`);
+    } catch (e) {
+      console.error('Failed to delete BGM:', e);
+      showToast('⚠️ 削除に失敗しました');
+    }
+  },
+
+  togglePreview(type) {
+    const btn = $(`btn-preview-${type}`);
+
+    if (this.previewType === type && this.previewAudio && !this.previewAudio.paused) {
+      this.stopPreview();
+      return;
+    }
+
+    this.stopPreview();
+
+    const t = this.tracks[type];
+    if (!t || !t.audio) return;
+
+    this.pauseStudyBgm();
+
+    this.previewType = type;
+    this.previewAudio = t.audio;
+    this.previewAudio.currentTime = 0;
+    this.previewAudio.volume = type === 'normal' ? volumeSettings.normalBgm : volumeSettings.rushBgm;
+    this.previewAudio.play().then(() => {
+      if (btn) {
+        btn.textContent = '⏸ 停止';
+        btn.classList.add('playing');
+      }
+    }).catch(err => {
+      console.warn('Preview play blocked:', err);
+      this.stopPreview();
+    });
+  },
+
+  stopPreview() {
+    if (this.previewAudio) {
+      this.previewAudio.pause();
+      this.previewAudio.currentTime = 0;
+      this.previewAudio = null;
+    }
+    this.previewType = null;
+    ['normal', 'rush'].forEach(k => {
+      const b = $(`btn-preview-${k}`);
+      if (b) {
+        b.textContent = '▶ 試聴';
+        b.classList.remove('playing');
+      }
+    });
+  },
+
+  playStudyBgm() {
+    if (this.previewAudio) return; // 試聴中は何もしない
+
+    const studyActive = $('screen-study') && $('screen-study').classList.contains('active');
+    const completeEl = $('study-complete');
+    const isCompleted = completeEl && !completeEl.classList.contains('hidden');
+    if (!studyActive || isCompleted) {
+      this.pauseStudyBgm();
+      return;
+    }
+
+    if (isRushActive && rushTimeRemaining > 0) {
+      if (this.tracks.normal.audio) this.tracks.normal.audio.pause();
+      if (this.tracks.rush.audio) {
+        this.tracks.rush.audio.volume = volumeSettings.rushBgm;
+        this.tracks.rush.audio.play().catch(e => console.log('Rush autoplay blocked:', e));
+      }
+    } else {
+      if (this.tracks.rush.audio) this.tracks.rush.audio.pause();
+      if (this.tracks.normal.audio) {
+        this.tracks.normal.audio.volume = volumeSettings.normalBgm;
+        this.tracks.normal.audio.play().catch(e => console.log('Normal autoplay blocked:', e));
+      }
+    }
+  },
+
+  pauseStudyBgm() {
+    if (this.tracks.normal.audio) this.tracks.normal.audio.pause();
+    if (this.tracks.rush.audio) this.tracks.rush.audio.pause();
+  },
+
+  onRushStart() {
+    if (this.tracks.normal.audio) this.tracks.normal.audio.pause();
+    if (this.tracks.rush.audio) {
+      this.tracks.rush.audio.currentTime = 0;
+      this.tracks.rush.audio.volume = volumeSettings.rushBgm;
+      this.tracks.rush.audio.play().catch(e => console.log('Rush BGM play blocked:', e));
+    }
+  },
+
+  onRushEnd() {
+    if (this.tracks.rush.audio) {
+      this.tracks.rush.audio.pause();
+      this.tracks.rush.audio.currentTime = 0;
+    }
+    const studyActive = $('screen-study') && $('screen-study').classList.contains('active');
+    if (studyActive && this.tracks.normal.audio) {
+      this.tracks.normal.audio.volume = volumeSettings.normalBgm;
+      this.tracks.normal.audio.play().catch(e => console.log('Normal BGM resume blocked:', e));
+    }
+  }
+};
+
+// 画面タップ時にオーディオロック解除を確実に行うジェスチャーフック
+document.addEventListener('pointerdown', () => {
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  const studyActive = $('screen-study') && $('screen-study').classList.contains('active');
+  const completeEl = $('study-complete');
+  const isCompleted = completeEl && !completeEl.classList.contains('hidden');
+  if (studyActive && !isCompleted && typeof BgmManager !== 'undefined') {
+    if (isRushActive && BgmManager.tracks.rush.audio && BgmManager.tracks.rush.audio.paused) {
+      BgmManager.playStudyBgm();
+    } else if (!isRushActive && BgmManager.tracks.normal.audio && BgmManager.tracks.normal.audio.paused) {
+      BgmManager.playStudyBgm();
+    }
+  }
+}, { passive: true });
 
 
 // ============================================================
@@ -2690,6 +3170,7 @@ async function initApp() {
   updateMetroDots();
   initParticleCanvas();
   updateAutoFlipUI();
+  await BgmManager.init();
 }
 
 initApp();
