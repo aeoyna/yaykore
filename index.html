@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -17,9 +18,12 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="style.css?v=5" />
 </head>
+
 <body>
   <!-- ========== SCREEN: HOME ========== -->
   <div id="screen-home" class="screen active">
@@ -27,16 +31,16 @@
       <div class="logo">
         <div class="logo-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <rect x="2" y="4" width="14" height="18" rx="3" fill="url(#g1)" opacity="0.9"/>
-            <rect x="6" y="2" width="14" height="18" rx="3" fill="url(#g2)"/>
+            <rect x="2" y="4" width="14" height="18" rx="3" fill="url(#g1)" opacity="0.9" />
+            <rect x="6" y="2" width="14" height="18" rx="3" fill="url(#g2)" />
             <defs>
               <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#60a5fa"/>
-                <stop offset="100%" stop-color="#1d4ed8"/>
+                <stop offset="0%" stop-color="#60a5fa" />
+                <stop offset="100%" stop-color="#1d4ed8" />
               </linearGradient>
               <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#93c5fd"/>
-                <stop offset="100%" stop-color="#3b82f6"/>
+                <stop offset="0%" stop-color="#93c5fd" />
+                <stop offset="100%" stop-color="#3b82f6" />
               </linearGradient>
             </defs>
           </svg>
@@ -45,14 +49,19 @@
       </div>
       <div class="header-actions">
         <button id="btn-open-settings" class="btn-icon" title="設定">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
           </svg>
         </button>
         <button id="btn-add-deck" class="btn-icon" title="デッキを追加">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
         </button>
       </div>
@@ -60,7 +69,7 @@
 
     <main class="home-main">
       <section class="hero">
-        <h1 class="hero-title">スワイプで<br/><span class="gradient-text">単語を覚えよう</span></h1>
+        <h1 class="hero-title">スワイプで<br /><span class="gradient-text">単語を覚えよう</span></h1>
         <p class="hero-sub">右スワイプ → 覚えた　｜　左スワイプ → もう一度</p>
       </section>
 
@@ -81,15 +90,17 @@
 
     <header class="study-header">
       <button id="btn-back" class="btn-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"/>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6" />
         </svg>
       </button>
       <div class="study-header-center">
         <div id="study-deck-title-btn" class="study-deck-title-btn" role="button" tabindex="0" title="プロジェクト詳細を表示">
           <span id="study-deck-name" class="study-deck-name"></span>
           <span id="study-deck-mastery" class="study-deck-mastery">習得 0%</span>
-          <svg class="deck-detail-hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="deck-detail-hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
             <line x1="12" y1="16" x2="12" y2="12"></line>
             <line x1="12" y1="8" x2="12.01" y2="8"></line>
@@ -143,9 +154,10 @@
 
         <!-- Center: Prev Card Button -->
         <button id="btn-prev-card" class="action-btn action-btn-prev" title="前のカードに戻る" disabled>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 14 4 9l5-5"/>
-            <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 14 4 9l5-5" />
+            <path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11" />
           </svg>
         </button>
 
@@ -205,8 +217,10 @@
       <div class="modal-header">
         <h3 id="modal-deck-title">新しいデッキ</h3>
         <button id="modal-deck-close" class="btn-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
       </div>
@@ -241,8 +255,10 @@
       <div class="modal-header">
         <h3>アプリ設定</h3>
         <button id="modal-settings-close" class="btn-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
       </div>
@@ -302,8 +318,10 @@
           </div>
         </div>
         <button id="modal-deck-detail-close" class="btn-icon" title="閉じる">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
       </div>
@@ -316,26 +334,29 @@
             <svg class="donut-chart-svg" viewBox="0 0 160 160">
               <defs>
                 <linearGradient id="chartGradMastered" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#34d399"/>
-                  <stop offset="100%" stop-color="#059669"/>
+                  <stop offset="0%" stop-color="#34d399" />
+                  <stop offset="100%" stop-color="#059669" />
                 </linearGradient>
                 <linearGradient id="chartGradLearning" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#fbbf24"/>
-                  <stop offset="100%" stop-color="#f87171"/>
+                  <stop offset="0%" stop-color="#fbbf24" />
+                  <stop offset="100%" stop-color="#f87171" />
                 </linearGradient>
                 <linearGradient id="chartGradUnlearned" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#3b82f6"/>
-                  <stop offset="100%" stop-color="#6366f1"/>
+                  <stop offset="0%" stop-color="#3b82f6" />
+                  <stop offset="100%" stop-color="#6366f1" />
                 </linearGradient>
                 <filter id="chartGlow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#34d399" flood-opacity="0.4"/>
+                  <feDropShadow dx="0" dy="0" stdDeviation="3" flood-color="#34d399" flood-opacity="0.4" />
                 </filter>
               </defs>
               <circle class="donut-track" cx="80" cy="80" r="62" />
               <!-- 円グラフの各セグメント (JSで動的に更新) -->
-              <circle id="donut-seg-unlearned" class="donut-segment donut-seg-unlearned" cx="80" cy="80" r="62" stroke="url(#chartGradUnlearned)" />
-              <circle id="donut-seg-learning" class="donut-segment donut-seg-learning" cx="80" cy="80" r="62" stroke="url(#chartGradLearning)" />
-              <circle id="donut-seg-mastered" class="donut-segment donut-seg-mastered" cx="80" cy="80" r="62" stroke="url(#chartGradMastered)" filter="url(#chartGlow)" />
+              <circle id="donut-seg-unlearned" class="donut-segment donut-seg-unlearned" cx="80" cy="80" r="62"
+                stroke="url(#chartGradUnlearned)" />
+              <circle id="donut-seg-learning" class="donut-segment donut-seg-learning" cx="80" cy="80" r="62"
+                stroke="url(#chartGradLearning)" />
+              <circle id="donut-seg-mastered" class="donut-segment donut-seg-mastered" cx="80" cy="80" r="62"
+                stroke="url(#chartGradMastered)" filter="url(#chartGlow)" />
             </svg>
             <div class="donut-chart-center">
               <span class="donut-label">習得度</span>
@@ -388,11 +409,12 @@
               <h4>全カード一覧</h4>
               <span id="detail-cards-count-badge" class="badge">0枚</span>
             </div>
-            
+
             <!-- 検索 & フィルター -->
             <div class="detail-filter-bar">
               <div class="detail-search-wrap">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="11" cy="11" r="8"></circle>
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
@@ -426,8 +448,10 @@
       <div class="modal-header">
         <h3 id="modal-card-list-title">単語一覧</h3>
         <button id="modal-card-list-close" class="btn-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
       </div>
@@ -447,8 +471,10 @@
       <div class="modal-header">
         <h3>📊 学習記録 (レコード)</h3>
         <button id="modal-exit-close" class="btn-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
       </div>
@@ -488,4 +514,5 @@
 
   <script src="app.js?v=5"></script>
 </body>
+
 </html>
