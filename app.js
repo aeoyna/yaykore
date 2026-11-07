@@ -1353,14 +1353,30 @@ document.addEventListener('touchmove', e => {
 // CARD LIST MODAL LOGIC
 // ============================================================
 
+function formatInterval(minutes) {
+  if (!minutes || minutes <= 0) return '0分';
+  if (minutes < 60) return `${minutes}分`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `${hours}時間`;
+  const days = Math.round(hours / 24);
+  return `${days}日`;
+}
+
 function getSrsInfo(card) {
   if (!card.srs || card.srs.lastReviewed === 0) {
-    return { retention: 0, nextText: '未学習' };
+    return {
+      retention: 0,
+      nextText: '未学習',
+      intervalText: '未設定',
+      level: 0,
+      repetitions: 0
+    };
   }
   
   const now = Date.now();
   const elapsed = now - card.srs.lastReviewed;
-  const intervalMs = card.srs.interval * 60 * 1000;
+  const interval = card.srs.interval || 0;
+  const intervalMs = interval * 60 * 1000;
   
   let retention = 100;
   if (intervalMs > 0) {
@@ -1385,8 +1401,17 @@ function getSrsInfo(card) {
       nextText = `${Math.round(diffHours / 24)}日後`;
     }
   }
+
+  const intervalText = formatInterval(interval);
+  const repetitions = card.srs.repetitions || 0;
   
-  return { retention, nextText };
+  return {
+    retention,
+    nextText,
+    intervalText,
+    level: repetitions,
+    repetitions
+  };
 }
 
 function openCardListModal(type) {
@@ -1423,6 +1448,8 @@ function openCardListModal(type) {
           <div class="list-card-front">${escHtml(card.front)}</div>
           <div class="list-card-back">${escHtml(card.back)}</div>
           <div class="list-card-srs">
+            ${srs.level > 0 ? `<span class="srs-pill srs-pill-level">Lv.${srs.level}</span>` : ''}
+            <span class="srs-pill srs-pill-interval" title="次に出現するまでの復習間隔">間隔: ${srs.intervalText}</span>
             <span class="srs-retention" style="color: ${retentionColor}">定着率: ${srs.retention}%</span>
             <span class="srs-separator">·</span>
             <span class="srs-next">次回: ${srs.nextText}</span>
@@ -1472,7 +1499,7 @@ let detailRenderedCount = 0;
 const DETAIL_CHUNK_SIZE = 50;
 
 function getCardStudyStatus(card) {
-  if (!currentDeck) return { type: 'unlearned', label: '未学習', badgeClass: 'badge-status-unlearned', retention: 0, nextText: '未着手', barClass: 'unlearned', icon: '○' };
+  if (!currentDeck) return { type: 'unlearned', label: '未学習', badgeClass: 'badge-status-unlearned', retention: 0, nextText: '未着手', intervalText: '未設定', level: 0, barClass: 'unlearned', icon: '○' };
 
   const isMastered = currentDeck.learned && currentDeck.learned.includes(card.id);
   const isSessionWrong = wrongCards.includes(card);
@@ -1487,7 +1514,9 @@ function getCardStudyStatus(card) {
       label: '覚えた',
       badgeClass: 'badge-status-mastered',
       retention: ret,
-      nextText: srs.nextText === '未学習' ? '習得済' : `次回: ${srs.nextText}`,
+      nextText: srs.nextText === '未学習' ? '習得済' : srs.nextText,
+      intervalText: srs.intervalText,
+      level: srs.level,
       barClass: 'mastered',
       icon: '✓'
     };
@@ -1497,7 +1526,9 @@ function getCardStudyStatus(card) {
       label: '学習中',
       badgeClass: 'badge-status-learning',
       retention: srs.retention,
-      nextText: srs.nextText ? `次回: ${srs.nextText}` : '復習対象',
+      nextText: srs.nextText ? srs.nextText : '復習対象',
+      intervalText: srs.intervalText,
+      level: srs.level,
       barClass: 'learning',
       icon: '🔥'
     };
@@ -1508,6 +1539,8 @@ function getCardStudyStatus(card) {
       badgeClass: 'badge-status-unlearned',
       retention: 0,
       nextText: '未着手',
+      intervalText: '未設定',
+      level: 0,
       barClass: 'unlearned',
       icon: '○'
     };
@@ -1678,6 +1711,28 @@ function renderMoreDetailCards() {
     const { card, idx, status } = item;
     const row = document.createElement('div');
     row.className = 'detail-card-item';
+
+    // 復習間隔と出現頻度に関するメタ情報のHTML
+    let srsMetaHtml = '';
+    if (status.type === 'mastered') {
+      srsMetaHtml = `
+        <div class="card-srs-meta">
+          <span class="srs-chip srs-chip-interval" title="次に出現するまでの復習間隔（出現頻度）">間隔: ${status.intervalText}</span>
+          <span class="srs-chip srs-chip-next" title="次回の復習出現予定">次回: ${status.nextText}</span>
+        </div>`;
+    } else if (status.type === 'learning') {
+      srsMetaHtml = `
+        <div class="card-srs-meta">
+          <span class="srs-chip srs-chip-learning" title="要復習">次回: ${status.nextText}</span>
+          <span class="srs-chip srs-chip-retention">定着 ${status.retention}%</span>
+        </div>`;
+    } else {
+      srsMetaHtml = `
+        <div class="card-srs-meta">
+          <span class="srs-chip srs-chip-unlearned">未着手</span>
+        </div>`;
+    }
+
     row.innerHTML = `
       <div class="detail-card-left">
         <div class="detail-card-front-row">
@@ -1690,7 +1745,10 @@ function renderMoreDetailCards() {
       </div>
       <div class="detail-card-right">
         <div class="detail-card-actions">
-          <span class="card-status-badge ${status.badgeClass}">${status.icon} ${status.label}</span>
+          <span class="card-status-badge ${status.badgeClass}">
+            ${status.icon} ${status.label}
+            ${status.level > 0 ? `<span class="badge-sub-lv">Lv.${status.level}</span>` : ''}
+          </span>
           <button class="detail-card-speak" title="英語読み上げ">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
@@ -1701,7 +1759,7 @@ function renderMoreDetailCards() {
         <div class="card-mastery-bar-wrap" title="定着率: ${status.retention}%">
           <div class="card-mastery-bar ${status.barClass}" style="width: ${status.retention}%"></div>
         </div>
-        <div class="card-srs-hint">${status.nextText}</div>
+        ${srsMetaHtml}
       </div>
     `;
 

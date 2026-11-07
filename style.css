@@ -1768,6 +1768,28 @@ input, textarea {
   font-size: 0.75rem;
   margin-top: 4px;
   color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.srs-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.srs-pill-level {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.srs-pill-interval {
+  background: rgba(56, 189, 248, 0.14);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
 }
 
 .srs-separator {
@@ -2893,6 +2915,62 @@ input, textarea {
 .card-mastery-bar.unlearned {
   background: transparent;
   width: 0%;
+}
+
+.badge-sub-lv {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  margin-left: 3px;
+  letter-spacing: -0.2px;
+}
+
+.card-srs-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.srs-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 4px;
+  line-height: 1.2;
+}
+
+.srs-chip-interval {
+  background: rgba(56, 189, 248, 0.14);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+}
+
+.srs-chip-next {
+  background: rgba(52, 211, 153, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.25);
+}
+
+.srs-chip-learning {
+  background: rgba(251, 191, 36, 0.14);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.28);
+}
+
+.srs-chip-retention {
+  color: var(--text-muted);
+  font-size: 0.66rem;
+}
+
+.srs-chip-unlearned {
+  color: var(--text-muted);
+  font-size: 0.68rem;
 }
 
 .card-srs-hint {
