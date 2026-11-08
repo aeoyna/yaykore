@@ -627,8 +627,8 @@ body::before {
   align-items: flex-start;
   width: 100%;
   max-width: 400px;
-  margin-top: clamp(36px, 5.5vh, 48px);
-  margin-bottom: auto;
+  margin-top: clamp(60px, 9vh, 90px);
+  margin-bottom: 18px;
   padding: 0 4px;
   box-sizing: border-box;
 }
@@ -797,7 +797,7 @@ body::before {
   height: clamp(220px, 40vh, 340px);
   perspective: 1000px;
   transform-style: preserve-3d;
-  margin-top: auto;
+  margin-top: 0;
   margin-bottom: auto;
 }
 
@@ -2368,7 +2368,8 @@ input, textarea {
     padding: 8px 12px;
   }
   .study-stat-badges {
-    margin-top: 20px;
+    margin-top: 32px;
+    margin-bottom: 12px;
   }
   .stat-badge-col {
     gap: 14px;
