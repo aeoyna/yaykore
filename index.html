@@ -21,7 +21,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=12" />
+  <link rel="stylesheet" href="style.css?v=13" />
 </head>
 
 <body>
@@ -110,36 +110,35 @@
           <div id="progress-bar" class="progress-bar"></div>
         </div>
       </div>
-      <div class="study-header-right">
-        <button id="btn-study-bgm-toggle" class="btn-icon btn-study-bgm" title="音楽の一時停止 / 再開">
-          <svg class="icon-bgm-playing" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 18V5l12-2v13"></path>
-            <circle cx="6" cy="18" r="3"></circle>
-            <circle cx="18" cy="16" r="3"></circle>
-          </svg>
-          <svg class="icon-bgm-muted hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="2" y1="2" x2="22" y2="22"></line>
-            <path d="M9 18V5l12-2v13"></path>
-            <circle cx="6" cy="18" r="3"></circle>
-            <circle cx="18" cy="16" r="3"></circle>
-          </svg>
-        </button>
-        <div id="progress-counter-box" class="progress-counter-box" title="スワイプ回数">
-          <span id="progress-count-num" class="progress-count-num">0</span>
-          <span class="progress-count-unit">回</span>
-        </div>
+      <div id="progress-counter-box" class="progress-counter-box" title="スワイプ回数">
+        <span id="progress-count-num" class="progress-count-num">0</span>
+        <span class="progress-count-unit">回</span>
       </div>
     </header>
 
     <main class="study-main">
-      <!-- Stat badges -->
+      <!-- Stat badges with sub action buttons -->
       <div class="study-stat-badges">
-        <div class="stat-badge stat-badge-left" id="btn-show-learning" title="学習中の単語一覧を表示">
-          <span class="stat-badge-num" id="badge-learning">0</span>
-          <span class="stat-badge-label">学習中</span>
+        <!-- 左列: 学習中バッジ & その下に三角の再生ボタン -->
+        <div class="stat-badge-col stat-col-left">
+          <div class="stat-badge stat-badge-left" id="btn-show-learning" title="学習中の単語一覧を表示">
+            <span class="stat-badge-num" id="badge-learning">0</span>
+            <span class="stat-badge-label">学習中</span>
+          </div>
+          <button id="btn-study-auto-toggle" class="stat-sub-btn btn-sub-auto" title="自動めくり(AUTO) ON/OFF">
+            <svg class="icon-auto-play" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="6 4 20 12 6 20 6 4"></polygon>
+            </svg>
+            <svg class="icon-auto-pause hidden" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+              <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+            </svg>
+            <span class="stat-sub-label" id="label-study-auto">AUTO</span>
+          </button>
         </div>
-        <div class="study-score-badge" id="btn-pachinko-score" title="タップで自動めくり(AUTO) ON/OFF">
-          <div class="slot-auto-pill" id="slot-auto-pill">AUTO OFF</div>
+
+        <!-- 中央: スロット (純粋なスロット演出) -->
+        <div class="study-score-badge" id="btn-pachinko-score">
           <!-- Mini Slot Machine Inline -->
           <div class="pachinko-screen-mini">
             <div class="slot-reel-mini" id="reel-0">3</div>
@@ -148,9 +147,27 @@
           </div>
           <span class="pachinko-status-mini" id="pachinko-modal-status">READY</span>
         </div>
-        <div class="stat-badge stat-badge-right" id="btn-show-correct" title="覚えた単語一覧を表示">
-          <span class="stat-badge-num" id="badge-correct">0</span>
-          <span class="stat-badge-label">覚えた</span>
+
+        <!-- 右列: 覚えたバッジ & その下に音符ボタン -->
+        <div class="stat-badge-col stat-col-right">
+          <div class="stat-badge stat-badge-right" id="btn-show-correct" title="覚えた単語一覧を表示">
+            <span class="stat-badge-num" id="badge-correct">0</span>
+            <span class="stat-badge-label">覚えた</span>
+          </div>
+          <button id="btn-study-bgm-toggle" class="stat-sub-btn btn-sub-bgm" title="音楽の一時停止 / 再開">
+            <svg class="icon-bgm-playing" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 18V5l12-2v13"></path>
+              <circle cx="6" cy="18" r="3"></circle>
+              <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+            <svg class="icon-bgm-muted hidden" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="2" y1="2" x2="22" y2="22"></line>
+              <path d="M9 18V5l12-2v13"></path>
+              <circle cx="6" cy="18" r="3"></circle>
+              <circle cx="18" cy="16" r="3"></circle>
+            </svg>
+            <span class="stat-sub-label">BGM</span>
+          </button>
         </div>
       </div>
 
@@ -610,7 +627,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=12"></script>
+  <script src="app.js?v=13"></script>
 </body>
 
 </html>

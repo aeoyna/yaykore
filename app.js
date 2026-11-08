@@ -1214,15 +1214,12 @@ function saveSettingsFromUI() {
 function updateAutoFlipUI() {
   const isEnabled = !!(settings && settings.autoFlip);
 
-  const slotBadge = $('btn-pachinko-score');
-  if (slotBadge) {
-    slotBadge.classList.toggle('auto-active', isEnabled);
-  }
-
-  const autoPill = $('slot-auto-pill');
-  if (autoPill) {
-    autoPill.textContent = isEnabled ? 'AUTO ON' : 'AUTO OFF';
-    autoPill.classList.toggle('active', isEnabled);
+  // 学習中の下に配置された三角再生ボタン (AUTO)
+  const studyAutoBtn = $('btn-study-auto-toggle');
+  if (studyAutoBtn) {
+    studyAutoBtn.classList.toggle('active', isEnabled);
+    const label = $('label-study-auto');
+    if (label) label.textContent = isEnabled ? 'AUTO ON' : 'AUTO';
   }
 
   const btn = $('btn-auto-flip-toggle');
@@ -2703,11 +2700,11 @@ function playReelStopSound() {
 }
 
 
-// スロット部分のクリックイベント: AUTO（テンポ連動自動めくり）のON/OFF切り替え
+// 三角の自動再生ボタン (AUTO) のクリックイベント
 setTimeout(() => {
-  const scoreBadgeEl = document.querySelector('.study-score-badge');
-  if (scoreBadgeEl) {
-    scoreBadgeEl.addEventListener('click', e => {
+  const studyAutoBtn = $('btn-study-auto-toggle');
+  if (studyAutoBtn) {
+    studyAutoBtn.addEventListener('click', e => {
       e.stopPropagation();
       initAudioContext();
       toggleAutoFlip();
@@ -3220,6 +3217,50 @@ document.addEventListener('pointerdown', () => {
     }
   }
 }, { passive: true });
+
+// ============================================================
+// BACKGROUND / TAB SWITCH AUTO-PAUSE (ブラウザ離脱時の自動停止)
+// ============================================================
+let wasBgmPlayingBeforeHidden = false;
+let wasMetroPlayingBeforeHidden = false;
+
+function handleVisibilityChange() {
+  if (document.hidden) {
+    // ブラウザタブから離れた、または画面ロック、別アプリへ切り替え
+    if (typeof BgmManager !== 'undefined') {
+      const normalPlaying = BgmManager.tracks.normal.audio && !BgmManager.tracks.normal.audio.paused;
+      const rushPlaying = BgmManager.tracks.rush.audio && !BgmManager.tracks.rush.audio.paused;
+      wasBgmPlayingBeforeHidden = normalPlaying || rushPlaying;
+      BgmManager.pauseStudyBgm();
+    }
+    if (typeof isMetroPlaying !== 'undefined' && isMetroPlaying) {
+      wasMetroPlayingBeforeHidden = true;
+      stopMetronome();
+    }
+  } else {
+    // ブラウザタブに戻ってきた
+    const studyActive = $('screen-study') && $('screen-study').classList.contains('active');
+    const completeEl = $('study-complete');
+    const isCompleted = completeEl && !completeEl.classList.contains('hidden');
+
+    if (studyActive && !isCompleted) {
+      if (typeof BgmManager !== 'undefined' && !BgmManager.isManualPaused && wasBgmPlayingBeforeHidden) {
+        BgmManager.playStudyBgm();
+      }
+      if (wasMetroPlayingBeforeHidden && settings && settings.autoFlip) {
+        startMetronome();
+      }
+    }
+    wasBgmPlayingBeforeHidden = false;
+    wasMetroPlayingBeforeHidden = false;
+  }
+}
+
+document.addEventListener('visibilitychange', handleVisibilityChange);
+window.addEventListener('pagehide', () => {
+  if (typeof BgmManager !== 'undefined') BgmManager.pauseStudyBgm();
+  if (typeof isMetroPlaying !== 'undefined' && isMetroPlaying) stopMetronome();
+});
 
 
 // ============================================================

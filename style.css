@@ -537,55 +537,6 @@ body::before {
   box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
 }
 
-.study-header-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-.btn-study-bgm {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--cyan, #38bdf8);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.btn-study-bgm:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.25);
-  transform: scale(1.04);
-}
-
-.btn-study-bgm.is-playing {
-  color: #38bdf8;
-  border-color: rgba(56, 189, 248, 0.4);
-  background: rgba(56, 189, 248, 0.12);
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
-}
-
-.btn-study-bgm.is-muted {
-  color: #94a3b8;
-  border-color: rgba(239, 68, 68, 0.3);
-  background: rgba(239, 68, 68, 0.08);
-}
-
-.btn-study-bgm.is-muted svg {
-  color: #f87171;
-}
-
-.btn-study-bgm.hidden-unconfigured {
-  display: none !important;
-}
-
 .progress-counter-box {
   display: flex;
   align-items: baseline;
@@ -673,13 +624,104 @@ body::before {
 .study-stat-badges {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
   max-width: 400px;
-  margin-top: 10px;
+  margin-top: 8px;
   margin-bottom: auto;
   padding: 0 4px;
   box-sizing: border-box;
+}
+
+.stat-badge-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-sub-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  min-width: 66px;
+  user-select: none;
+}
+
+.stat-sub-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.stat-sub-btn:active {
+  transform: translateY(0) scale(0.95);
+}
+
+/* 三角の自動再生ボタン (AUTO) */
+.btn-sub-auto {
+  color: #94a3b8;
+}
+
+.btn-sub-auto:hover {
+  color: #e2e8f0;
+}
+
+.btn-sub-auto.active {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.55);
+  color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+.btn-sub-auto.active .icon-auto-play {
+  display: none !important;
+}
+
+.btn-sub-auto.active .icon-auto-pause {
+  display: block !important;
+}
+
+/* 音符ボタン (BGM) */
+.btn-sub-bgm {
+  color: #94a3b8;
+}
+
+.btn-sub-bgm:hover {
+  color: #e2e8f0;
+}
+
+.btn-sub-bgm.is-playing {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.5);
+  color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+.btn-sub-bgm.is-muted {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.btn-sub-bgm.is-muted svg {
+  color: #f87171;
+}
+
+.btn-sub-bgm.hidden-unconfigured {
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 .stat-badge {
@@ -2053,7 +2095,7 @@ input, textarea {
   border-radius: var(--radius-md);
   padding: 8px 12px;
   min-width: 100px;
-  cursor: pointer;
+  cursor: default;
   transition: var(--transition);
   gap: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 10px rgba(59, 130, 246, 0.15);
@@ -2062,22 +2104,6 @@ input, textarea {
 .study-score-badge:hover {
   background: linear-gradient(135deg, rgba(30, 36, 56, 0.8) 0%, rgba(15, 18, 30, 0.95) 100%);
   border-color: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 15px rgba(59, 130, 246, 0.25);
-  transform: translateY(-2px);
-}
-
-.study-score-badge:active {
-  transform: translateY(0) scale(0.96);
-}
-
-.study-score-badge.auto-active {
-  border-color: rgba(56, 189, 248, 0.5);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), 0 0 14px rgba(56, 189, 248, 0.3);
-}
-
-.study-score-badge.auto-active:hover {
-  border-color: rgba(56, 189, 248, 0.75);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.45);
 }
 
 .slot-auto-pill {
