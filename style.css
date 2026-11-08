@@ -627,7 +627,7 @@ body::before {
   align-items: flex-start;
   width: 100%;
   max-width: 400px;
-  margin-top: 22px;
+  margin-top: clamp(36px, 5.5vh, 48px);
   margin-bottom: auto;
   padding: 0 4px;
   box-sizing: border-box;
@@ -637,7 +637,7 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 20px;
 }
 
 .stat-sub-btn {
@@ -2368,10 +2368,10 @@ input, textarea {
     padding: 8px 12px;
   }
   .study-stat-badges {
-    margin-top: 12px;
+    margin-top: 20px;
   }
   .stat-badge-col {
-    gap: 10px;
+    gap: 14px;
   }
   .stat-badge {
     padding: 4px 12px;
