@@ -627,8 +627,8 @@ body::before {
   align-items: flex-start;
   width: 100%;
   max-width: 400px;
-  margin-top: clamp(60px, 9vh, 90px);
-  margin-bottom: 18px;
+  margin-top: 28px;
+  margin-bottom: auto;
   padding: 0 4px;
   box-sizing: border-box;
 }
@@ -637,7 +637,7 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 14px;
 }
 
 .stat-sub-btn {
@@ -797,7 +797,7 @@ body::before {
   height: clamp(220px, 40vh, 340px);
   perspective: 1000px;
   transform-style: preserve-3d;
-  margin-top: 0;
+  margin-top: auto;
   margin-bottom: auto;
 }
 
@@ -2368,11 +2368,11 @@ input, textarea {
     padding: 8px 12px;
   }
   .study-stat-badges {
-    margin-top: 32px;
-    margin-bottom: 12px;
+    margin-top: 14px;
+    margin-bottom: auto;
   }
   .stat-badge-col {
-    gap: 14px;
+    gap: 10px;
   }
   .stat-badge {
     padding: 4px 12px;
