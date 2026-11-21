@@ -52,10 +52,28 @@ const SAMPLE_DECKS = [
   }
 ];
 
+const MAX_SRS_INTERVAL = 43200; // 30日上限 (分単位: 30日 * 24時間 * 60分)
+
+function clampCardInterval(card) {
+  if (card && card.srs && typeof card.srs.interval === 'number' && card.srs.interval > MAX_SRS_INTERVAL) {
+    card.srs.interval = MAX_SRS_INTERVAL;
+  }
+}
+
 function loadDecks() {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
-    if (data) return JSON.parse(data);
+    if (data) {
+      const decks = JSON.parse(data);
+      if (Array.isArray(decks)) {
+        decks.forEach(deck => {
+          if (deck && Array.isArray(deck.cards)) {
+            deck.cards.forEach(clampCardInterval);
+          }
+        });
+      }
+      return decks;
+    }
     // First load: use sample data
     saveDecks(SAMPLE_DECKS);
     return SAMPLE_DECKS;
@@ -847,7 +865,8 @@ function markCard(correct) {
     } else if (card.srs.repetitions === 2) {
       nextInterval = 15;
     } else {
-      nextInterval = Math.round(card.srs.interval * card.srs.easeFactor);
+      const prevInterval = Math.min(MAX_SRS_INTERVAL, card.srs.interval || 0);
+      nextInterval = Math.min(MAX_SRS_INTERVAL, Math.round(prevInterval * card.srs.easeFactor));
     }
     
     card.srs.interval = nextInterval;
