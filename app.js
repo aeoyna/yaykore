@@ -155,11 +155,32 @@ let cardHistory = []; // {cardIndex, correct, scoreSnapshot} stack for undo
 // PACHINKO & PARTICLES STATE
 // ============================================================
 const SCORE_STORAGE_KEY = 'swipecard_score';
+const PACHINKO_ENABLED_KEY = 'swipecard_pachinko_enabled';
 let score = loadScore();
+let isPachinkoEnabled = loadPachinkoEnabled();
+let isSlotToggling = false;
+let activeReelIntervals = [];
 let isRushActive = false;
 let rushTimeRemaining = 0;
 let rushTimerInterval = null;
 let isReelSpinning = false;
+
+function loadPachinkoEnabled() {
+  try {
+    const val = localStorage.getItem(PACHINKO_ENABLED_KEY);
+    return val !== null ? val === 'true' : true;
+  } catch {
+    return true;
+  }
+}
+
+function savePachinkoEnabled(enabled) {
+  try {
+    localStorage.setItem(PACHINKO_ENABLED_KEY, enabled);
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 let particles = [];
 let particleCanvas = null;
@@ -212,6 +233,7 @@ function showScreen(screenId) {
     // Entering study screen: update score display and check RUSH
     const scoreValEl = $('pachinko-score-val');
     if (scoreValEl) scoreValEl.textContent = String(score).padStart(5, '0');
+    updatePachinkoUI();
     
     if (isRushActive && rushTimeRemaining > 0) {
       resumeRush();
@@ -2181,9 +2203,219 @@ function initAudioContext() {
 }
 
 // ============================================================
-// PACHINKO GACHA LOGIC
+// PACHINKO GACHA LOGIC & CONTROLS
 // ============================================================
+
+function clearReelIntervals() {
+  activeReelIntervals.forEach(id => clearInterval(id));
+  activeReelIntervals = [];
+}
+
+function updatePachinkoUI() {
+  const badge = $('btn-pachinko-score');
+  const reel0 = $('reel-0');
+  const reel1 = $('reel-1');
+  const reel2 = $('reel-2');
+  const statusEl = $('pachinko-modal-status');
+  
+  if (!isPachinkoEnabled) {
+    if (reel0) reel0.textContent = '';
+    if (reel1) reel1.textContent = '';
+    if (reel2) reel2.textContent = '';
+    if (statusEl) {
+      statusEl.className = 'pachinko-status-mini';
+      statusEl.textContent = 'OFF';
+    }
+    if (badge) {
+      badge.classList.remove('spinning', 'rush-active');
+      badge.classList.add('pachinko-disabled');
+      badge.setAttribute('title', 'パチンコ機能: 停止中 (タップで再開)');
+    }
+  } else {
+    if (reel0 && !reel0.textContent) reel0.textContent = '3';
+    if (reel1 && !reel1.textContent) reel1.textContent = '5';
+    if (reel2 && !reel2.textContent) reel2.textContent = '9';
+    if (statusEl && !isReelSpinning && !isSlotToggling) {
+      statusEl.className = 'pachinko-status-mini';
+      statusEl.textContent = 'READY';
+    }
+    if (badge) {
+      badge.classList.remove('pachinko-disabled');
+      badge.setAttribute('title', 'パチンコ機能: 稼働中 (タップで停止)');
+    }
+  }
+}
+
+function togglePachinkoState() {
+  if (isSlotToggling) return;
+  initAudioContext();
+  
+  if (isPachinkoEnabled) {
+    disablePachinkoWithAnimation();
+  } else {
+    enablePachinkoWithAnimation();
+  }
+}
+
+function disablePachinkoWithAnimation() {
+  isSlotToggling = true;
+  clearReelIntervals();
+  
+  if (isRushActive) {
+    endRush();
+  }
+  
+  const badge = $('btn-pachinko-score');
+  if (badge) {
+    badge.classList.remove('rush-active');
+    badge.classList.add('spinning');
+  }
+  
+  const statusEl = $('pachinko-modal-status');
+  if (statusEl) {
+    statusEl.textContent = 'STOPPING...';
+    statusEl.className = 'pachinko-status-mini neon-blink';
+  }
+  
+  playSlotSpinSound();
+  
+  const reel0 = $('reel-0');
+  const reel1 = $('reel-1');
+  const reel2 = $('reel-2');
+  
+  let count0 = 0;
+  let count1 = 0;
+  let count2 = 0;
+  const spinInterval = 45;
+  
+  const int0 = setInterval(() => {
+    if (reel0) reel0.textContent = Math.floor(Math.random() * 9) + 1;
+    count0++;
+    playReelTickSound();
+    if (count0 > 8) {
+      clearInterval(int0);
+      if (reel0) reel0.textContent = '';
+      playReelStopSound();
+    }
+  }, spinInterval);
+  
+  const int1 = setInterval(() => {
+    if (reel1) reel1.textContent = Math.floor(Math.random() * 9) + 1;
+    count1++;
+    playReelTickSound();
+    if (count1 > 14) {
+      clearInterval(int1);
+      if (reel1) reel1.textContent = '';
+      playReelStopSound();
+    }
+  }, spinInterval);
+  
+  const int2 = setInterval(() => {
+    if (reel2) reel2.textContent = Math.floor(Math.random() * 9) + 1;
+    count2++;
+    playReelTickSound();
+    if (count2 > 20) {
+      clearInterval(int2);
+      if (reel2) reel2.textContent = '';
+      playReelStopSound();
+      
+      // 停止完了処理: 無地確定
+      isPachinkoEnabled = false;
+      savePachinkoEnabled(false);
+      isReelSpinning = false;
+      isSlotToggling = false;
+      
+      updatePachinkoUI();
+      showToast('パチンコ機能を停止しました');
+    }
+  }, spinInterval);
+  
+  activeReelIntervals.push(int0, int1, int2);
+}
+
+function enablePachinkoWithAnimation() {
+  isSlotToggling = true;
+  clearReelIntervals();
+  
+  const badge = $('btn-pachinko-score');
+  if (badge) {
+    badge.classList.remove('pachinko-disabled');
+    badge.classList.add('spinning');
+  }
+  
+  const statusEl = $('pachinko-modal-status');
+  if (statusEl) {
+    statusEl.textContent = 'STARTING...';
+    statusEl.className = 'pachinko-status-mini neon-blink';
+  }
+  
+  playSlotSpinSound();
+  
+  const reel0 = $('reel-0');
+  const reel1 = $('reel-1');
+  const reel2 = $('reel-2');
+  
+  let count0 = 0;
+  let count1 = 0;
+  let count2 = 0;
+  const spinInterval = 45;
+  const defaultTargets = [3, 5, 9];
+  
+  const int0 = setInterval(() => {
+    if (reel0) reel0.textContent = Math.floor(Math.random() * 9) + 1;
+    count0++;
+    playReelTickSound();
+    if (count0 > 8) {
+      clearInterval(int0);
+      if (reel0) reel0.textContent = defaultTargets[0];
+      playReelStopSound();
+    }
+  }, spinInterval);
+  
+  const int1 = setInterval(() => {
+    if (reel1) reel1.textContent = Math.floor(Math.random() * 9) + 1;
+    count1++;
+    playReelTickSound();
+    if (count1 > 14) {
+      clearInterval(int1);
+      if (reel1) reel1.textContent = defaultTargets[1];
+      playReelStopSound();
+    }
+  }, spinInterval);
+  
+  const int2 = setInterval(() => {
+    if (reel2) reel2.textContent = Math.floor(Math.random() * 9) + 1;
+    count2++;
+    playReelTickSound();
+    if (count2 > 20) {
+      clearInterval(int2);
+      if (reel2) reel2.textContent = defaultTargets[2];
+      playReelStopSound();
+      
+      // 有効化完了処理
+      isPachinkoEnabled = true;
+      savePachinkoEnabled(true);
+      isReelSpinning = false;
+      isSlotToggling = false;
+      
+      updatePachinkoUI();
+      showToast('パチンコ機能を再開しました');
+    }
+  }, spinInterval);
+  
+  activeReelIntervals.push(int0, int1, int2);
+}
+
+function initPachinkoState() {
+  updatePachinkoUI();
+  const badge = $('btn-pachinko-score');
+  if (badge) {
+    badge.addEventListener('click', togglePachinkoState);
+  }
+}
+
 function checkGachaChance() {
+  if (!isPachinkoEnabled) return;
   const roll = Math.random();
   const baseThreshold = isRushActive ? 1.0 : 0.2; // 100% in RUSH, 20% in normal
   const triggerThreshold = baseThreshold * gachaProbabilityMultiplier;
@@ -2194,7 +2426,7 @@ function checkGachaChance() {
 }
 
 function startSlotSpin() {
-  if (isReelSpinning) return;
+  if (!isPachinkoEnabled || isReelSpinning || isSlotToggling) return;
   isReelSpinning = true;
   
   // Update score badge spinning and RUSH styles
@@ -2271,6 +2503,8 @@ function animateReels(targets, isWin, triggersRush, winDigit) {
   const reel2 = $('reel-2');
   if (!reel0 || !reel1 || !reel2) return;
   
+  clearReelIntervals();
+  
   let count0 = 0;
   let count1 = 0;
   let count2 = 0;
@@ -2312,10 +2546,13 @@ function animateReels(targets, isWin, triggersRush, winDigit) {
       evaluateSlotResult(isWin, triggersRush, winDigit);
     }
   }, spinInterval);
+
+  activeReelIntervals.push(int0, int1, int2);
 }
 
 function evaluateSlotResult(isWin, triggersRush, winDigit) {
   isReelSpinning = false;
+  if (!isPachinkoEnabled) return;
   const statusEl = $('pachinko-modal-status');
   if (!statusEl) return;
   statusEl.className = 'pachinko-status-mini';
@@ -2345,6 +2582,7 @@ function evaluateSlotResult(isWin, triggersRush, winDigit) {
     }
 
     setTimeout(() => {
+      if (!isPachinkoEnabled) return;
       statusEl.classList.remove('win-flash');
       statusEl.textContent = 'READY';
       
@@ -2366,6 +2604,7 @@ function evaluateSlotResult(isWin, triggersRush, winDigit) {
         } else {
           // RUSH突入演出: 「大当たりRUSH入」の演出に合わせて今より10秒遅らせて赤くなる演出・タイマーを開始
           setTimeout(() => {
+            if (!isPachinkoEnabled) return;
             isRushActive = true;
             startRush();
           }, 10000);
@@ -2375,6 +2614,7 @@ function evaluateSlotResult(isWin, triggersRush, winDigit) {
   } else {
     statusEl.textContent = 'READY';
     setTimeout(() => {
+      if (!isPachinkoEnabled) return;
       const badge = $('btn-pachinko-score');
       if (badge) {
         badge.classList.remove('spinning');
@@ -3310,6 +3550,7 @@ async function initApp() {
   updateMetroDots();
   initParticleCanvas();
   updateAutoFlipUI();
+  initPachinkoState();
   await BgmManager.init();
 }
 
