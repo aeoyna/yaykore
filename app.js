@@ -768,29 +768,35 @@ function goToPrevCard() {
   if (cardHistory.length === 0) return;
 
   const prev = cardHistory.pop();
+  const currentCardIdx = studyQueue[prev.cardIndex];
+  const card = currentDeck.cards[currentCardIdx];
 
-  // Undo the score delta that was applied when this card was answered
-  const card = currentDeck.cards[studyQueue[prev.cardIndex]];
-  if (prev.correct) {
+  if (prev.isAuto) {
+    // AUTOで列の末尾に追加されたカードをキューから取り消す
+    const nextOccur = studyQueue.lastIndexOf(currentCardIdx);
+    if (nextOccur !== -1 && nextOccur > prev.cardIndex) {
+      studyQueue.splice(nextOccur, 1);
+    }
+  } else if (prev.correct) {
     sessionCorrect = Math.max(0, sessionCorrect - 1);
     correctCards = correctCards.filter(c => c !== card);
     if (currentDeck.learned) {
       currentDeck.learned = currentDeck.learned.filter(id => id !== card.id);
     }
+    if (prev.srsSnapshot) {
+      card.srs = { ...prev.srsSnapshot };
+    }
   } else {
     sessionWrong = Math.max(0, sessionWrong - 1);
     wrongCards = wrongCards.filter(c => c !== card);
     // Remove the injected duplicate from the queue
-    const currentCardIdx = studyQueue[prev.cardIndex];
-    const nextOccur = studyQueue.indexOf(currentCardIdx, prev.cardIndex + 1);
-    if (nextOccur !== -1) {
+    const nextOccur = studyQueue.lastIndexOf(currentCardIdx);
+    if (nextOccur !== -1 && nextOccur > prev.cardIndex) {
       studyQueue.splice(nextOccur, 1);
     }
-  }
-
-  // Restore the card's SRS state
-  if (prev.srsSnapshot) {
-    card.srs = { ...prev.srsSnapshot };
+    if (prev.srsSnapshot) {
+      card.srs = { ...prev.srsSnapshot };
+    }
   }
 
   // Restore score
@@ -932,7 +938,40 @@ function markCard(correct) {
   checkGachaChance();
 }
 
-function animateCardOut(correct, callback) {
+function deferCardAuto() {
+  if (isCardTransitioning) return;
+  isCardTransitioning = true;
+
+  const currentCardIdx = studyQueue[studyIndex];
+
+  // Save history snapshot for undo
+  cardHistory.push({
+    cardIndex: studyIndex,
+    isAuto: true,
+    scoreSnapshot: score
+  });
+  if (cardHistory.length > 30) cardHistory.shift();
+
+  // 列の一番後ろに戻す（キューの末尾に追加）
+  studyQueue.push(currentCardIdx);
+
+  // 学習中(sessionWrong/wrongCards)にはカウントせず、SRSやlearnedも変更しない
+  saveDecks(decks);
+  sessionSwipes++;
+  studyIndex++;
+  updatePrevCardBtn();
+
+  animateCardOut(false, () => {
+    renderStudyCard(true);
+    isCardTransitioning = false;
+  }, true);
+
+  // Audio activation and gacha roll
+  initAudioContext();
+  checkGachaChance();
+}
+
+function animateCardOut(correct, callback, isAuto = false) {
   const el = $('current-card');
   if (!el) {
     isCardTransitioning = false;
@@ -948,15 +987,16 @@ function animateCardOut(correct, callback) {
       const studyRect = studyScreen.getBoundingClientRect();
       const canvasX = rect.left - studyRect.left + rect.width / 2;
       const canvasY = rect.top - studyRect.top + rect.height / 2;
-      spawnParticles(canvasX, canvasY, correct ? '#34d399' : '#f87171');
+      const pColor = isAuto ? '#60a5fa' : (correct ? '#34d399' : '#f87171');
+      spawnParticles(canvasX, canvasY, pColor);
     }
   } catch (e) {
     console.error('Failed to spawn particles:', e);
   }
 
   // 1. Swipe out the current card
-  const dx = correct ? 120 : -120;
-  const rotate = correct ? 20 : -20;
+  const dx = isAuto ? -120 : (correct ? 120 : -120);
+  const rotate = isAuto ? -15 : (correct ? 20 : -20);
 
   el.style.transition = 'transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.25s ease';
   el.style.transform = `translateX(${dx}%) rotate(${rotate}deg)`;
@@ -2036,9 +2076,9 @@ function handleAutoBeat(beatNumber) {
       flipCard();
     }
   } else if (beatNumber === 1) {
-    // 2拍目: めくられて裏面になっていれば次のカードへ進める（AUTO時は「学習中」に組分け）
+    // 2拍目: めくられて裏面になっていれば次のカードへ進める（AUTO時は学習中にせず列の一番後ろに戻す）
     if (isFlipped) {
-      markCard(false);
+      deferCardAuto();
     }
   }
 }
