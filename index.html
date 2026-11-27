@@ -48,6 +48,11 @@
         <span class="logo-text">SwipeCard</span>
       </div>
       <div class="header-actions">
+        <div id="streak-badge" class="streak-badge" role="button" tabindex="0" title="連続ログイン記録（タップで詳細）">
+          <span class="streak-icon">🔥</span>
+          <span id="streak-days-num" class="streak-days-num">0</span>
+          <span class="streak-days-unit">日</span>
+        </div>
         <button id="btn-open-settings" class="btn-icon" title="設定">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
@@ -414,6 +419,48 @@
   <!-- Toast -->
   <div id="toast" class="toast hidden"></div>
 
+  <!-- ========== MODAL: Streak Detail (連続ログイン詳細) ========== -->
+  <div id="modal-streak" class="modal-overlay hidden">
+    <div class="modal-box modal-streak-box">
+      <div class="modal-header">
+        <h3>🔥 連続ログイン記録</h3>
+        <button id="modal-streak-close" class="btn-icon" title="閉じる">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body streak-modal-body">
+        <div class="streak-hero-card">
+          <div class="streak-flame-wrapper">
+            <span class="streak-flame-large" id="streak-modal-flame">🔥</span>
+          </div>
+          <div class="streak-count-display">
+            <span id="streak-modal-days" class="streak-large-num">0</span>
+            <span class="streak-large-unit">日連続</span>
+          </div>
+          <p id="streak-modal-status-text" class="streak-status-desc">1日15分以上の学習で連続記録がつきます</p>
+        </div>
+
+        <div class="streak-progress-card">
+          <div class="streak-progress-header">
+            <span>本日の学習時間</span>
+            <span id="streak-modal-time-text" class="streak-time-val">0分 / 15分</span>
+          </div>
+          <div class="streak-progress-track">
+            <div id="streak-modal-progress-bar" class="streak-progress-fill" style="width: 0%;"></div>
+          </div>
+          <div id="streak-modal-hint" class="streak-progress-hint">あと15分の学習で今日のログイン達成！</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-close-streak-modal" class="btn-primary" style="width: 100%;">閉じる</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ========== MODAL: Deck Detail (プロジェクト詳細) ========== -->
   <div id="modal-deck-detail" class="modal-overlay hidden">
     <div class="modal-box modal-deck-detail-box">
@@ -627,7 +674,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=18"></script>
+  <script src="app.js?v=19"></script>
 </body>
 
 </html>

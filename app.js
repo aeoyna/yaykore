@@ -229,6 +229,10 @@ function showScreen(screenId) {
     stopMetronome();
     pauseRush();
     if (typeof BgmManager !== 'undefined') BgmManager.pauseStudyBgm();
+    if (typeof StreakManager !== 'undefined') {
+      StreakManager.pauseStudyTimer();
+      StreakManager.updateUI();
+    }
   } else {
     // Entering study screen: update score display and check RUSH
     const scoreValEl = $('pachinko-score-val');
@@ -241,6 +245,7 @@ function showScreen(screenId) {
       resetRushUI();
     }
     if (typeof BgmManager !== 'undefined') BgmManager.playStudyBgm();
+    if (typeof StreakManager !== 'undefined') StreakManager.startStudyTimer();
   }
   document.querySelectorAll('.screen').forEach(s => {
     if (s.id === screenId) {
@@ -3526,6 +3531,9 @@ let wasMetroPlayingBeforeHidden = false;
 function handleVisibilityChange() {
   if (document.hidden) {
     // ブラウザタブから離れた、または画面ロック、別アプリへ切り替え
+    if (typeof StreakManager !== 'undefined') {
+      StreakManager.pauseStudyTimer();
+    }
     if (typeof BgmManager !== 'undefined') {
       const normalPlaying = BgmManager.tracks.normal.audio && !BgmManager.tracks.normal.audio.paused;
       const rushPlaying = BgmManager.tracks.rush.audio && !BgmManager.tracks.rush.audio.paused;
@@ -3543,11 +3551,18 @@ function handleVisibilityChange() {
     const isCompleted = completeEl && !completeEl.classList.contains('hidden');
 
     if (studyActive && !isCompleted) {
+      if (typeof StreakManager !== 'undefined') {
+        StreakManager.startStudyTimer();
+      }
       if (typeof BgmManager !== 'undefined' && !BgmManager.isManualPaused && wasBgmPlayingBeforeHidden) {
         BgmManager.playStudyBgm();
       }
       if (wasMetroPlayingBeforeHidden && settings && settings.autoFlip) {
         startMetronome();
+      }
+    } else {
+      if (typeof StreakManager !== 'undefined') {
+        StreakManager.updateUI();
       }
     }
     wasBgmPlayingBeforeHidden = false;
@@ -3557,9 +3572,275 @@ function handleVisibilityChange() {
 
 document.addEventListener('visibilitychange', handleVisibilityChange);
 window.addEventListener('pagehide', () => {
+  if (typeof StreakManager !== 'undefined') StreakManager.pauseStudyTimer();
   if (typeof BgmManager !== 'undefined') BgmManager.pauseStudyBgm();
   if (typeof isMetroPlaying !== 'undefined' && isMetroPlaying) stopMetronome();
 });
+
+// ============================================================
+// STREAK & STUDY TIME MANAGER (Duolingoスタイル 連続ログイン)
+// ============================================================
+const STREAK_STORAGE_KEY = 'swipecard_streak_data';
+const STREAK_GOAL_SECONDS = 15 * 60; // 15分 (900秒)
+
+const StreakManager = {
+  data: {
+    history: {}, // { "YYYY-MM-DD": seconds }
+    currentStreak: 0,
+    lastAchievedDate: null
+  },
+  timerId: null,
+  lastTickTime: 0,
+  hasCelebratedToday: false,
+
+  getTodayKey() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  },
+
+  getYesterdayKey() {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  },
+
+  init() {
+    this.load();
+    this.setupListeners();
+    this.updateUI();
+  },
+
+  load() {
+    try {
+      const raw = localStorage.getItem(STREAK_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        this.data = {
+          history: parsed.history || {},
+          currentStreak: typeof parsed.currentStreak === 'number' ? parsed.currentStreak : 0,
+          lastAchievedDate: parsed.lastAchievedDate || null
+        };
+      }
+    } catch (e) {
+      console.warn('Failed to load streak data:', e);
+    }
+    this.recalcStreak();
+  },
+
+  save() {
+    try {
+      localStorage.setItem(STREAK_STORAGE_KEY, JSON.stringify(this.data));
+    } catch (e) {
+      console.warn('Failed to save streak data:', e);
+    }
+  },
+
+  getTodaySeconds() {
+    const today = this.getTodayKey();
+    return this.data.history[today] || 0;
+  },
+
+  isTodayAchieved() {
+    return this.getTodaySeconds() >= STREAK_GOAL_SECONDS;
+  },
+
+  recalcStreak() {
+    const today = this.getTodayKey();
+    const history = this.data.history || {};
+
+    let streak = 0;
+    const isTodayDone = (history[today] || 0) >= STREAK_GOAL_SECONDS;
+
+    // 起点日: 今日達成なら今日から、未達成なら昨日から遡る
+    let checkDate = new Date();
+    if (!isTodayDone) {
+      checkDate.setDate(checkDate.getDate() - 1);
+    }
+
+    // 連続して15分以上学習している日数をカウント
+    for (let i = 0; i < 365; i++) {
+      const y = checkDate.getFullYear();
+      const m = String(checkDate.getMonth() + 1).padStart(2, '0');
+      const d = String(checkDate.getDate()).padStart(2, '0');
+      const key = `${y}-${m}-${d}`;
+
+      if ((history[key] || 0) >= STREAK_GOAL_SECONDS) {
+        streak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+
+    this.data.currentStreak = streak;
+    if (isTodayDone) {
+      this.data.lastAchievedDate = today;
+      this.hasCelebratedToday = true;
+    }
+  },
+
+  startStudyTimer() {
+    if (this.timerId) return;
+    this.lastTickTime = Date.now();
+    this.timerId = setInterval(() => this.tick(), 1000);
+  },
+
+  pauseStudyTimer() {
+    if (this.timerId) {
+      this.tick();
+      clearInterval(this.timerId);
+      this.timerId = null;
+      this.save();
+    }
+  },
+
+  tick() {
+    const now = Date.now();
+    const deltaMs = now - this.lastTickTime;
+    this.lastTickTime = now;
+
+    // バックグラウンド復帰等の極端なタイムジャンプを抑制（最大3秒）
+    const deltaSec = Math.min(3, Math.max(0, Math.floor(deltaMs / 1000)));
+    if (deltaSec <= 0) return;
+
+    const today = this.getTodayKey();
+    const wasAchievedBefore = this.isTodayAchieved();
+
+    this.data.history[today] = (this.data.history[today] || 0) + deltaSec;
+
+    // 15分達成チェック
+    if (!wasAchievedBefore && this.isTodayAchieved() && !this.hasCelebratedToday) {
+      this.hasCelebratedToday = true;
+      this.recalcStreak();
+      this.save();
+      this.celebrateGoal();
+    }
+
+    // 10秒ごとに自動保存
+    if (this.data.history[today] % 10 === 0) {
+      this.save();
+    }
+    this.updateUI();
+  },
+
+  celebrateGoal() {
+    showToast(`🔥 今日の目標15分達成！連続${this.data.currentStreak}日ログイン記録！`, 4000);
+    const studyScreen = $('screen-study');
+    if (studyScreen) {
+      const rect = studyScreen.getBoundingClientRect();
+      spawnParticles(rect.width / 2, rect.height / 3, '#f97316');
+      spawnParticles(rect.width / 2, rect.height / 3, '#fbbf24');
+    }
+  },
+
+  updateUI() {
+    const badge = $('streak-badge');
+    const daysNumEl = $('streak-days-num');
+    if (!badge || !daysNumEl) return;
+
+    const streak = this.data.currentStreak;
+    const isDone = this.isTodayAchieved();
+
+    daysNumEl.textContent = streak;
+    badge.classList.toggle('streak-active', streak > 0 || isDone);
+    badge.classList.toggle('streak-achieved', isDone);
+
+    const todaySec = this.getTodaySeconds();
+    const todayMin = Math.floor(todaySec / 60);
+    badge.setAttribute('title', `連続ログイン: ${streak}日 (本日: ${todayMin}/15分)`);
+
+    // モーダルが開いていればリアルタイム更新
+    const modal = $('modal-streak');
+    if (modal && !modal.classList.contains('hidden')) {
+      this.renderModalContent();
+    }
+  },
+
+  openDetailModal() {
+    this.renderModalContent();
+    const modal = $('modal-streak');
+    if (modal) modal.classList.remove('hidden');
+  },
+
+  closeDetailModal() {
+    const modal = $('modal-streak');
+    if (modal) modal.classList.add('hidden');
+  },
+
+  renderModalContent() {
+    const streak = this.data.currentStreak;
+    const todaySec = this.getTodaySeconds();
+    const isDone = this.isTodayAchieved();
+    const todayMin = Math.floor(todaySec / 60);
+    const remainingMin = Math.max(0, 15 - todayMin);
+    const pct = Math.min(100, Math.round((todaySec / STREAK_GOAL_SECONDS) * 100));
+
+    const daysEl = $('streak-modal-days');
+    if (daysEl) daysEl.textContent = streak;
+
+    const timeTextEl = $('streak-modal-time-text');
+    if (timeTextEl) {
+      timeTextEl.textContent = isDone ? `${todayMin}分 / 15分 (達成!)` : `${todayMin}分 / 15分`;
+    }
+
+    const barEl = $('streak-modal-progress-bar');
+    if (barEl) {
+      barEl.style.width = `${pct}%`;
+    }
+
+    const hintEl = $('streak-modal-hint');
+    if (hintEl) {
+      if (isDone) {
+        hintEl.textContent = '🎉 今日のログイン目標達成！素晴らしい継続力です！';
+        hintEl.style.color = '#34d399';
+      } else {
+        hintEl.textContent = `あと${remainingMin}分の学習で今日のログイン達成！`;
+        hintEl.style.color = '#94a3b8';
+      }
+    }
+
+    const descEl = $('streak-modal-status-text');
+    if (descEl) {
+      if (isDone) {
+        descEl.textContent = '本日達成済み！明日も続けて記録を伸ばそう！';
+      } else if (streak > 0) {
+        descEl.textContent = `現在${streak}日連続中！本日中にあと${remainingMin}分で継続！`;
+      } else {
+        descEl.textContent = '1日15分以上の学習で今日から新しい連続記録がスタート！';
+      }
+    }
+  },
+
+  setupListeners() {
+    const badge = $('streak-badge');
+    if (badge) {
+      badge.addEventListener('click', () => this.openDetailModal());
+    }
+
+    const closeBtn = $('modal-streak-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => this.closeDetailModal());
+    }
+
+    const okBtn = $('btn-close-streak-modal');
+    if (okBtn) {
+      okBtn.addEventListener('click', () => this.closeDetailModal());
+    }
+
+    const modal = $('modal-streak');
+    if (modal) {
+      modal.addEventListener('click', e => {
+        if (e.target === modal) this.closeDetailModal();
+      });
+    }
+  }
+};
 
 
 // ============================================================
@@ -3591,6 +3872,7 @@ async function initApp() {
   initParticleCanvas();
   updateAutoFlipUI();
   initPachinkoState();
+  StreakManager.init();
   await BgmManager.init();
 }
 
